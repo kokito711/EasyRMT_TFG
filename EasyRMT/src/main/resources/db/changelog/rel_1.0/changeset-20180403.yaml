@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - logicalFilePath: changeset-rel_1.0
+  
+  - preConditions:
+                   
+  - changeSet:
+      id: 20180403-create_schema_1.0
+      author: sergio
+      changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \n;
+            path: ./install/20180403/00-create_project_table.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+
+        - sqlFile:
+                    dbms: mysql
+                    encoding: utf8
+                    endDelimiter: \n;
+                    path: ./install/20180403/01-create_req_type_table.sql
+                    relativeToChangelogFile: true
+                    splitStatements: true
+                    stripComments: true
+        - sqlFile:
+                            dbms: mysql
+                            encoding: utf8
+                            endDelimiter: \n;
+                            path: ./install/20180403/03-create_req_type_relation_table.sql
+                            relativeToChangelogFile: true
+                            splitStatements: true
+                            stripComments: true

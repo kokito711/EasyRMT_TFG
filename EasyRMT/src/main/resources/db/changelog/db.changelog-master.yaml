@@ -1,0 +1,7 @@
+# This file includes the changelog for the releases in the correct order
+databaseChangeLog:
+  - logicalFilePath: db.changelog-master
+  
+  - include:
+      relativeToChangelogFile: true
+      file: rel_1.0/changeset-20180403.yaml

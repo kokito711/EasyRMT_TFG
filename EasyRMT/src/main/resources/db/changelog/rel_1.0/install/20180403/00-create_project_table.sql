@@ -1,0 +1,316 @@
+
+-- -----------------------------------------------------
+-- Table `easyrmt`.`project`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS easyrmt.project (
+  `idproject` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(64) NOT NULL DEFAULT 'Project',
+  `description` LONGTEXT NULL,
+  `projecttype` ENUM('AGILE', 'NOT_AGILE') NOT NULL DEFAULT 'NOT_AGILE',
+  PRIMARY KEY (`idproject`),
+  UNIQUE INDEX `idProject_UNIQUE` (`idproject` ASC))
+ENGINE = InnoDB;
+
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`object`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`object` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`object` (
+--   `idobject` INT NOT NULL AUTO_INCREMENT,
+--   `project_idproject` INT NOT NULL,
+--   PRIMARY KEY (`idobject`),
+--   UNIQUE INDEX `idObject_UNIQUE` (`idobject` ASC),
+--   INDEX `fk_Object_Project1_idx` (`project_idproject` ASC),
+--   CONSTRAINT `fk_Object_Project1`
+--     FOREIGN KEY (`project_idproject`)
+--     REFERENCES `easyrmt`.`project` (`idproject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`requirement`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`requirement` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`requirement` (
+--   `idobject` INT NOT NULL,
+--   `name` VARCHAR(64) NOT NULL DEFAULT 'Object name',
+--   `identifier` VARCHAR(10) NULL,
+--   `description` LONGTEXT NULL,
+--   `priority` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `complexity` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `state` ENUM('DRAFT', 'APPROVED', 'WORKING', 'TESTING', 'IMPLEMENTED', 'REJECTED') NOT NULL DEFAULT 'DRAFT',
+--   `cost` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+--   `estimatedhours` DECIMAL(4,2) NULL,
+--   `storypoints` INT NULL,
+--   `source` VARCHAR(64) NULL,
+--   `scope` ENUM('PROJECT', 'FEATURE', 'REQUIREMENT') NULL,
+--   `risk` ENUM('HIGH', 'MEDIUM', 'LOW', 'NONE') NULL,
+--   `created` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `lastupdated` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `version` VARCHAR(45) NULL,
+--   `validationmethod` LONGTEXT NULL,
+--   `author` INT NOT NULL DEFAULT 0,
+--   `assignedto` INT NULL,
+--   `justification` MEDIUMTEXT NULL,
+--   `testcases` LONGTEXT NULL,
+--   `requirementtype` INT NOT NULL,
+--   PRIMARY KEY (`idobject`),
+--   UNIQUE INDEX `idObject_UNIQUE` (`idobject` ASC),
+--   INDEX `fk_Requirement_Requirement_Type1_idx` (`requirementtype` ASC),
+--   CONSTRAINT `fk_Requirement_Requirement_Type1`
+--     FOREIGN KEY (`requirementtype`)
+--     REFERENCES `easyrmt`.`requirement_type` (`idtype`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE,
+--   CONSTRAINT `fk_Requirement_Object1`
+--     FOREIGN KEY (`idobject`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`documentation`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`documentation` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`documentation` (
+--   `iddocumentation` INT NOT NULL AUTO_INCREMENT,
+--   `path` VARCHAR(512) NOT NULL DEFAULT '\"\"',
+--   `idobject` INT NOT NULL,
+--   PRIMARY KEY (`iddocumentation`),
+--   UNIQUE INDEX `Path_UNIQUE` (`path` ASC),
+--   INDEX `fk_Documentation_Object1_idx` (`idobject` ASC),
+--   CONSTRAINT `fk_Documentation_Object1`
+--     FOREIGN KEY (`idobject`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`feature`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`feature` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`feature` (
+--   `idobject` INT NOT NULL,
+--   `name` VARCHAR(64) NOT NULL DEFAULT 'Object name',
+--   `identifier` VARCHAR(10) NULL,
+--   `description` LONGTEXT NULL,
+--   `priority` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `complexity` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `state` ENUM('DRAFT', 'APPROVED', 'WORKING', 'TESTING', 'IMPLEMENTED', 'REJECTED') NOT NULL DEFAULT 'DRAFT',
+--   `cost` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+--   `estimatedhours` DECIMAL(4,2) NULL,
+--   `storypoints` INT NULL,
+--   `source` VARCHAR(64) NULL,
+--   `scope` ENUM('PROJECT', 'FEATURE', 'REQUIREMENT') NULL,
+--   `risk` ENUM('HIGH', 'MEDIUM', 'LOW', 'NONE') NULL,
+--   `created` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `lastupdated` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `version` VARCHAR(45) NULL,
+--   `validationmethod` LONGTEXT NULL,
+--   `author` INT NOT NULL DEFAULT 0,
+--   `assignedto` INT NULL,
+--   `justification` MEDIUMTEXT NULL,
+--   `testcases` LONGTEXT NULL,
+--   PRIMARY KEY (`idobject`),
+--   UNIQUE INDEX `idObject_UNIQUE` (`idobject` ASC),
+--   CONSTRAINT `fk_Feature_Object1`
+--     FOREIGN KEY (`idobject`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`epic`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`epic` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`epic` (
+--   `idobject` INT NOT NULL,
+--   `name` VARCHAR(64) NOT NULL DEFAULT 'Object name',
+--   `identifier` VARCHAR(10) NULL,
+--   `description` LONGTEXT NULL,
+--   `priority` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `complexity` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `state` ENUM('DRAFT', 'APPROVED', 'WORKING', 'TESTING', 'IMPLEMENTED', 'REJECTED') NOT NULL DEFAULT 'DRAFT',
+--   `cost` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+--   `estimatedhours` DECIMAL(4,2) NULL,
+--   `storypoints` INT NULL,
+--   `source` VARCHAR(64) NULL,
+--   `scope` ENUM('PROJECT', 'FEATURE', 'REQUIREMENT') NULL,
+--   `risk` ENUM('HIGH', 'MEDIUM', 'LOW', 'NONE') NULL,
+--   `created` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `lastupdated` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `version` VARCHAR(45) NULL,
+--   `validationmethod` LONGTEXT NULL,
+--   `author` INT NOT NULL DEFAULT 0,
+--   `assignedto` INT NULL,
+--   `justification` MEDIUMTEXT NULL,
+--   `testcases` LONGTEXT NULL,
+--   PRIMARY KEY (`idobject`),
+--   UNIQUE INDEX `idObject_UNIQUE` (`idobject` ASC),
+--   CONSTRAINT `fk_Epic_Object1`
+--     FOREIGN KEY (`idobject`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`user_story`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`user_story` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`user_story` (
+--   `idobject` INT NOT NULL,
+--   `name` VARCHAR(64) NOT NULL DEFAULT 'Object name',
+--   `identifier` VARCHAR(10) NULL,
+--   `description` LONGTEXT NULL,
+--   `priority` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `complexity` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `state` ENUM('DRAFT', 'APPROVED', 'WORKING', 'TESTING', 'IMPLEMENTED', 'REJECTED') NOT NULL DEFAULT 'DRAFT',
+--   `cost` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+--   `estimatedhours` DECIMAL(4,2) NULL,
+--   `storypoints` INT NULL,
+--   `source` VARCHAR(64) NULL,
+--   `scope` ENUM('PROJECT', 'FEATURE', 'REQUIREMENT') NULL,
+--   `risk` ENUM('HIGH', 'MEDIUM', 'LOW', 'NONE') NULL,
+--   `created` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `lastupdated` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `version` VARCHAR(45) NULL,
+--   `validationmethod` LONGTEXT NULL,
+--   `author` INT NOT NULL DEFAULT 0,
+--   `assignedto` INT NULL,
+--   `justification` MEDIUMTEXT NULL,
+--   `testcases` LONGTEXT NULL,
+--   `epic` INT NOT NULL,
+--   PRIMARY KEY (`idobject`),
+--   UNIQUE INDEX `idObject_UNIQUE` (`idobject` ASC),
+--   INDEX `fk_User_Story_Epic1_idx` (`epic` ASC),
+--   CONSTRAINT `fk_User_Story_Epic1`
+--     FOREIGN KEY (`epic`)
+--     REFERENCES `easyrmt`.`epic` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE,
+--   CONSTRAINT `fk_User_Story_Object1`
+--     FOREIGN KEY (`idobject`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`use_case`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`use_case` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`use_case` (
+--   `idobject` INT NOT NULL,
+--   `name` VARCHAR(64) NOT NULL DEFAULT 'Object name',
+--   `identifier` VARCHAR(10) NULL,
+--   `description` LONGTEXT NULL,
+--   `priority` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `complexity` ENUM('VERY_LOW', 'LOW', 'NORMAL', 'HIGH', 'VERY_HIGH', 'BLOCKER') NOT NULL DEFAULT 'NORMAL',
+--   `state` ENUM('DRAFT', 'APPROVED', 'WORKING', 'TESTING', 'IMPLEMENTED', 'REJECTED') NOT NULL DEFAULT 'DRAFT',
+--   `cost` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+--   `estimatedhours` DECIMAL(4,2) NULL,
+--   `storypoints` INT NULL,
+--   `source` VARCHAR(64) NULL,
+--   `scope` ENUM('PROJECT', 'FEATURE', 'REQUIREMENT') NULL,
+--   `risk` ENUM('HIGH', 'MEDIUM', 'LOW', 'NONE') NULL,
+--   `created` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `lastupdated` DATETIME NOT NULL DEFAULT '1000-01-01 00:00:00',
+--   `version` VARCHAR(45) NULL,
+--   `validationmethod` LONGTEXT NULL,
+--   `author` INT NOT NULL DEFAULT 0,
+--   `assignedto` INT NULL,
+--   `justification` MEDIUMTEXT NULL,
+--   `testcases` LONGTEXT NULL,
+--   `actors` MEDIUMTEXT NULL,
+--   `preconditions` MEDIUMTEXT NULL,
+--   `postconditions` MEDIUMTEXT NULL,
+--   `steps` LONGTEXT NULL,
+--   `feature` INT NOT NULL,
+--   PRIMARY KEY (`idobject`),
+--   UNIQUE INDEX `idObject_UNIQUE` (`idobject` ASC),
+--   INDEX `fk_Use_Case_Feature1_idx` (`feature` ASC),
+--   CONSTRAINT `fk_Use_Case_Feature1`
+--     FOREIGN KEY (`feature`)
+--     REFERENCES `easyrmt`.`feature` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE,
+--   CONSTRAINT `fk_Use_Case_Object1`
+--     FOREIGN KEY (`idobject`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- -- -----------------------------------------------------
+-- -- Table `easyrmt`.`traceability`
+-- -- -----------------------------------------------------
+-- -- DROP TABLE IF EXISTS `easyrmt`.`traceability` ;
+--
+-- CREATE TABLE IF NOT EXISTS `easyrmt`.`traceability` (
+--   `idTraceability` INT NOT NULL AUTO_INCREMENT,
+--   `idObject` INT NOT NULL,
+--   `idObjectTraced` INT NOT NULL,
+--   `traceType` ENUM('FuncReqToUserReq', 'UserReqToBussReq', 'DesReqToFuncReq', 'SolPropoToFuncReq', 'ExternalIfToFunctionReq', 'InfoReqToFuncReq', 'RestricToFuncReq', 'QualAttToFuncReq', 'InfoReqToUserReq', 'QualAttToUserReq', 'BussRuleToBussReq', 'BussRuleToUserReq', 'BussRuleToQualAtt', 'BussRuleToRestriction', 'BussRuleToFuncReq', 'BussRuleToInfoReq', 'BussRuleToSolPropo', 'BussRuleToDesignReq', 'NonFunctionalToBussReq', 'NonFunctionalToUserReq', 'NonFunctionalToFuncReq') NOT NULL,
+--   PRIMARY KEY (`idTraceability`),
+--   INDEX `idObjectIndex` (`idObject` ASC),
+--   INDEX `idObjectTraced_Object_idx` (`idObject` ASC, `idObjectTraced` ASC),
+--   INDEX `idObjectTraced_idx` (`idObjectTraced` ASC),
+--   CONSTRAINT `fk_idObject_Object`
+--     FOREIGN KEY (`idObject`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE,
+--   CONSTRAINT `fk_idObjectTraced_Object`
+--     FOREIGN KEY (`idObjectTraced`)
+--     REFERENCES `easyrmt`.`object` (`idobject`)
+--     ON DELETE CASCADE
+--     ON UPDATE CASCADE)
+-- ENGINE = InnoDB;
+--
+--
+-- --SET SQL_MODE=@OLD_SQL_MODE;
+-- --SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+-- --SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+--
+-- -- -----------------------------------------------------
+-- -- Data for table `easyrmt`.`requirement_type`
+-- -- -----------------------------------------------------
+-- START TRANSACTION;
+-- USE `easyrmt`;
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (1, 'Functional  requirement');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (2, 'Non Functional requirement');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (3, 'Information requirement');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (4, 'Bussiness requirement');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (5, 'Bussiness rule');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (6, 'User requirement');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (7, 'Quality attribute');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (8, 'External interface requirement');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (9, 'Restriction');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (10, 'Solution proposal');
+-- INSERT INTO `easyrmt`.`requirement_type` (`idtype`, `type`) VALUES (11, 'Design requirement');
+--
+-- COMMIT;
+
+
