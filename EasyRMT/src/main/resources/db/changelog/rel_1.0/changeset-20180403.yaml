@@ -25,10 +25,10 @@ databaseChangeLog:
                     splitStatements: true
                     stripComments: true
         - sqlFile:
-                            dbms: mysql
-                            encoding: utf8
-                            endDelimiter: \n;
-                            path: ./install/20180403/03-create_req_type_relation_table.sql
-                            relativeToChangelogFile: true
-                            splitStatements: true
-                            stripComments: true
+                    dbms: mysql
+                    encoding: utf8
+                    endDelimiter: \n;
+                    path: ./install/20180403/03-create_req_type_relation_table.sql
+                    relativeToChangelogFile: true
+                    splitStatements: true
+                    stripComments: true
