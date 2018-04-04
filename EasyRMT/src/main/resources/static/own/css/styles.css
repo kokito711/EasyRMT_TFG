@@ -1,0 +1,17 @@
+.panel-footer {
+    position: fixed;
+    bottom: 0;
+}
+textarea {
+    resize: none;
+}
+.project-type{
+    width: 50%;
+    margin: 0 auto;
+}
+.radio-agile-development{
+    left: 40px;
+}
+.submit-button{
+    width: 25%;
+}
