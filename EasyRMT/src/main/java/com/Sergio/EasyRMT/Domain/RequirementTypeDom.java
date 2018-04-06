@@ -28,4 +28,12 @@ public class RequirementTypeDom implements Serializable{
     @Getter
     private String name;
 
+    public RequirementTypeDom(int idType, String name) {
+        this.idType = idType;
+        this.name = name;
+    }
+
+    public RequirementTypeDom(int idType) {
+        this.idType = idType;
+    }
 }
