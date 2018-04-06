@@ -15,3 +15,6 @@ textarea {
 .submit-button{
     width: 25%;
 }
+p{
+    display:inline;
+}
