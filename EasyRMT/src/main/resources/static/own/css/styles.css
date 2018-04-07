@@ -18,3 +18,7 @@ textarea {
 p{
     display:inline;
 }
+#index_body{
+    background:url(https://picsum.photos/1920/1080/?random) no-repeat 0 0;
+    background-size: cover;
+}

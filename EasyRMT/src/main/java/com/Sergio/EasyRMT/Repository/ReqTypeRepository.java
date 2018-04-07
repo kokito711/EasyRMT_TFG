@@ -12,5 +12,5 @@ import java.util.Optional;
 
 public interface ReqTypeRepository extends JpaRepository<RequirementType,Integer> {
         Optional<RequirementType> findByName(String name);
-
+        Optional<RequirementType> findByIdType(int id);
 }

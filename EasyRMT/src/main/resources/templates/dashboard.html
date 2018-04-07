@@ -70,19 +70,19 @@
                     </li>
                     <!-- Management Dashboard -->
                     <li>
-                        <a href="#" th:text="#{mainMenu.management}"><i class="fa fa-gears  fa-fw"></i><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-gears  fa-fw"></i><p th:text="#{mainMenu.management.label}"></p><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="#" th:text="#{mainMenu.management.project}"><span class="fa arrow"></span></a>
+                                <a href="#"><p th:text="#{mainMenu.management.project}"></p><span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="/createProject">Create</a>
+                                        <a href="/createProject" th:text="#{mainMenu.management.CreateProject}"></a>
                                     </li>
-                                    <li id="update-project" class="hidden">
-                                        <a >Modify</a>
+                                    <li id="update-project" class="">
+                                        <a href="#" th:text="#{mainMenu.management.updateProject}"></a>
                                     </li>
-                                    <li id="delete-project" class="hidden">
-                                        <a >Delete</a>
+                                    <li id="delete-project" class="">
+                                        <a href="#" th:text="#{mainMenu.management.deleteProject}"></a>
                                     </li>
                                 </ul>
                                 <!-- /.nav-third-level -->

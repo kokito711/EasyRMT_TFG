@@ -41,11 +41,13 @@ public class ProjectService {
 
     //get project
 
-    /*@Transactional(rollbackFor = Exception.class)
-    public ProjectDom createProject(@Valid ProjectDom projectDom){
 
+    @Transactional(rollbackFor = Exception.class)
+    public ProjectDom createProject(ProjectDom projectDom) {
+        Project project = projectConverter.toModel(projectDom);
+        ProjectDom projectCretated = projectConverter.toDomain(project);
+        return projectCretated;
     }
-*/
 
     /**
      * This method returns the complete list of requirement types existing in db
@@ -58,5 +60,4 @@ public class ProjectService {
         List<RequirementTypeDom> requirementTypeDomList = reqTypeConverter.toDomain(requirementTypeList);
         return requirementTypeDomList;
     }
-
 }

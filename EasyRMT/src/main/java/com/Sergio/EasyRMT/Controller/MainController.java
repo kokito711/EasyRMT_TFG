@@ -27,10 +27,11 @@ public class MainController {
     }
 
     @RequestMapping(value="/createProject", method = RequestMethod.GET)
-    public String createProject(Model model){
-        model.addAttribute("project",new ProjectDom());
-        model.addAttribute("reqTypes", projectService.getReqTypes());
-        return "createProject";
+    public ModelAndView createProject(ModelAndView model){
+        model.setViewName("createProject");
+        model.addObject("project",new ProjectDom());
+        model.addObject("reqTypes", projectService.getReqTypes());
+        return model;
     }
 
 }
