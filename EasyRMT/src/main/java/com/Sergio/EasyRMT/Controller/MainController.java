@@ -4,6 +4,7 @@ package com.Sergio.EasyRMT.Controller;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,4 +25,12 @@ public class MainController {
         modelAndView.addObject("projectList", projectDomList);
         return modelAndView;
     }
+
+    @RequestMapping(value="/createProject", method = RequestMethod.GET)
+    public String createProject(Model model){
+        model.addAttribute("project",new ProjectDom());
+        model.addAttribute("reqTypes", projectService.getReqTypes());
+        return "createProject";
+    }
+
 }

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head :: head">
+</head>
+<body>
+<div id="wrapper" >
+
+    <!--Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/dashboard">Easy RMT</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw" ></i><p th:text="#{userMenu.profile}"></p></a>
+                    </li>
+                    <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>-->
+                    <li class="divider"></li>
+                    <li><a href="/"><i class="fa fa-sign-out fa-fw" ></i><p th:text="#{userMenu.logout}"></p></a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="sidebar-search">
+                        <!--
+                                                <div class="input-group custom-search-form">
+                                                    <input type="text" class="form-control" placeholder="Search...">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-default" type="button">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                        -->
+                        <!-- /input-group -->
+                    </li>
+                    <li>
+                        <a href="/dashboard"><i class="fa fa-home fa-fw"></i><p th:text="#{mainMenu.home}"></p></a>
+                    </li>
+                    <!--Project dashboard-->
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i><p th:text="#{mainMenu.projects}"></p><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level list-project" id="project-nav" th:if="${not #lists.isEmpty(projectList)}">
+                            <li th:each="project : ${projectList}"><a href="#"><p th:text="${project.getName()}"></p></a></li>
+                        </ul>
+                        <ul th:unless="${not #lists.isEmpty(projectList)}" id="project_empty"
+                            class="alert alert-info text-center">
+                            <p th:text="#{error.empty.ProjectList}"></p>
+                        </ul>
+                    </li>
+                    <!-- Management Dashboard -->
+                    <li>
+                        <a href="#" th:text="#{mainMenu.management}"><i class="fa fa-gears  fa-fw"></i><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#" th:text="#{mainMenu.management.project}"><span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="/createProject">Create</a>
+                                    </li>
+                                    <li id="update-project" class="hidden">
+                                        <a >Modify</a>
+                                    </li>
+                                    <li id="delete-project" class="hidden">
+                                        <a >Delete</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#">Team <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">View</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Stakeholder</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                </ul>
+                <!-- /.nav-second-level -->
+            </div>
+            <!-- /.sidebar-collapse -->
+            <div class="panel-footer sidebar">
+                <p class="text-info">
+                    &copy; 2018 Sergio López Jiménez and Universidad de Valladolid
+                </p>
+            </div>
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+</div>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+<!--            <div class="info-panel">
+                <div id="general_error" class="alert alert-danger text-center hidden">
+                    UNKNOWN ERROR OCCURRED!
+                </div>
+            </div>-->
+            <div id="content">
+                <h1 class="page-header" th:text="#{createProject.title}">Create project</h1>
+                <div class="panel-body">
+                    <form role="form" id="create-project-form" th:action="@{/projects}" th:object="${project}" method="post">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label th:text="#{createProject.nameLabel}"></label>
+                                    <input id="project-name" class="form-control" required type="text"
+                                           maxlength="64" name="name" th:field="*{name}"/>
+                                    <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" id="project-name-error"
+                                           class="control-label" for="project-name" th:text="#{createProject.nameError}">
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label th:text="#{createProject.descriptionLabel}"></label>
+                                    <textarea id="project-description" class="form-control" rows="5" name="description"
+                                              th:field="*{description}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label th:text="#{createProject.typeLabel}"></label><br>
+                                    <div class="project-type">
+<!--                                        <input id="radio_standard_development" name="projecttype" value="NOT_AGILE"
+                                               checked type="radio">
+                                        Standard Development-->
+                                        <label class="radio-inline">
+                                            <input name="projectType" value="AGILE"
+                                                   type="radio" th:field="*{type}">
+                                            <p th:text="#{createProject.developmentTypeLabel.Agile}"></p>
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="projectType" value="NOT_AGILE"
+                                                   type="radio" th:field="*{type}">
+                                            <p th:text="#{createProject.developmentTypeLabel.NotAgile}"></p>
+                                        </label>
+                                        <label id="project-type-error" class="control-label"
+                                               th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                                th:text="#{createProject.developmentTypeLabel.error}">
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label th:text="#{createProject.requirementType.label}"></label>
+                                    <div class="checkbox" th:each="reqType : ${reqTypes}">
+                                        <label>
+                                            <input th:value="" value="1" type="checkbox" name="idtype">
+                                            Functional requirement
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="2" type="checkbox" name="idtype">
+                                            Non Functional requirement
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="3" type="checkbox" name="idtype">
+                                            Information requirement
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="4" type="checkbox" name="idtype">
+                                            Bussiness requirement
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="5" type="checkbox" name="idtype">
+                                            Bussiness rule
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="6" type="checkbox" name="idtype">
+                                            User requirement
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label></label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="7" type="checkbox" name="idtype">
+                                            Quality attribute
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="8" type="checkbox" name="idtype">
+                                            External interface requirement
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="9" type="checkbox" name="idtype">
+                                            Restriction
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="10" type="checkbox" name="idtype">
+                                            Solution proposal
+                                        </label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input value="11" type="checkbox" name="idtype">
+                                            Design requirement
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 submit-button" >
+                                <button class="btn btn-primary" type="submit">Create project</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -57,4 +57,7 @@ public class ProjectDom implements Serializable {
     public ProjectDom(int idProject) {
         this.idProject = idProject;
     }
+
+    public ProjectDom() {
+    }
 }

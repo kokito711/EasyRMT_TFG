@@ -68,16 +68,15 @@
                             <p th:text="#{error.empty.ProjectList}"></p>
                         </ul>
                     </li>
-                    <!--Management Dashboard -->
-<!--
+                    <!-- Management Dashboard -->
                     <li>
                         <a href="#" th:text="#{mainMenu.management}"><i class="fa fa-gears  fa-fw"></i><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="#">Project <span class="fa arrow"></span></a>
+                                <a href="#" th:text="#{mainMenu.management.project}"><span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a onclick="includeHTML('/pages/createProject')">Create</a>
+                                        <a href="/createProject">Create</a>
                                     </li>
                                     <li id="update-project" class="hidden">
                                         <a >Modify</a>
@@ -86,7 +85,7 @@
                                         <a >Delete</a>
                                     </li>
                                 </ul>
-                                &lt;!&ndash; /.nav-third-level &ndash;&gt;
+                                <!-- /.nav-third-level -->
                             </li>
                             <li>
                                 <a href="#">Team <span class="fa arrow"></span></a>
@@ -98,12 +97,11 @@
                                         <a href="#">Stakeholder</a>
                                     </li>
                                 </ul>
-                                &lt;!&ndash; /.nav-third-level &ndash;&gt;
+                                <!-- /.nav-third-level -->
                             </li>
                         </ul>
-                        &lt;!&ndash; /.nav-second-level &ndash;&gt;
+                        <!-- /.nav-second-level -->
                     </li>
--->
                 </ul>
                 <!-- /.nav-second-level -->
             </div>
