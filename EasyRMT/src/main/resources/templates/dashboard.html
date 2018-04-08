@@ -61,7 +61,7 @@
                     <li>
                         <a href="#"><i class="fa fa-sitemap fa-fw"></i><p th:text="#{mainMenu.projects}"></p><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level list-project" id="project-nav" th:if="${not #lists.isEmpty(projectList)}">
-                            <li th:each="project : ${projectList}"><a href="#"><p th:text="${project.getName()}"></p></a></li>
+                            <li th:each="project : ${projectList}"><a th:href="'/project/'+${project.getIdProject()}"><p th:text="${project.getName()}"></p></a></li>
                         </ul>
                         <ul th:unless="${not #lists.isEmpty(projectList)}" id="project_empty"
                             class="alert alert-info text-center">
