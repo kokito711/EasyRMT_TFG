@@ -30,7 +30,7 @@ public class ProjectService {
 
     /**
      * This method gets a list of existing projects in db and provides it
-     * @return List<ProjectDom> List of existing projects
+     * @return List of {@link ProjectDom} with existing projects
      */
     @Transactional(readOnly = true)
     public List<ProjectDom> getProjects(){
@@ -54,8 +54,7 @@ public class ProjectService {
 
     /**
      * This method returns the complete list of requirement types existing in db
-     * @return List<RequirementTypeDom> A list with RequirementTypeDom
-     * @See RequirementTypeDom
+     * @return List of {@link RequirementTypeDom} with RequirementTypeDom related with {@link ProjectDom}
      */
     @Transactional(readOnly = true)
     public List<RequirementTypeDom> getReqTypes(){

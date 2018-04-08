@@ -17,6 +17,15 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
+    /**
+     * This method gets the request of a project creation.
+     * Then calls {@link ProjectService}to manage it.
+     * When the information is returned this method generate a new ModelAndView with a project view and the persisted
+     * {@link ProjectDom} as object.
+     * @param project {@link ProjectDom} object returned from view to
+     * @return ModelAndView with a project view and the persisted
+     *       {@link ProjectDom} as object.
+     */
     @RequestMapping(value = "/projects", method = RequestMethod.POST)
     public ModelAndView createProject(@ModelAttribute @Valid ProjectDom project){
         ProjectDom projectDom = projectService.createProject(project);
@@ -24,4 +33,6 @@ public class ProjectController {
         modelAndView.addObject("project", projectDom);
         return modelAndView;
     }
+
+
 }
