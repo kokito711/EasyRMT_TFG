@@ -44,8 +44,11 @@ public class ProjectService {
 
     @Transactional(rollbackFor = Exception.class)
     public ProjectDom createProject(ProjectDom projectDom) {
+        for (String id: projectDom.getStringReqTypes()) {
+            projectDom.getRequirementTypes().add(new RequirementTypeDom(Integer.parseInt(id)));
+        }
         Project project = projectConverter.toModel(projectDom);
-        ProjectDom projectCretated = projectConverter.toDomain(project);
+        ProjectDom projectCretated = projectConverter.toDomain(projectRepository.save(project));
         return projectCretated;
     }
 

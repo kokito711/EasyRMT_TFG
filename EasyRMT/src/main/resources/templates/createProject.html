@@ -70,7 +70,7 @@
                     </li>
                     <!-- Management Dashboard -->
                     <li>
-                        <a href="#" th:text="#{mainMenu.management}"><i class="fa fa-gears  fa-fw"></i><span class="fa arrow"></span></a>
+                        <a href="#" th:text="#{mainMenu.management.label}"><i class="fa fa-gears  fa-fw"></i><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="#" th:text="#{mainMenu.management.project}"><span class="fa arrow"></span></a>
@@ -169,10 +169,10 @@
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label th:text="#{createProject.requirementType.label}"></label>
-                                    <div class="checkbox" th:each="reqType : ${reqTypes}">
+                                    <div class="checkbox" th:each="reqType: ${reqTypes}">
                                         <label>
-                                            <input th:value="${reqType.getIdType()}" type="checkbox" name="idtype"
-                                                th:text="${reqType.getName()}" th:field="*{requirementTypes[__${reqType.idType}__].idType}"/>
+                                            <input th:value="${reqType.idType}" type="checkbox" name="idtype"
+                                                th:text="${reqType.getName()}" th:field="*{stringReqTypes}"/>
                                         </label>
                                     </div>
                                 </div>

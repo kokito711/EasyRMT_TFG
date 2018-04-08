@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-
 @RestController
 public class ProjectController {
 
@@ -19,7 +18,7 @@ public class ProjectController {
     ProjectService projectService;
 
     @RequestMapping(value = "/projects", method = RequestMethod.POST)
-    public ModelAndView createProject(@ModelAttribute/* @Valid*/ ProjectDom project){
+    public ModelAndView createProject(@ModelAttribute @Valid ProjectDom project){
         ProjectDom projectDom = projectService.createProject(project);
         ModelAndView modelAndView = new ModelAndView("project");
         modelAndView.addObject("project", projectDom);

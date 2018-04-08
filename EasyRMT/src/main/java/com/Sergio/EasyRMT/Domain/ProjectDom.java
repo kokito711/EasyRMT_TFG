@@ -41,6 +41,10 @@ public class ProjectDom implements Serializable {
     @Setter
     private List<RequirementTypeDom> requirementTypes;
 
+    @Getter
+    @Setter
+    private  List<String> stringReqTypes;
+
     public ProjectDom(int idProject, String name, String description, ProjectType type, List<RequirementTypeDom> requirementTypes) {
         this.idProject = idProject;
         this.name = name;
@@ -59,5 +63,7 @@ public class ProjectDom implements Serializable {
     }
 
     public ProjectDom() {
+        requirementTypes = new ArrayList<>();
+        stringReqTypes = new ArrayList<>();
     }
 }

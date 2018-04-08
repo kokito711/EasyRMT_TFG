@@ -44,9 +44,9 @@ public class ProjectConverter {
     public Project toModel(ProjectDom projectDom) {
         Project project = new Project();
         List<RequirementType> reqTypeList = new ArrayList<>();
-        project.setName(project.getName());
-        project.setDescription(project.getDescription());
-        project.setType(project.getType());
+        project.setName(projectDom.getName());
+        project.setDescription(projectDom.getDescription());
+        project.setType(projectDom.getType());
         for(RequirementTypeDom reqTypeDom : projectDom.getRequirementTypes()){
             RequirementType reqType = reqTypeRepository.findByIdType(reqTypeDom.getIdType()).get();
             reqTypeList.add(reqType);
