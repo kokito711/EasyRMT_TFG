@@ -1,6 +1,6 @@
-<!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head th:include="fragments/head :: head">
+
 </head>
 <body>
 <div id="wrapper" >
@@ -70,10 +70,10 @@
                     </li>
                     <!-- Management Dashboard -->
                     <li>
-                        <a href="#" th:text="#{mainMenu.management.label}"><i class="fa fa-gears  fa-fw"></i><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-gears  fa-fw"></i><p th:text="#{mainMenu.management.label}"></p><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="#" th:text="#{mainMenu.management.project}"><span class="fa arrow"></span></a>
+                                <a href="#"><p th:text="#{mainMenu.management.project}"></p><span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level">
                                     <li>
                                         <a href="/createProject" th:text="#{mainMenu.management.CreateProject}"></a>
@@ -118,73 +118,94 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
-<!--            <div class="info-panel">
-                <div id="general_error" class="alert alert-danger text-center hidden">
-                    UNKNOWN ERROR OCCURRED!
-                </div>
-            </div>-->
-            <div id="content">
-                <h1 class="page-header" th:text="#{createProject.title}">Create project</h1>
-                <div class="panel-body">
-                    <form role="form" id="create-project-form" th:action="@{/projects}" th:object="${project}" method="post">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label th:text="#{createProject.nameLabel}"></label>
-                                    <input id="project-name" class="form-control" required="required" type="text"
-                                           maxlength="64" name="name" th:field="*{name}"/>
-                                    <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" id="project-name-error"
-                                           class="control-label" for="project-name" th:text="#{createProject.nameError}">
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label th:text="#{createProject.descriptionLabel}"></label>
-                                    <textarea id="project-description" class="form-control" rows="5" name="description"
-                                              th:field="*{description}"/>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label th:text="#{createProject.typeLabel}"></label><br/>
-                                    <div class="project-type">
-<!--                                        <input id="radio_standard_development" name="projecttype" value="NOT_AGILE"
-                                               checked type="radio">
-                                        Standard Development-->
-                                        <label class="radio-inline">
-                                            <input name="projectType" value="AGILE"
-                                                   type="radio" th:field="*{type}"/>
-                                            <p th:text="#{createProject.developmentTypeLabel.Agile}"></p>
-                                        </label>
-                                        <label class="radio-inline">
-                                            <input name="projectType" value="NOT_AGILE"
-                                                   type="radio" th:field="*{type}"/>
-                                            <p th:text="#{createProject.developmentTypeLabel.NotAgile}"></p>
-                                        </label>
-                                        <label id="project-type-error" class="control-label"
-                                               th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-                                                th:text="#{createProject.developmentTypeLabel.error}">
-                                        </label>
-
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label th:text="#{createProject.requirementType.label}"></label>
-                                    <div class="checkbox" th:each="reqType: ${reqTypes}">
-                                        <label>
-                                            <input th:value="${reqType.idType}" type="checkbox" name="idtype"
-                                                th:text="${reqType.getName()}" th:field="*{stringReqTypes}"/>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 submit-button" >
-                                <button class="btn btn-primary" type="submit" th:text="#{createProject.submitButton}"></button>
-                            </div>
+            <h1 id="project-name" class="page-header" th:text="${project.getName()}"></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                           <i class="fa fa-folder fa-5x"></i>
                         </div>
-                    </form>
+                        <div th:if="${project.getType().name() == 'AGILE'}" class="col-xs-9 text-right huge"
+                             id="elements-panel-agile" th:text="#{project.agile}">
+                        </div>
+                        <div th:unless="${project.getType().name() == 'AGILE'}" class="col-xs-9 text-right huge"
+                             id="elements-panel-traditional" th:text="#{project.notAgile}">
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a href="" id="feat-epic-link">
+                        <span class="pull-left" th:text="#{project.viewDetails}"></span>
+                        <span class="pull-right">
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </a>
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-book fa-5x"></i>
+                        </div>
+                        <div th:if="${project.getType().name() == 'AGILE'}" class="col-xs-9 text-right "
+                             id="elements-panel-userStories" th:text="#{project.userStory}">
+                        </div>
+                        <div th:unless="${project.getType().name() == 'AGILE'}" class="col-xs-9 text-right huge"
+                             id="elements-panel-useCases" th:text="#{project.useCase}">
+                        </div>
+                    </div>
+
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left" th:text="#{project.viewDetails}"></span>
+                        <span class="pull-right">
+                            <i class="fa fa-arrow-circle-right"></i>
+                        </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-list-alt fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right huge" id="requirement-panel" th:text="#{project.requirements}">
+                        </div>
+                    </div>
+                </div>
+                <a href="">
+                    <div class="panel-footer">
+                        <span class="pull-left" th:text="#{project.viewDetails}"></span>
+                        <span class="pull-right">
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 id="project-info" class="page-header" th:text="#{project.projectInformationLabel}"></h1>
+        </div>
+    </div>
+    <div class="row">
+        <!--here goes all the reporting information-->
     </div>
 </div>
 </body>

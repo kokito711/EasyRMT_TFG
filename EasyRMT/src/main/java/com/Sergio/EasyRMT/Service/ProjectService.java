@@ -39,8 +39,17 @@ public class ProjectService {
         return projectDomList;
     }
 
-    //get project
-
+    /**
+     * This method gets a existing project in db and provides it.
+     * @param id project id to be found
+     * @return {@link ProjectDom} or null if not exist
+     */
+    @Transactional(readOnly = true)
+    public ProjectDom getProject(int id){
+        Project projectModel = projectRepository.findByIdProject(id).get();
+        ProjectDom projectDom = projectConverter.toDomain(projectModel);
+        return projectDom;
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public ProjectDom createProject(ProjectDom projectDom) {
@@ -51,6 +60,8 @@ public class ProjectService {
         ProjectDom projectCretated = projectConverter.toDomain(projectRepository.save(project));
         return projectCretated;
     }
+
+
 
     /**
      * This method returns the complete list of requirement types existing in db
