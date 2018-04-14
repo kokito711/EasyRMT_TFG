@@ -25,13 +25,4 @@ public class MainController {
         return modelAndView;
     }
 
-    @RequestMapping(value="/createProject", method = RequestMethod.GET)
-    public ModelAndView createProject(ModelAndView model){
-        ProjectDom projectDom = new ProjectDom();
-        model.setViewName("createProject");
-        model.addObject("project", projectDom);
-        model.addObject("reqTypes", projectService.getReqTypes());
-        return model;
-    }
-
 }

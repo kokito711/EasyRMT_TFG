@@ -70,7 +70,8 @@
                     </li>
                     <!-- Management Dashboard -->
                     <li>
-                        <a href="#"><i class="fa fa-gears  fa-fw"></i><p th:text="#{mainMenu.management.label}"></p><span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-gears  fa-fw"></i><p th:text="#{mainMenu.management.label}"></p>
+                            <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="#"><p th:text="#{mainMenu.management.project}"></p><span class="fa arrow"></span></a>
@@ -79,10 +80,11 @@
                                         <a href="/createProject" th:text="#{mainMenu.management.CreateProject}"></a>
                                     </li>
                                     <li id="update-project" class="">
-                                        <a href="#" th:text="#{mainMenu.management.updateProject}"></a>
+                                        <a href="/updateProject" th:text="#{mainMenu.management.updateProject}"></a>
                                     </li>
                                     <li id="delete-project" class="">
-                                        <a href="#" th:text="#{mainMenu.management.deleteProject}"></a>
+                                        <a href="#" th:text="#{mainMenu.management.deleteProject}" data-toggle="modal"
+                                           data-target="#deleteProjectModal"></a>
                                     </li>
                                 </ul>
                                 <!-- /.nav-third-level -->
@@ -122,6 +124,29 @@
         </div>
     </div>
     <div class="row">
+        <!-- Modal -->
+        <div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteProjectModalLabel" th:text="#{project.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{project.deleteModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{project.deleteModal.cancelButton}"></button>
+                        <button type="button" class="btn btn-danger" th:onclick="${'deleteProject('+project.getIdProject()+')'}"
+                                th:text="#{project.deleteModal.deleteButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
         <div class="col-lg-3 col-md-6">
             <div class="panel panel-primary">
                 <div class="panel-heading">

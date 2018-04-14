@@ -51,6 +51,16 @@ public class ProjectService {
         return projectDom;
     }
 
+    /**
+     * Method which interacts with {@link ProjectRepository}, {@link com.Sergio.EasyRMT.Controller.ProjectController}
+     * and {@link ProjectConverter}
+     * The ProjectController method "createProject" calls this method and provides it a {@link ProjectDom} object filled
+     * with information. Then, the method createProject, parse the attributes to an {@link Project} object using
+     * ProjectConverter class. When the conversion  finish, createProject call {@link ProjectRepository} to persist data.
+     * @param projectDom {@link ProjectDom} object with information.
+     * @return {@link ProjectDom} object with information persisted
+     *
+     */
     @Transactional(rollbackFor = Exception.class)
     public ProjectDom createProject(ProjectDom projectDom) {
         for (String id: projectDom.getStringReqTypes()) {
@@ -72,5 +82,15 @@ public class ProjectService {
         List<RequirementType> requirementTypeList = reqTypeRepository.findAll();
         List<RequirementTypeDom> requirementTypeDomList = reqTypeConverter.toDomain(requirementTypeList);
         return requirementTypeDomList;
+    }
+
+    public ProjectDom updateProject(int id, ProjectDom project) {
+        return project;
+    }
+
+    @Transactional(rollbackFor=Exception.class)
+    public boolean deleteProject(int id) {
+        projectRepository.deleteProjectByIdProject(id);
+        return !projectRepository.existsByIdProject(id);
     }
 }

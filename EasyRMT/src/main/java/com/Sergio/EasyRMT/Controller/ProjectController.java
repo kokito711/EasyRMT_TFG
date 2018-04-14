@@ -3,6 +3,8 @@ package com.Sergio.EasyRMT.Controller;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -14,6 +16,20 @@ public class ProjectController {
 
     @Autowired
     ProjectService projectService;
+
+    /**
+     * This method returns the create project view
+     * @param model with project object and an array with requirement types
+     * @return ModelAndView which is model received as param
+     */
+    @RequestMapping(value="/createProject", method = RequestMethod.GET)
+    public ModelAndView createProjectView(ModelAndView model){
+        ProjectDom projectDom = new ProjectDom();
+        model.setViewName("createProject");
+        model.addObject("project", projectDom);
+        model.addObject("reqTypes", projectService.getReqTypes());
+        return model;
+    }
 
     /**
      * This method gets the request of a project creation.
@@ -34,6 +50,51 @@ public class ProjectController {
         return modelAndView;
     }
 
+    /**
+     * This method gets the request of a projectUpdate.
+     * Then calls {@link ProjectService}to manage it.
+     * When the information is returned this method generate a new ModelAndView with a project view and the persisted
+     * {@link ProjectDom} as object.
+     * @param id {@link ProjectDom} id to find it in database.
+     * @return ModelAndView with a project view and the persisted {@link ProjectDom} as object.
+     */
+    @RequestMapping(value = "/updateProject/{id}", method = RequestMethod.GET)
+    public ModelAndView getUpdateView(@PathVariable int id){
+        List<ProjectDom> projectDomList = projectService.getProjects();
+        ModelAndView modelAndView = new ModelAndView("updateProject");
+        ProjectDom projectDom = projectService.getProject(id);
+        modelAndView.addObject("project", projectDom);
+        modelAndView.addObject("projectList", projectDomList);
+        return modelAndView;
+    }
+
+    /**
+     * This method receives a post request and calls {@link ProjectService} to update a project
+     * When Project Service returns informaction, that is updated in database.
+     * @param id Project identificator
+     * @param project Project Object Filled with information
+     * @return ModelAndView with new project information, redirected to update project
+     */
+    @RequestMapping(value = "/project/{id}", method = RequestMethod.POST)
+    public ModelAndView updateProject(@PathVariable int id, @ModelAttribute @Valid ProjectDom project){
+        List<ProjectDom> projectDomList = projectService.getProjects();
+        ProjectDom projectDom = projectService.updateProject(id,project);
+        ModelAndView modelAndView = new ModelAndView("updateProject");
+        modelAndView.addObject("project", projectDom);
+        modelAndView.addObject("projectList", projectDomList);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/project/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteProject(@PathVariable int id){
+        boolean deleted = projectService.deleteProject(id);
+        if(deleted){
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+        }
+    }
 
     /**
      * This method gets the request of a project.
