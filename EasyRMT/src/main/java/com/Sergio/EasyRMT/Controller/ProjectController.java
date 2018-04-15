@@ -65,6 +65,7 @@ public class ProjectController {
         ProjectDom projectDom = projectService.getProject(id);
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("reqTypes", projectService.getReqTypes());
         return modelAndView;
     }
 
@@ -79,12 +80,19 @@ public class ProjectController {
     public ModelAndView updateProject(@PathVariable int id, @ModelAttribute @Valid ProjectDom project){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom projectDom = projectService.updateProject(id,project);
-        ModelAndView modelAndView = new ModelAndView("updateProject");
+        ModelAndView modelAndView = new ModelAndView("project");
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
         return modelAndView;
     }
 
+    /**
+     * Delete project receives a project id as path variable and uses it to call {@link ProjectService} delete method.
+     * this method is called via JavaScript so returns a HttpStatus ok yif deletion has been done and a HttpStatus
+     * Internal Server Error if not.
+     * @param id project id to be deleted.
+     * @return HttpStatus.ok if correct. HttpStatus.INTERNAL_SERVER_ERROR if not correct.
+     */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteProject(@PathVariable int id){
         boolean deleted = projectService.deleteProject(id);

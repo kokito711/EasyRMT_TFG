@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head :: head">
+</head>
+<body>
+<div id="wrapper" >
+
+    <!--Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/dashboard">Easy RMT</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#"><i class="fa fa-user fa-fw" ></i><p th:text="#{userMenu.profile}"></p></a>
+                    </li>
+                    <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>-->
+                    <li class="divider"></li>
+                    <li><a href="/"><i class="fa fa-sign-out fa-fw" ></i><p th:text="#{userMenu.logout}"></p></a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
+            </li>
+            <!-- /.dropdown -->
+        </ul>
+        <!-- /.navbar-top-links -->
+
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="sidebar-search">
+                        <!--
+                                                <div class="input-group custom-search-form">
+                                                    <input type="text" class="form-control" placeholder="Search...">
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-default" type="button">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                        -->
+                        <!-- /input-group -->
+                    </li>
+                    <li>
+                        <a href="/dashboard"><i class="fa fa-home fa-fw"></i><p th:text="#{mainMenu.home}"></p></a>
+                    </li>
+                    <!--Project dashboard-->
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap fa-fw"></i><p th:text="#{mainMenu.projects}"></p><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level list-project" id="project-nav" th:if="${not #lists.isEmpty(projectList)}">
+                            <li th:each="project : ${projectList}"><a th:href="'/project/'+${project.getIdProject()}"><p th:text="${project.getName()}"></p></a></li>
+                        </ul>
+                        <ul th:unless="${not #lists.isEmpty(projectList)}" id="project_empty"
+                            class="alert alert-info text-center">
+                            <p th:text="#{error.empty.ProjectList}"></p>
+                        </ul>
+                    </li>
+                    <!-- Management Dashboard -->
+                    <li>
+                        <a href="#" th:text="#{mainMenu.management.label}"><i class="fa fa-gears  fa-fw"></i><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#" th:text="#{mainMenu.management.project}"><span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="/createProject" th:text="#{mainMenu.management.CreateProject}"></a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                            <li>
+                                <a href="#">Team <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">View</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Stakeholder</a>
+                                    </li>
+                                </ul>
+                                <!-- /.nav-third-level -->
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                </ul>
+                <!-- /.nav-second-level -->
+            </div>
+            <!-- /.sidebar-collapse -->
+            <div class="panel-footer-copyright sidebar">
+                <p class="text-info">
+                    &copy; 2018 Sergio López Jiménez and Universidad de Valladolid
+                </p>
+            </div>
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+</div>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="content">
+                <h1 class="page-header" th:text="#{updateProject.Label}"></h1>
+                <div class="panel-body">
+                    <form role="form" id="update-project-form" th:action="'/project/'+${project.getIdProject()}"
+                          th:object="${project}" method="post">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <h1 th:text="${project.getName()}"></h1>
+                                </div>
+                                <div class="form-group">
+                                    <label th:text="#{createProject.descriptionLabel}"></label>
+                                    <textarea id="project-description" class="form-control" rows="5" name="description"
+                                              th:field="*{description}" th:text="${project.getDescription()}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label th:text="#{createProject.typeLabel}"></label><br/>
+                                    <div class="project-type">
+                                        <label class="radio-inline">
+                                            <input name="projectType" value="AGILE"
+                                                   type="radio" th:if="${project.getType().name() == 'AGILE'}"
+                                                   checked="checked" disabled="disabled"/>
+                                            <input name="projectType" value="AGILE"
+                                                   type="radio" th:unless="${project.getType().name() == 'AGILE'}"
+                                                   disabled="disabled"/>
+                                            <p th:text="#{createProject.developmentTypeLabel.Agile}"></p>
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input name="projectType" value="NOT_AGILE"
+                                                   type="radio" th:unless="${project.getType().name() == 'AGILE'}"
+                                                   checked="checked" disabled="disabled"/>
+                                            <input name="projectType" value="NOT_AGILE"
+                                                   type="radio" th:if="${project.getType().name() == 'AGILE'}"
+                                                   disabled="disabled"/>
+                                            <p th:text="#{createProject.developmentTypeLabel.NotAgile}"></p>
+                                        </label>
+                                        <label id="project-type-error" class="control-label"
+                                               th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                               th:text="#{createProject.developmentTypeLabel.error}">
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 form-group">
+                                    <label th:text="#{createProject.requirementType.label}"></label>
+                                    <div class="checkbox" th:each="reqType, i: ${reqTypes}">
+                                        <label><!--th:if="${#lists.contains(project.requirementTypes, reqType)}"-->
+                                            <input th:value="${reqType.idType}" type="checkbox" name="idtype"
+                                                   th:text="${reqType.getName()}" th:field="*{stringReqTypes}"
+                                                   th:checked="${#lists.contains(project.requirementTypes, reqType)}"
+                                                   th:disabled="${#lists.contains(project.requirementTypes, reqType)}"/>
+
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 submit-button" >
+                                <button class="btn btn-primary" type="submit" th:text="#{updateProject.submitButton}"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

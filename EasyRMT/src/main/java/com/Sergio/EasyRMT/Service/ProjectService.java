@@ -71,7 +71,58 @@ public class ProjectService {
         return projectCretated;
     }
 
+    /**
+     *
+     * @param id
+     * @param project
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ProjectDom updateProject(int id, ProjectDom project) {
+        Project projectModel = projectRepository.findByIdProject(id).get();
+        ProjectDom projectDomPersisted = new ProjectDom();
+        boolean descChanged = false;
+        boolean reqTypes = false;
+        if(projectModel != null){
+            projectDomPersisted = projectConverter.toDomain(projectModel);
+        }
+        projectDomPersisted.setIdProject(projectModel.getIdProject());
+        if (!project.getDescription().equals(projectDomPersisted.getDescription())){
+            descChanged = true;
+            projectDomPersisted.setDescription(project.getDescription());
+        }
+        if(project.getStringReqTypes().size()>0){
+            for (String reqTypeId: project.getStringReqTypes()) {
+                projectDomPersisted.getRequirementTypes().add(new RequirementTypeDom(Integer.parseInt(reqTypeId)));
+            }
+            reqTypes = true;
+        }
+        if (descChanged || reqTypes) {
+            Project requested = projectConverter.toModel(projectDomPersisted);
+            if(descChanged){
+                projectModel.setDescription(requested.getDescription());
+            }
+            if(reqTypes){
+                projectModel.setRequirementTypes(requested.getRequirementTypes());
+            }
+            projectModel = projectRepository.save(projectModel);
+            projectDomPersisted = projectConverter.toDomain(projectModel);
+        }
+        return projectDomPersisted;
+    }
 
+    /**
+     * This method calls the JPA Repository to delete a project with the idProject received as parameter.
+     * Then, calls again the {@link ProjectRepository} to check if project has been deleted.
+     * If not exists in database, method will return true and false if exists.
+     * @param id idProject to be deleted
+     * @return If not exists in database, method will return true and false if exists.
+     */
+    @Transactional(rollbackFor=Exception.class)
+    public boolean deleteProject(int id) {
+        projectRepository.deleteProjectByIdProject(id);
+        return !projectRepository.existsByIdProject(id);
+    }
 
     /**
      * This method returns the complete list of requirement types existing in db
@@ -84,13 +135,5 @@ public class ProjectService {
         return requirementTypeDomList;
     }
 
-    public ProjectDom updateProject(int id, ProjectDom project) {
-        return project;
-    }
 
-    @Transactional(rollbackFor=Exception.class)
-    public boolean deleteProject(int id) {
-        projectRepository.deleteProjectByIdProject(id);
-        return !projectRepository.existsByIdProject(id);
-    }
 }

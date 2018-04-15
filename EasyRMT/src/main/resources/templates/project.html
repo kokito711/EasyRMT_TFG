@@ -80,7 +80,8 @@
                                         <a href="/createProject" th:text="#{mainMenu.management.CreateProject}"></a>
                                     </li>
                                     <li id="update-project" class="">
-                                        <a href="/updateProject" th:text="#{mainMenu.management.updateProject}"></a>
+                                        <a th:href="'/updateProject/'+${project.getIdProject()}"
+                                           th:text="#{mainMenu.management.updateProject}"></a>
                                     </li>
                                     <li id="delete-project" class="">
                                         <a href="#" th:text="#{mainMenu.management.deleteProject}" data-toggle="modal"
