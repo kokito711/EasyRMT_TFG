@@ -139,6 +139,35 @@ public class ProjectServiceTest {
         verify(projectConverter, times(1)).toDomain(project);
     }
 
+    @Test
+    @DisplayName("Update Project persist an updated project provided")
+    public void updateProject_ProjectWithChangesProvided_UpdatesProject(){
+        ProjectDom projectDom = mock(ProjectDom.class);
+        Project project = mock(Project.class);
+        ProjectDom projectParam = mock(ProjectDom.class); //change this
+
+        ArrayList<String> reqTypesString = new ArrayList<>();
+        reqTypesString.add("1");
+        reqTypesString.add("2");
+
+        when(projectRepository.findByIdProject(anyInt())).thenReturn(Optional.of(project));
+        doReturn(projectDom).doReturn(projectDom).when(projectConverter.toDomain(project));
+        when(projectDom.getIdProject()).thenReturn(anyInt());
+        when(projectDom.getDescription()).thenReturn("description");
+        when(projectDom.getStringReqTypes()).thenReturn(reqTypesString);
+        when(projectConverter.toModel(projectDom)).thenReturn(project);
+        when(project.getDescription()).thenReturn("description");
+        when(project.getRequirementTypes()).thenReturn(reqTypes); //Do this
+        when(projectRepository.save(project)).thenReturn(project);
+
+        ProjectService projectService = createProjectService();
+        //Test conditions
+        assertTrue(projectService.createProject(projectDom).equals(projectDom));
+        //verifys
+
+    }
+
+
     private ProjectService createProjectService(){
         return new ProjectService(projectRepository, reqTypeRepository, projectConverter, reqTypeConverter);
     }
