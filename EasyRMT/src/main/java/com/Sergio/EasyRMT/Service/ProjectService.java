@@ -16,17 +16,23 @@ import org.springframework.validation.BindingResult;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectService {
-    @Autowired
+
     ProjectRepository projectRepository;
-    @Autowired
     ReqTypeRepository reqTypeRepository;
-    @Autowired
     ProjectConverter projectConverter;
-    @Autowired
     ReqTypeConverter reqTypeConverter;
+
+    @Autowired
+    public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository, ProjectConverter projectConverter, ReqTypeConverter reqTypeConverter) {
+        this.projectRepository = projectRepository;
+        this.reqTypeRepository = reqTypeRepository;
+        this.projectConverter = projectConverter;
+        this.reqTypeConverter = reqTypeConverter;
+    }
 
     /**
      * This method gets a list of existing projects in db and provides it
@@ -46,7 +52,8 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public ProjectDom getProject(int id){
-        Project projectModel = projectRepository.findByIdProject(id).get();
+        Optional<Project> projectObtained = projectRepository.findByIdProject(id);
+        Project projectModel = projectObtained.get();
         ProjectDom projectDom = projectConverter.toDomain(projectModel);
         return projectDom;
     }
@@ -72,10 +79,12 @@ public class ProjectService {
     }
 
     /**
-     *
-     * @param id
-     * @param project
-     * @return
+     * The update method receives an id and a {@link ProjectDom} with data modified.
+     * Then obtains de persisted project from database and compares if there is any change.
+     * If the project information has been changed, this method will persist the changes.
+     * @param id Project Id
+     * @param project {@link ProjectDom} object with changed data
+     * @return {@link ProjectDom} with persisted information
      */
     @Transactional(rollbackFor = Exception.class)
     public ProjectDom updateProject(int id, ProjectDom project) {
@@ -120,8 +129,14 @@ public class ProjectService {
      */
     @Transactional(rollbackFor=Exception.class)
     public boolean deleteProject(int id) {
-        projectRepository.deleteProjectByIdProject(id);
-        return !projectRepository.existsByIdProject(id);
+        if (projectRepository.existsByIdProject(id)){
+            projectRepository.deleteProjectByIdProject(id);
+            return !projectRepository.existsByIdProject(id);
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**

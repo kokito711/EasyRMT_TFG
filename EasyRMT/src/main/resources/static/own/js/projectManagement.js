@@ -3,11 +3,12 @@ function deleteProject(id) {
         url: '/project/'+id,
         type: 'DELETE',
         success: function() {
-            location.href("/dashboard");
+            $("#deleteProjectModal").modal('hide');
+            $("#deleteProjectModalOk").modal('show');
         },
         error: function () {
-            location.href("/500Error.html");
+            $("#deleteProjectModal").modal('hide');
+            $("#deleteProjectModalFail").modal('show');
         }
     });
-
 }

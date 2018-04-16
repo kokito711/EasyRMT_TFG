@@ -24,10 +24,12 @@ public class ProjectController {
      */
     @RequestMapping(value="/createProject", method = RequestMethod.GET)
     public ModelAndView createProjectView(ModelAndView model){
+        List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom projectDom = new ProjectDom();
         model.setViewName("createProject");
         model.addObject("project", projectDom);
         model.addObject("reqTypes", projectService.getReqTypes());
+        model.addObject("projectList", projectDomList);
         return model;
     }
 

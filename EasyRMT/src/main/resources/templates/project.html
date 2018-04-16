@@ -61,7 +61,7 @@
                     <li>
                         <a href="#"><i class="fa fa-sitemap fa-fw"></i><p th:text="#{mainMenu.projects}"></p><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level list-project" id="project-nav" th:if="${not #lists.isEmpty(projectList)}">
-                            <li th:each="project : ${projectList}"><a th:href="'/project/'+${project.getIdProject()}"><p th:text="${project.getName()}"></p></a></li>
+                            <li th:each="project : ${projectList}"><a th:id="${project.getIdProject()}" th:href="'/project/'+${project.getIdProject()}"><p th:text="${project.getName()}"></p></a></li>
                         </ul>
                         <ul th:unless="${not #lists.isEmpty(projectList)}" id="project_empty"
                             class="alert alert-info text-center">
@@ -125,7 +125,7 @@
         </div>
     </div>
     <div class="row">
-        <!-- Modal -->
+        <!-- Deletion Modal -->
         <div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog"
              aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -147,7 +147,50 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal -->
+        <!-- /. deletion modal -->
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="deleteProjectModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteProjectModalLabelOk" th:text="#{project.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{project.deleteNotificationModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                        onclick="window.location = '/dashboard'" th:text="#{project.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="deleteProjectModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteProjectModalLabelFail" th:text="#{project.deleteModal.FailLabel}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{project.deleteNotificationModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{project.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
         <div class="col-lg-3 col-md-6">
             <div class="panel panel-primary">
                 <div class="panel-heading">
