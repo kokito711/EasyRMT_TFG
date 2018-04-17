@@ -14,8 +14,12 @@ import java.util.List;
 @RestController
 public class ProjectController {
 
-    @Autowired
     ProjectService projectService;
+
+    @Autowired
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     /**
      * This method returns the create project view

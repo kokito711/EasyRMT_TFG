@@ -13,9 +13,12 @@ import java.util.List;
 
 @RestController
 public class MainController {
+    ProjectService projectService;
 
     @Autowired
-    ProjectService projectService;
+    public MainController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView dashboard(){
