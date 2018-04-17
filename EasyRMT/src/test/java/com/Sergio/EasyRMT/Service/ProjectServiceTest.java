@@ -3,6 +3,7 @@ package com.Sergio.EasyRMT.Service;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
 import com.Sergio.EasyRMT.Model.Project;
+import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
 import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -144,29 +146,57 @@ public class ProjectServiceTest {
     public void updateProject_ProjectWithChangesProvided_UpdatesProject(){
         ProjectDom projectDom = mock(ProjectDom.class);
         Project project = mock(Project.class);
-        ProjectDom projectParam = mock(ProjectDom.class); //change this
+        ProjectDom projectParam =new ProjectDom();
+        ArrayList<RequirementType> reqTypes = mock(ArrayList.class);
 
         ArrayList<String> reqTypesString = new ArrayList<>();
         reqTypesString.add("1");
         reqTypesString.add("2");
 
+        projectParam.setDescription("description1");
+        projectParam.setStringReqTypes(reqTypesString);
+
         when(projectRepository.findByIdProject(anyInt())).thenReturn(Optional.of(project));
-        doReturn(projectDom).doReturn(projectDom).when(projectConverter.toDomain(project));
-        when(projectDom.getIdProject()).thenReturn(anyInt());
+        when(projectConverter.toDomain(project)).thenReturn(projectDom);
+        when(projectDom.getIdProject()).thenReturn(7);
         when(projectDom.getDescription()).thenReturn("description");
         when(projectDom.getStringReqTypes()).thenReturn(reqTypesString);
         when(projectConverter.toModel(projectDom)).thenReturn(project);
         when(project.getDescription()).thenReturn("description");
-        when(project.getRequirementTypes()).thenReturn(reqTypes); //Do this
+        when(project.getRequirementTypes()).thenReturn(reqTypes);
         when(projectRepository.save(project)).thenReturn(project);
 
         ProjectService projectService = createProjectService();
         //Test conditions
-        assertTrue(projectService.createProject(projectDom).equals(projectDom));
-        //verifys
+        assertTrue(projectService.updateProject(7,projectParam).equals(projectDom));
+        //verify projectRepository.findByIdProject has been called once
+        verify(projectRepository,times(1)).findByIdProject(anyInt());
+        //verify projectRepository.save has been called once
+        verify(projectRepository,times(1)).save(any(Project.class));
+        //verify projectConverter.toModel has been called once
+        verify(projectConverter,times(1)).toModel(any(ProjectDom.class));
+        //verify projectConverter.toDomain has been called two times
+        verify(projectConverter,times(2)).toDomain(any(Project.class));
 
     }
 
+    @Test
+    @Description("Get Requirement types returns a list of requirement types")
+    public void getReqTypes_ReturnsList(){
+        List<RequirementType> requirementTypeList = mock(List.class);
+        List<RequirementTypeDom> requirementTypeDomList = mock(List.class);
+        when(reqTypeRepository.findAll()).thenReturn(requirementTypeList);
+        when(reqTypeConverter.toDomain(requirementTypeList)).thenReturn(requirementTypeDomList);
+
+        ProjectService projectService = createProjectService();
+
+        //Test conditions
+        assertTrue(projectService.getReqTypes().equals(requirementTypeDomList));
+        //Verify reqTypeRepositoru.findAll has been called once
+        verify(reqTypeRepository, times(1)).findAll();
+        //Verify reTypeConverter.ToDomain has been called once
+        verify(reqTypeConverter, times(1)).toDomain(requirementTypeList);
+    }
 
     private ProjectService createProjectService(){
         return new ProjectService(projectRepository, reqTypeRepository, projectConverter, reqTypeConverter);

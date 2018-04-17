@@ -10,12 +10,19 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProjectConverter {
 
-    @Autowired
     ReqTypeRepository reqTypeRepository;
+
+    @Autowired
+    public ProjectConverter(ReqTypeRepository reqTypeRepository) {
+        this.reqTypeRepository = reqTypeRepository;
+    }
+
+
 
     public List<ProjectDom> toDomain(List<Project> projectModelList) {
         List<ProjectDom> projectDomList = new ArrayList<>();
@@ -48,7 +55,8 @@ public class ProjectConverter {
         project.setDescription(projectDom.getDescription());
         project.setType(projectDom.getType());
         for(RequirementTypeDom reqTypeDom : projectDom.getRequirementTypes()){
-            RequirementType reqType = reqTypeRepository.findByIdType(reqTypeDom.getIdType()).get();
+            Optional<RequirementType> reqObtained = reqTypeRepository.findByIdType(reqTypeDom.getIdType());
+            RequirementType reqType = reqObtained.get();
             reqTypeList.add(reqType);
         }
         project.setRequirementTypes(reqTypeList);
