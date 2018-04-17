@@ -1,7 +1,7 @@
 package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Service.ProjectService;
+import com.Sergio.EasyRMT.UnitTests.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

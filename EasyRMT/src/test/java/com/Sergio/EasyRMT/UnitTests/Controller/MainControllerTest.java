@@ -1,8 +1,8 @@
-package com.Sergio.EasyRMT.Controller;
+package com.Sergio.EasyRMT.UnitTests.Controller;
 
+import com.Sergio.EasyRMT.Controller.MainController;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Model.Project;
-import com.Sergio.EasyRMT.Service.ProjectService;
+import com.Sergio.EasyRMT.UnitTests.Service.ProjectService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
