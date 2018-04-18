@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
+ */
+
 package com.Sergio.EasyRMT.configuration;
 
 import org.springframework.context.annotation.Bean;

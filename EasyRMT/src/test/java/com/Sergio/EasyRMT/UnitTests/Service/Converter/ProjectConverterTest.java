@@ -7,6 +7,7 @@ import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Model.types.ProjectType;
 import static org.junit.jupiter.api.Assertions.*;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
+import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

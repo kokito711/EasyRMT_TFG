@@ -1,4 +1,4 @@
-package com.Sergio.EasyRMT.UnitTests.Service.Converter;
+package com.Sergio.EasyRMT.Service.Converter;
 
 import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
 import com.Sergio.EasyRMT.Model.RequirementType;

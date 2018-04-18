@@ -1,8 +1,14 @@
+
+/*
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
+ */
+
 package com.Sergio.EasyRMT.Controller;
 
 
 import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.UnitTests.Service.ProjectService;
+import com.Sergio.EasyRMT.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
