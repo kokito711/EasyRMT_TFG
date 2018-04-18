@@ -20,7 +20,6 @@ services:
       image: EasyRMT
       depends_on:
         - db
-        -jenkins
       ports:
         - 8650:80
       environment:
