@@ -15,4 +15,8 @@ public interface UserStoryRepository extends JpaRepository<UserStory, Integer> {
     @Query(value = "SELECT user_story.* FROM easyrmt.user_story INNER join easyrmt.epic on" +
             " user_story.epic = easyrmt.epic.idobject and easyrmt.epic.idobject = ?1",nativeQuery = true)
     List<UserStory> findByEpicId(int epicId);
+
+    @Query(value = "SELECT count(user_story.idobject) FROM easyrmt.user_story INNER join easyrmt.epic on" +
+            " user_story.epic = easyrmt.epic.idobject and easyrmt.epic.idobject = ?1",nativeQuery = true)
+    int countUserStories(int epicId);
 }

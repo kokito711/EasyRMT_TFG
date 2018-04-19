@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Epic")
@@ -85,18 +86,18 @@ public class Epic implements Serializable {
     @Setter
     @NotNull
     @Column(name = "cost", columnDefinition="Decimal(10,2) default '0.00'")
-    private double cost;
+    private Double cost;
 
     @Getter
     @Setter
     @NotNull
     @Column(name = "estimatedhours", columnDefinition="Decimal(4,2) default '0.00'")
-    private double estimatedHours;
+    private Double estimatedHours;
 
     @Getter
     @Setter
     @Column(name="storypoints")
-    private int storyPoints;
+    private Integer storyPoints;
 
     @Length(min=1, max = 64)
     @Setter
@@ -148,12 +149,12 @@ public class Epic implements Serializable {
     @Setter
     @NotNull
     @Column(name="author")
-    private int author;
+    private Integer author;
 
     @Getter
     @Setter
     @Column(name="assignedto")
-    private int assignedTo;
+    private Integer assignedTo;
 
     @Getter
     @Setter
@@ -175,4 +176,9 @@ public class Epic implements Serializable {
     @Getter
     @Setter
     private ObjectEntity object;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "epic")
+    private List<UserStory> userStories;
 }

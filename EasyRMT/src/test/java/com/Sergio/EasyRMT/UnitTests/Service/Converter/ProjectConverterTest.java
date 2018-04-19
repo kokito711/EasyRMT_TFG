@@ -5,7 +5,6 @@ import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Model.types.ProjectType;
-import static org.junit.jupiter.api.Assertions.*;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
 import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
 import org.junit.Test;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

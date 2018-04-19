@@ -2,7 +2,6 @@ package com.Sergio.EasyRMT.IntegrationTests;
 
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;

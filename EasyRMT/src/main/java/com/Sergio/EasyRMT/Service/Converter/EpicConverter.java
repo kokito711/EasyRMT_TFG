@@ -6,8 +6,10 @@
 package com.Sergio.EasyRMT.Service.Converter;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
+import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.Epic;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,6 +17,14 @@ import java.util.List;
 
 @Component
 public class EpicConverter {
+
+
+    UserStoryConverter userStoryConverter;
+
+    @Autowired
+    public EpicConverter(UserStoryConverter userStoryConverter) {
+        this.userStoryConverter = userStoryConverter;
+    }
 
     /**
      * this method converts an EpicList (Model) to an EpicList(Domain)
@@ -24,13 +34,18 @@ public class EpicConverter {
     public List<EpicDom> toDomain(List<Epic> epicList) {
         List<EpicDom> epicDomList = new ArrayList<>();
         for(Epic epic: epicList){
+            List<UserStoryDom> userStoryDomList = userStoryConverter.toDomain(epic.getUserStories());
+            if(epic.getAssignedTo() == null){
+                epic.setAssignedTo(0);
+            }
             EpicDom epicDom = new EpicDom(
                     epic.getIdEpic(),
                     epic.getName(),
                     epic.getIdentifier(),
                     epic.getAuthor(),
                     epic.getAssignedTo(),
-                    epic.getObject().getProject().getIdProject()
+                    epic.getObject().getProject().getIdProject(),
+                    userStoryDomList
             );
             epicDomList.add(epicDom);
         }
@@ -43,6 +58,16 @@ public class EpicConverter {
      * @return {@link EpicDom}
      */
     public EpicDom toDomain(Epic epic) {
+        List<UserStoryDom> userStoryDomList = userStoryConverter.toDomain(epic.getUserStories());
+        if(epic.getAssignedTo() == null){
+            epic.setAssignedTo(0);
+        }
+        if(epic.getEstimatedHours() == null){
+            epic.setEstimatedHours(0.00);
+        }
+        if (epic.getStoryPoints()==null){
+            epic.setStoryPoints(0);
+        }
         EpicDom epicDom = new EpicDom(
                 epic.getIdEpic(),
                 epic.getName(),
@@ -66,7 +91,8 @@ public class EpicConverter {
                 epic.getAssignedTo(),
                 epic.getJustification(),
                 epic.getTestCases(),
-                epic.getObject().getProject().getIdProject()
+                epic.getObject().getProject().getIdProject(),
+                userStoryDomList
         );
         return epicDom;
     }

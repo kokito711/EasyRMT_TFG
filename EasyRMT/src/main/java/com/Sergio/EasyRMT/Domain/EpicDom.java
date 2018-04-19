@@ -13,7 +13,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @ToString
 @EqualsAndHashCode
@@ -111,6 +113,10 @@ public class EpicDom  implements Serializable {
     @Setter
     private int projectId;
 
+    @Getter
+    @Setter
+    private List<UserStoryDom> userStoryDoms = new ArrayList<>();
+
     public EpicDom() {
     }
 
@@ -120,20 +126,22 @@ public class EpicDom  implements Serializable {
         this.projectId = projectId;
     }
 
-    public EpicDom(int idEpic, String name, String identifier, int author, int assignedTo,  int projectId) {
+    public EpicDom(int idEpic, String name, String identifier, int author, int assignedTo,  int projectId,
+                    List<UserStoryDom> userStoryDoms) {
         this.idEpic = idEpic;
         this.name = name;
         this.identifier = identifier;
         this.author = author;
         this.assignedTo = assignedTo;
         this.projectId = projectId;
+        this.userStoryDoms = userStoryDoms;
     }
 
     public EpicDom(int idEpic, String name, String identifier, String description, String definitionOfDone,
                    Priority priority, Complexity complexity, State state, double cost, double estimatedHours,
                    int storyPoints, String source, Scope scope, Risk risk, Date created, Date lastUpdated,
                    String version, String validationMethod, int author, int assignedTo, String justification,
-                   String testCases, int projectId) {
+                   String testCases, int projectId,List<UserStoryDom> userStoryDoms) {
         this.idEpic = idEpic;
         this.name = name;
         this.identifier = identifier;
@@ -157,6 +165,7 @@ public class EpicDom  implements Serializable {
         this.justification = justification;
         this.testCases = testCases;
         this.projectId = projectId;
+        this.userStoryDoms = userStoryDoms;
     }
 }
 

@@ -86,18 +86,18 @@ public class UserStory implements Serializable {
     @Setter
     @NotNull
     @Column(name = "cost", columnDefinition="Decimal(10,2) default '0.00'")
-    private double cost;
+    private Double cost = 0.00;
 
     @Getter
     @Setter
     @NotNull
     @Column(name = "estimatedhours", columnDefinition="Decimal(4,2) default '0.00'")
-    private double estimatedHours;
+    private Double estimatedHours = 0.00;
 
     @Getter
     @Setter
     @Column(name="storypoints")
-    private int storyPoints;
+    private Integer storyPoints;
 
     @Length(min=1, max = 64)
     @Setter
@@ -149,12 +149,12 @@ public class UserStory implements Serializable {
     @Setter
     @NotNull
     @Column(name="author")
-    private int author;
+    private Integer author;
 
     @Getter
     @Setter
     @Column(name="assignedto")
-    private int assignedTo;
+    private Integer assignedTo;
 
     @Getter
     @Setter
