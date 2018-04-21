@@ -60,9 +60,10 @@ public class EpicController {
     @RequestMapping(value = PATH_BASE+"epic/{epicId}", method = RequestMethod.GET)
     public ModelAndView getEpicView(@PathVariable int projectId, @PathVariable int epicId, ModelAndView mav){
         List<ProjectDom> projectDomList = projectService.getProjects();
+        ProjectDom project = projectService.getProject(projectId);
         mav.setViewName("epic");
         mav.addObject("epic", epicService.getEpic(epicId));
-        mav.addObject("projectId", projectId);
+        mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
         return mav;
     }

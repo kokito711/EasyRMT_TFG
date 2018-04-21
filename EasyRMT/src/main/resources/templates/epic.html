@@ -9,6 +9,230 @@
 
 </head>
 <body>
-
+<div id="wrapper" th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList})">
+</div>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="breadcrumb">
+            <p>
+                <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
+                </a>
+                /
+                <a th:href="'/project/'+${project.getIdProject()}+'/epics'" th:text="#{epic.Breadcrumb.epiclistLabel}">
+                </a>
+                /
+                <span th:text="${epic.getName()}"></span>
+            </p>
+        </div>
+        <h2 class="page-header" th:if="${epic.getIdentifier()} ==null" th:text="${epic.getName()}">
+        </h2>
+        <h2 class="page-header" th:unless="${epic.getIdentifier()} ==null"
+            th:text="${epic.getIdentifier()}+'  '+${epic.getName()}">
+        </h2>
+    </div>
+    <div class="row">
+        <a href="#">
+            <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
+        </a>
+        <a href="#">
+            <span class="fa fa-file-excel-o pull-right fa-2x" style="color: #2b542c;"></span>
+        </a>
+        <a href="#">
+            <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
+        </a>
+        <a href="#">
+            <span class="fa fa-print pull-right fa-2x"></span>
+        </a>
+        <a href="#">
+        <span class="fa fa-edit pull-right fa-2x"
+              data-toggle="tooltip" data-placement="top" th:title="#{epic.modifyButton}"></span>
+        </a>
+    </div>
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#generalInfo" data-toggle="tab" th:text="#{epic.tab.generalInfo}"></a>
+            </li>
+            <li><a href="#userStories" data-toggle="tab" th:text="#{epic.tab.userStories}"></a>
+            </li>
+            <li><a href="#additionalInfo" data-toggle="tab" th:text="#{epic.tab.additionalInfo}"></a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="generalInfo">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <h3 class="page-header" th:text="#{epic.tab.generalInfoTab.description}"></h3>
+                        <p th:text="${epic.getDescription()}"></p>
+                    </div>
+                    <div class="row">
+                        <h3 class="page-header" th:text="#{epic.tab.generalInfoTab.dod}"></h3>
+                        <p th:text="${epic.getDescription()}"></p>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.priority}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:if="${epic.getPriority() != null}" th:text="${epic.getPriority().name()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.state}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:if="${epic.getState() != null}" th:text="${epic.getState().name()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.storyPoints}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getStoryPoints()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.risk}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:if="${epic.getRisk() != null }" th:text="${epic.getRisk().name()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getAuthor()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getAssignedTo()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.version}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getVersion()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.generalInfoTab.source}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getSource()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="userStories">
+                <h4>Profile Tab</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div class="tab-pane fade" id="additionalInfo">
+                <br/>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.additionalInfoTab.complexity}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:if="${epic.getComplexity() != null}" th:text="${epic.getComplexity().name()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.additionalInfoTab.cost}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getCost()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.additionalInfoTab.estHours}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getEstimatedHours()}"></p>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.additionalInfoTab.scope}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:if="${epic.getScope() != null}" th:text="${epic.getScope()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.additionalInfoTab.created}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getCreated().toLocaleString()}"></p>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <strong th:text="#{epic.tab.additionalInfoTab.lastUpdated}"></strong>
+                        </div>
+                        <div class="col-lg-3">
+                            <p th:text="${epic.getLastUpdated().toLocaleString()}"></p>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="col-lg-12">
+                    <div class="row">
+                        <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.validationMethod}"></h4>
+                        <p th:text="${epic.getValidationMethod()}"></p>
+                        <hr/>
+                    </div>
+                    <div class="row">
+                        <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.justification}"></h4>
+                        <p th:text="${epic.getJustification()}"></p>
+                        <hr/>
+                    </div>
+                    <div class="row">
+                        <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.testCases}"></h4>
+                        <p th:text="${epic.getTestCases()}"></p>
+                        <hr/>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

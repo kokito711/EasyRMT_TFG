@@ -12,3 +12,31 @@ function deleteProject(id) {
         }
     });
 }
+function deleteEpic(projectId, epicId) {
+    $.ajax({
+        url: '/project/'+projectId+'/epic/'+epicId,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteEpicModal").modal('hide');
+            $("#deleteEpicModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteEpicModal").modal('hide');
+            $("#deleteEpicModalFail").modal('show');
+        }
+    });
+}
+function startTable() {
+    var locale = navigator.language;
+    //http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/
+    var url = "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/English.json";
+    if(locale == 'es-ES'){
+        url ="http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+    }
+    $('#dataTable').DataTable({
+        responsive: true,
+        language: {
+            url: url
+        },
+    });
+}

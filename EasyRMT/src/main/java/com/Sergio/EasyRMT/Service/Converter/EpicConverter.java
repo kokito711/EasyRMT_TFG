@@ -9,6 +9,7 @@ import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.Epic;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
+import com.Sergio.EasyRMT.Model.types.Complexity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
