@@ -102,4 +102,12 @@ public class EpicService {
         epic = epicConverter.toDomain(epicModel);
         return epic;
     }
+
+    public EpicDom update(EpicDom epic, int epicId, int projectId) {
+        return null;
+    }
+
+    public boolean deleteEpic(int epicId) {
+        return false;
+    }
 }
