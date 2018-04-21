@@ -9,6 +9,7 @@ import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.Epic;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
+import com.Sergio.EasyRMT.Model.UserStory;
 import com.Sergio.EasyRMT.Model.types.Complexity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -103,10 +104,10 @@ public class EpicConverter {
      * @param epicDom {@link EpicDom}
      * @return {@link Epic}
      */
-    public EpicDom toModel(EpicDom epicDom) {
+    public Epic toModel(EpicDom epicDom) {
         ObjectEntity objectEntity = new ObjectEntity();
         objectEntity.setIdobject(epicDom.getIdEpic());
-
+        List<UserStory> userStory = userStoryConverter.toModel(epicDom.getUserStoryDoms());
         Epic epic = new Epic();
         epic.setIdEpic(epicDom.getIdEpic());
         epic.setName(epicDom.getName());
@@ -131,6 +132,6 @@ public class EpicConverter {
         epic.setJustification(epicDom.getJustification());
         epic.setTestCases(epicDom.getTestCases());
         epic.setObject(objectEntity);
-        return epicDom;
+        return epic;
     }
 }

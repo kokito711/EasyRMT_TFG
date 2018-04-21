@@ -6,16 +6,25 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
+import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Model.Epic;
+import com.Sergio.EasyRMT.Model.ObjectEntity;
+import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
+import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EpicService {
@@ -57,5 +66,40 @@ public class EpicService {
         return epicDom;
     }
 
+    /**
+     * Method which interacts with {@link ProjectRepository}, {@link ObjectRepository}, {@link EpicRepository}
+     * and {@link EpicConverter}
+     * The EpicController method "createEpic" calls this method and provides it a {@link EpicDom} object filled
+     * with information and a project id. Then, the method createEpic, parse the attributes to an {@link Epic} object using
+     * EpicConverter class. When the conversion  finish, createEpic call {@link EpicRepository} to persist data.
+     * @param epic {@link EpicDom} object with information.
+     * @param projectId projectId
+     * @return {@link EpicDom} object with information persisted
+     *
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public EpicDom create(EpicDom epic, int projectId) {
+        ObjectEntity objectEntity = new ObjectEntity();
+        Optional<Project> project;
+        Epic epicModel;
+        project = projectRepository.findByIdProject(projectId);
+        if(project.isPresent()){
+            objectEntity.setProject(project.get());
+            objectEntity = objectRepository.save(objectEntity);
+        }
 
+        Date timestamp = new Date();
+        SimpleDateFormat sdf =
+                new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        epic.setCreated(timestamp);
+        epic.setLastUpdated(timestamp);
+        epic.setAuthor(0); //TODO change this on second iteration
+        epicModel = epicConverter.toModel(epic);
+        epicModel.setIdEpic(objectEntity.getIdobject());
+        epicModel.setUserStories(new ArrayList<>());
+        epicModel.setObject(objectEntity);
+        epicModel = epicRepository.save(epicModel);
+        epic = epicConverter.toDomain(epicModel);
+        return epic;
+    }
 }

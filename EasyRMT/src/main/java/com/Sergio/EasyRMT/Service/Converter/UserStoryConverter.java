@@ -108,4 +108,48 @@ public class UserStoryConverter {
         userStory.setObject(objectEntity);
         return userStory;
     }
+
+    /**
+     * this method converts an UserStoryList (Domain) to an USerStory(Model)
+     * @param userStoryDomList List of {@link UserStoryDom} obtained from DB
+     * @return List of {@link UserStory}
+     */
+    public List<UserStory> toModel(List<UserStoryDom> userStoryDomList){
+        if(userStoryDomList!=null) {
+            List<UserStory> userStoryList = new ArrayList<>();
+            for (UserStoryDom userStoryDom : userStoryDomList) {
+                ObjectEntity objectEntity = new ObjectEntity();
+                objectEntity.setIdobject(userStoryDom.getIdUserStory());
+
+                UserStory userStory = new UserStory();
+                userStory.setIdUserStory(userStoryDom.getIdUserStory());
+                userStory.setName(userStoryDom.getName());
+                userStory.setIdentifier(userStoryDom.getIdentifier());
+                userStory.setDescription(userStoryDom.getDescription());
+                userStory.setDefinitionOfDone(userStoryDom.getDefinitionOfDone());
+                userStory.setPriority(userStoryDom.getPriority());
+                userStory.setComplexity(userStoryDom.getComplexity());
+                userStory.setState(userStoryDom.getState());
+                userStory.setCost(userStoryDom.getCost());
+                userStory.setEstimatedHours(userStoryDom.getEstimatedHours());
+                userStory.setStoryPoints(userStoryDom.getStoryPoints());
+                userStory.setSource(userStoryDom.getSource());
+                userStory.setScope(userStoryDom.getScope());
+                userStory.setRisk(userStoryDom.getRisk());
+                userStory.setCreated(userStoryDom.getCreated());
+                userStory.setLastUpdated(userStoryDom.getLastUpdated());
+                userStory.setVersion(userStoryDom.getVersion());
+                userStory.setValidationMethod(userStoryDom.getValidationMethod());
+                userStory.setAuthor(userStoryDom.getAuthor());
+                userStory.setAssignedTo(userStoryDom.getAssignedTo());
+                userStory.setJustification(userStoryDom.getJustification());
+                userStory.setTestCases(userStoryDom.getTestCases());
+                userStory.setObject(objectEntity);
+                userStoryList.add(userStory);
+            }
+            return userStoryList;
+        }
+        else
+            return new ArrayList<>();
+    }
 }
