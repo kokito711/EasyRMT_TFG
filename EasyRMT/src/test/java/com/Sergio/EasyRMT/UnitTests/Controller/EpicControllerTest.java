@@ -38,6 +38,7 @@ public class EpicControllerTest {
         epicService = mock(EpicService.class);
     }
 
+    //TODO refactor this test
     @Test
     @DisplayName("Request a view with a list of epics")
     public void getEpicListView_ProjectIdProvided_ReturnView(){

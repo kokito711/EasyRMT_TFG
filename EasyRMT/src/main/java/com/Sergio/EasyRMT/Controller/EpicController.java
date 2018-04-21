@@ -41,7 +41,9 @@ public class EpicController {
     public ModelAndView getEpicListView(@PathVariable int projectId, ModelAndView mav){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<EpicDom> epicDomList = epicService.getEpics(projectId);
+        ProjectDom project = projectService.getProject(projectId);
         mav.setViewName("epicsDashboard");
+        mav.addObject("project", project);
         mav.addObject("epicList", epicDomList);
         mav.addObject("projectList", projectDomList);
         return mav;
