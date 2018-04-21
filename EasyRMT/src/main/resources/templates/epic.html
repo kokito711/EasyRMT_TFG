@@ -149,8 +149,20 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="userStories">
-                <h4>Profile Tab</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="table-responsive">
+                    <table width="100%" class="table table-striped table-bordered table-hover"
+                           th:unless="${#lists.isEmpty(epic.userStoryDoms)}" id="dataTable">
+                    </table>
+                </div>
+                <br th:if="${#lists.isEmpty(epic.userStoryDoms)}"/>
+                <div class="alert alert-info" th:if="${#lists.isEmpty(epic.userStoryDoms)}">
+                    <a href="#" class="text-center">
+                        <p th:text="#{epic.tab.userStoriesTab.Table.Tbody.emptyList}"></p>
+                        <span class="fa fa-plus-circle fa-2x pull-right" style="color: #5cb85c;"
+                              data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}">
+                        </span>
+                    </a>
+                </div>
             </div>
             <div class="tab-pane fade" id="additionalInfo">
                 <br/>
@@ -234,5 +246,10 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(
+        startTable()
+    );
+</script>
 </body>
 </html>
