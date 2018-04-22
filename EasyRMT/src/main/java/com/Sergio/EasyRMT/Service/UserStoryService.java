@@ -95,6 +95,7 @@ public class UserStoryService {
         userStoryDom.setLastUpdated(timestamp);
         userStoryDom.setAuthor(0); //TODO change this on second iteration
         userStoryModel = userStoryConverter.toModel(userStoryDom);
+        userStoryModel.setIdUserStory(objectEntity.getIdobject());
         userStoryModel.setEpic(epicModel);
         userStoryModel.setObject(objectEntity);
         userStoryModel = userStoryRepository.save(userStoryModel);

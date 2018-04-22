@@ -114,9 +114,10 @@
                         <a href="#">
                             <span class="fa fa-print pull-right fa-2x"></span>
                         </a>
-                        <a th:href="'/project/'+${project.getIdProject()}+'/epics/create'">
+                        <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+
+                                '/userstories/create'">
                         <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
-                              data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}"></span>
+                              data-toggle="tooltip" data-placement="top" th:title="#{epic.tab.userStoriesTab.Table.Thead.createButton}"></span>
                         </a>
                     </th>
                 </tr>
