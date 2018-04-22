@@ -208,4 +208,15 @@ public class UserStoryService {
             return false;
         }
     }
+
+    /**
+     * This method returns a list of all user stories related with a project
+     * @param projectId
+     * @return
+     */
+    public List<UserStoryDom> getByProjectID(int projectId) {
+        List<UserStory> userStoryList = userStoryRepository.findByProjectId(projectId);
+        List<UserStoryDom> userStoryDomList = userStoryConverter.toDomain(userStoryList);
+        return userStoryDomList;
+    }
 }

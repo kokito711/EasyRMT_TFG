@@ -49,6 +49,15 @@ function modalValue(id){
     att.value = id;
     button.setAttributeNode(att);
 }
+function modalValueExtended(id1, id2){
+    var button = document.getElementById("delete_button");
+    var att1 = document.createAttribute("value1");
+    att1.value = id1;
+    var att2 = document.createAttribute("value2");
+    att2.value = id2;
+    button.setAttributeNode(att1);
+    button.setAttributeNode(att2);
+}
 
 
 function startTable() {

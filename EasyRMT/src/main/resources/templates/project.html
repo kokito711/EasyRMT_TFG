@@ -246,11 +246,22 @@
                 </div>
                 <a href="">
                     <div class="panel-footer">
-                        <span class="pull-left" th:text="#{project.viewDetails}"></span>
-                        <span class="pull-right">
-                            <i class="fa fa-arrow-circle-right"></i>
-                        </span>
-                        <div class="clearfix"></div>
+                        <a th:if="${project.getType().name() == 'AGILE'}"
+                           th:href="'/project/'+${project.getIdProject()}+'/epics/userstories'" id="us-link">
+                            <span class="pull-left" th:text="#{project.viewDetails}"></span>
+                            <span class="pull-right">
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </a>
+                        <a th:unless="${project.getType().name() == 'AGILE'}"
+                           th:href="'/project/'+${project.getIdProject()}+'/epics/usecases'" id="uc-link">
+                            <span class="pull-left" th:text="#{project.viewDetails}"></span>
+                            <span class="pull-right">
+                                <i class="fa fa-arrow-circle-right"></i>
+                            </span>
+                            <div class="clearfix"></div>
+                        </a>
                     </div>
                 </a>
             </div>

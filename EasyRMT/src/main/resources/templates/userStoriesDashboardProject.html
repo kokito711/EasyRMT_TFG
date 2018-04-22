@@ -19,8 +19,6 @@
                 /
                 <a th:href="'/project/'+${project.getIdProject()}+'/epics'" th:text="#{epic.Breadcrumb.epiclistLabel}">
                 </a>
-                /
-                <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}" th:text="${epicName}"></a>
                 / <span th:text="#{userStory.breadcrumb}"></span>
             </p>
         </div>
@@ -43,7 +41,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal"
                                 th:text="#{usDash.deleteModal.cancelButton}"></button>
                         <button type="button" class="btn btn-danger"
-                                th:onclick="'deleteUserStory('+${project.getIdProject()}+','+${epicId}+',this.value)'"
+                                th:onclick="'deleteUserStory('+${project.getIdProject()}+',this.value2,this.value1)'"
                                 th:text="#{usDash.deleteModal.deleteButton}" id="delete_button"></button>
                     </div>
                 </div>
@@ -114,11 +112,11 @@
                         <a href="#">
                             <span class="fa fa-print pull-right fa-2x"></span>
                         </a>
-                        <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+
+                        <!--<a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+
                                 '/userstories/create'">
                         <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                               data-toggle="tooltip" data-placement="top" th:title="#{epic.tab.userStoriesTab.Table.Thead.createButton}"></span>
-                        </a>
+                        </a>-->
                     </th>
                 </tr>
                 <tr>
@@ -138,14 +136,15 @@
                     <td th:text="${userStory.getAuthor()}"></td>
                     <td th:text="${userStory.getAssignedTo()}"></td>
                     <td>
-                        <a th:href="'/project/'+${userStory.getProjectId()}+'/epic/'+${epicId}+'/userstory/'+${userStory.getIdUserStory()}">
+                        <a th:href="'/project/'+${userStory.getProjectId()}+'/epic/'+${userStory.getEpicId()}+
+                        '/userstory/'+${userStory.getIdUserStory()}">
                                 <span class="fa fa-info-circle fa-2x" style="color: #204d74"
                                       data-toggle="tooltip" data-placement="top"
                                       th:title="#{usDash.Table.Tbody.usInformation}">
                                 </span>
                         </a>
                         <a href="" data-toggle="modal" data-target="#deleteUsModal"
-                           th:onclick="'modalValue('+${userStory.getIdUserStory()}+')'">
+                           th:onclick="'modalValueExtended('+${userStory.getEpicId()}+','+${userStory.getIdUserStory()}+')'">
                                 <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                       data-toggle="tooltip" data-placement="top"
                                       th:title="#{usDash.Table.Tbody.deleteUserStory}">
@@ -157,11 +156,10 @@
             </table>
             <div class="alert alert-info" th:if="${#lists.isEmpty(userStoriesList)}">
                 <p th:text="#{usDash.Table.Tbody.emptyList}"></p>
-                <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+
-                '/userstories/create'">
+                <!--<a href="#">
                         <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                               data-toggle="tooltip" data-placement="top" th:title="#{userStory.createButton}"></span>
-                </a>
+                </a>-->
             </div>
         </div>
     </div>
