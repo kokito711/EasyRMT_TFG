@@ -174,8 +174,8 @@ public class EpicController {
      * @param epicId epic id to be deleted.
      * @return HttpStatus.ok if correct. HttpStatus.INTERNAL_SERVER_ERROR if not correct.
      */
-    @RequestMapping(value = "/project/{projectId}epic/{epicId}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteProject(@PathVariable int projectId, @PathVariable int epicId){
+    @RequestMapping(value = PATH_BASE+"/epic/{epicId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteEpic(@PathVariable int projectId, @PathVariable int epicId){
         boolean deleted = epicService.deleteEpic(epicId);
         if(deleted){
             return ResponseEntity.status(HttpStatus.OK).body("");

@@ -24,7 +24,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Epic")
-@ToString
+//@ToString
 @EqualsAndHashCode
 @EntityListeners(AuditingEntityListener.class)
 public class Epic implements Serializable {

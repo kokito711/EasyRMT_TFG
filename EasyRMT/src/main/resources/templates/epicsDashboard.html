@@ -20,6 +20,74 @@
         </h2>
     </div>
     <div class="row">
+        <!-- Deletion Modal -->
+        <div class="modal fade" id="deleteEpicModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteEpicModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteEpicModalLabel" th:text="#{epicsDashboard.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{epicsDashboard.deleteModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{epicsDashboard.deleteModal.cancelButton}"></button>
+                        <button type="button" class="btn btn-danger"
+                                th:onclick="'deleteEpic('+${project.getIdProject()}+',this.value)'"
+                                th:text="#{epicsDashboard.deleteModal.deleteButton}" id="delete_button"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion modal -->
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="deleteEpicModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="deleteEpicModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteEpicModalLabelOk" th:text="#{epicsDashboard.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{epicsDashboard.deleteNotificationModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                                th:onclick="'window.location = \'/project/'+${project.getIdProject()}+'/epics\''"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="deleteEpicModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteEpicModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteEpicModalLabelFail" th:text="#{epicsDashboard.deleteModal.FailLabel}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{epicsDashboard.deleteNotificationModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
         <div class="table-responsive">
             <table width="100%" class="table table-striped table-bordered table-hover"
                    th:unless="${#lists.isEmpty(epicList)}" id="dataTable">
@@ -72,7 +140,8 @@
                                   data-toggle="tooltip" data-placement="top"
                                   th:title="#{epicsDashboard.Table.Tbody.goUserStories}"></span>
                             </a>
-                            <a th:href="'/project/'+${epic.getProjectId()}+'/epic/'+${epic.getIdEpic()}">
+                            <a href="" data-toggle="modal" data-target="#deleteEpicModal"
+                                th:onclick="'modalValue('+${epic.getIdEpic()}+')'">
                                 <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                       data-toggle="tooltip" data-placement="top"
                                       th:title="#{epicsDashboard.Table.Tbody.deleteEpic}">

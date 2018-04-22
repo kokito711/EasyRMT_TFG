@@ -10,6 +10,7 @@ import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Model.Epic;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.Project;
+import com.Sergio.EasyRMT.Model.UserStory;
 import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
@@ -107,7 +108,33 @@ public class EpicService {
         return null;
     }
 
+    /**
+     * This method calls the JPA Repository to delete an epic with the epicId received as parameter.
+     * Then, calls again the {@link ObjectRepository} to check if epic has been deleted.
+     * If not exists in database, method will return true and false if exists.
+     * @param epicId epicId to be deleted
+     * @return If not exists in database, method will return true and false if exists.
+     */
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteEpic(int epicId) {
-        return false;
+        if (objectRepository.exists(epicId)){
+            Epic epic = epicRepository.findOne(epicId);
+            if(!epic.getUserStories().isEmpty()){
+                for(UserStory userStory: epic.getUserStories()){
+                    objectRepository.deleteObject(userStory.getIdUserStory());
+                }
+            }
+            objectRepository.deleteObject(epicId);
+            if(objectRepository.exists(epicId) ||epicRepository.exists(epicId)){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 }

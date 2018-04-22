@@ -23,7 +23,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "user_story")
-@ToString
+//@ToString
 @EqualsAndHashCode
 @EntityListeners(AuditingEntityListener.class)
 public class UserStory implements Serializable {

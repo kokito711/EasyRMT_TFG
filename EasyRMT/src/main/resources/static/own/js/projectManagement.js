@@ -26,6 +26,15 @@ function deleteEpic(projectId, epicId) {
         }
     });
 }
+
+function modalValue(id){
+    var button = document.getElementById("delete_button");
+    var att = document.createAttribute("value");
+    att.value = id;
+    button.setAttributeNode(att);
+}
+
+
 function startTable() {
     var locale = navigator.language;
     //http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/
