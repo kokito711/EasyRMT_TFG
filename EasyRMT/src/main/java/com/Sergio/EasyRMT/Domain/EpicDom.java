@@ -120,11 +120,6 @@ public class EpicDom  implements Serializable {
     public EpicDom() {
     }
 
-    public EpicDom(int idEpic, String name, int projectId) {
-        this.idEpic = idEpic;
-        this.name = name;
-        this.projectId = projectId;
-    }
 
     public EpicDom(int idEpic, String name, String identifier, int author, int assignedTo,  int projectId,
                     List<UserStoryDom> userStoryDoms) {

@@ -6,7 +6,6 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
-import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Model.Epic;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.Project;
@@ -15,13 +14,10 @@ import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
-import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
