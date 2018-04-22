@@ -90,8 +90,6 @@ public class EpicService {
         }
 
         Date timestamp = new Date();
-        SimpleDateFormat sdf =
-                new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         epic.setCreated(timestamp);
         epic.setLastUpdated(timestamp);
         epic.setAuthor(0); //TODO change this on second iteration
@@ -104,8 +102,95 @@ public class EpicService {
         return epic;
     }
 
+    /**
+     * The update method receives an id and a {@link EpicDom} with data modified.
+     * Then obtains de persisted epic from database and compares if there is any change.
+     * If the epic information has been changed, this method will persist the changes.
+     * @param epicId epic Id
+     * @param epic {@link EpicDom} object with changed data
+     * @param projectId projectId
+     * @return {@link EpicDom} with persisted information
+     */
+    @Transactional(rollbackFor = Exception.class)
     public EpicDom update(EpicDom epic, int epicId, int projectId) {
-        return null;
+        Epic epicModel = epicRepository.findOne(epicId);
+        EpicDom epicDom;
+        boolean changed = false;
+        if(!epicModel.getIdentifier().equals(epic.getIdentifier())){
+            changed = true;
+            epicModel.setIdentifier(epic.getIdentifier());
+        }
+        if(!epicModel.getDescription().equals(epic.getDescription())){
+            changed = true;
+            epicModel.setDescription(epic.getDescription());
+        }
+        if(!epicModel.getDefinitionOfDone().equals(epic.getDefinitionOfDone())){
+            changed = true;
+            epicModel.setDefinitionOfDone(epic.getDefinitionOfDone());
+        }
+        if(!epicModel.getPriority().equals(epic.getPriority())){
+            changed = true;
+            epicModel.setPriority(epic.getPriority());
+        }
+        if(!epicModel.getState().equals(epic.getState())){
+            changed = true;
+            epicModel.setState(epic.getState());
+        }
+        if(!epicModel.getStoryPoints().equals(epic.getStoryPoints())){
+            changed = true;
+            epicModel.setStoryPoints(epic.getStoryPoints());
+        }
+        if(!epicModel.getRisk().equals(epic.getRisk())){
+            changed = true;
+            epicModel.setRisk(epic.getRisk());
+        }
+        if(!epicModel.getAssignedTo().equals(epic.getAssignedTo())){
+            changed = true;
+            epicModel.setAssignedTo(epic.getAssignedTo());
+        }
+        if(!epicModel.getVersion().equals(epic.getVersion())){
+            changed = true;
+            epicModel.setVersion(epic.getVersion());
+        }
+        if(!epicModel.getSource().equals(epic.getSource())){
+            changed = true;
+            epicModel.setSource(epic.getSource());
+        }
+        if(!epicModel.getComplexity().equals(epic.getComplexity())){
+            changed = true;
+            epicModel.setComplexity(epic.getComplexity());
+        }
+        if(!epicModel.getCost().equals(epic.getCost())){
+            changed = true;
+            epicModel.setCost(epic.getCost());
+        }
+        if(!epicModel.getEstimatedHours().equals(epic.getEstimatedHours())){
+            changed = true;
+            epicModel.setEstimatedHours(epic.getEstimatedHours());
+        }
+        if(!epicModel.getScope().equals(epic.getScope())){
+            changed = true;
+            epicModel.setScope(epic.getScope());
+        }
+        if(!epicModel.getValidationMethod().equals(epic.getValidationMethod())){
+            changed = true;
+            epicModel.setValidationMethod(epic.getValidationMethod());
+        }
+        if(!epicModel.getJustification().equals(epic.getJustification())){
+            changed = true;
+            epicModel.setJustification(epic.getJustification());
+        }
+        if(!epicModel.getTestCases().equals(epic.getTestCases())){
+            changed = true;
+            epicModel.setTestCases(epic.getTestCases());
+        }
+        if(changed){
+            Date timestamp = new Date();
+            epicModel.setLastUpdated(timestamp);
+            epicModel = epicRepository.save(epicModel);
+        }
+        epicDom = epicConverter.toDomain(epicModel);
+        return epicDom;
     }
 
     /**
