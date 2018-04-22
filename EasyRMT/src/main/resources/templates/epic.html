@@ -69,7 +69,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
                                 th:onclick="'window.location = \'/project/'+${project.getIdProject()}+'/epic/'+
-                                ${epic.getIdEpic()}+'userstories\''" th:text="#{usDash.deleteNotificationModal.dismissButton}">
+                                ${epic.getIdEpic()}+'/userstories\''" th:text="#{usDash.deleteNotificationModal.dismissButton}">
                         </button>
                     </div>
                 </div>
@@ -283,7 +283,8 @@
                 </div>
                 <br th:if="${#lists.isEmpty(epic.userStoryDoms)}"/>
                 <div class="alert alert-info" th:if="${#lists.isEmpty(epic.userStoryDoms)}">
-                    <a href="#" class="text-center">
+                    <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+
+                '/userstories/create'" class="text-center">
                         <p th:text="#{epic.tab.userStoriesTab.Table.Tbody.emptyList}"></p>
                         <span class="fa fa-plus-circle fa-2x pull-right" style="color: #5cb85c;"
                               data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}">

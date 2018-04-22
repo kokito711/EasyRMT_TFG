@@ -62,9 +62,9 @@
                     <div class="modal-body" th:text="#{usDash.deleteNotificationModal.text}">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal" id="modal_dismiss"
                                 th:onclick="'window.location = \'/project/'+${project.getIdProject()}+'/epic/'+
-                                ${epicId}+'userstories\''" th:text="#{usDash.deleteNotificationModal.dismissButton}">
+                                'this.value/userstories\''" th:text="#{usDash.deleteNotificationModal.dismissButton}">
                         </button>
                     </div>
                 </div>
@@ -143,13 +143,13 @@
                                       th:title="#{usDash.Table.Tbody.usInformation}">
                                 </span>
                         </a>
-                        <a href="" data-toggle="modal" data-target="#deleteUsModal"
+<!--                        <a href="" data-toggle="modal" data-target="#deleteUsModal"
                            th:onclick="'modalValueExtended('+${userStory.getEpicId()}+','+${userStory.getIdUserStory()}+')'">
                                 <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                       data-toggle="tooltip" data-placement="top"
                                       th:title="#{usDash.Table.Tbody.deleteUserStory}">
                                 </span>
-                        </a>
+                        </a>-->
                     </td>
                 </tr>
                 </tbody>

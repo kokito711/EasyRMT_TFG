@@ -51,12 +51,16 @@ function modalValue(id){
 }
 function modalValueExtended(id1, id2){
     var button = document.getElementById("delete_button");
+    var dismiss = document.getElementById("modal_dismiss")
     var att1 = document.createAttribute("value1");
     att1.value = id1;
     var att2 = document.createAttribute("value2");
     att2.value = id2;
+    var att3 = document.createAttribute("value");
+    att3.value = id2;
     button.setAttributeNode(att1);
     button.setAttributeNode(att2);
+    dismiss.setAttributeNode(att3);
 }
 
 

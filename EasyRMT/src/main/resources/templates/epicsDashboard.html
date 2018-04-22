@@ -153,7 +153,7 @@
             </table>
             <div class="alert alert-info" th:if="${#lists.isEmpty(epicList)}">
                 <p th:text="#{epicsDashboard.Table.Tbody.emptyList}"></p>
-                <a href="#">
+                <a th:href="'/project/'+${project.getIdProject()}+'/epics/create'">
                         <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                               data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}"></span>
                 </a>
