@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+  ~                             All rights reserved
+  -->
+
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/fragments/head :: head">
+</head>
+<body>
+<div id="wrapper" th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList})">
+</div>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="breadcrumb">
+            <p>
+                <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
+                </a>
+                /
+                <a th:href="'/project/'+${project.getIdProject()}+'/epics'" th:text="#{epic.Breadcrumb.epiclistLabel}">
+                </a>
+                /
+                <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}" th:text="${epicName}"></a>
+                / <span th:text="#{userStory.breadcrumb}"></span>
+            </p>
+        </div>
+        <h2 id="userStoryListLabel" class="page-header" th:text="#{usDash.UsListLabel}">
+        </h2>
+    </div>
+    <div class="row">
+        <!-- Deletion Modal -->
+        <div class="modal fade" id="deleteUsModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteUsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteUsModalLabel" th:text="#{usDash.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{usDash.deleteModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{usDash.deleteModal.cancelButton}"></button>
+                        <button type="button" class="btn btn-danger"
+                                th:onclick="'deleteUserStory('+${project.getIdProject()}+','+${epicId}+',this.value)'"
+                                th:text="#{usDash.deleteModal.deleteButton}" id="delete_button"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion modal -->
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="deleteUsModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="deleteUsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteUsModalLabelOk" th:text="#{usDash.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{usDash.deleteNotificationModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                                th:onclick="'window.location = \'/project/'+${project.getIdProject()}+'/epic/'+
+                                ${epicId}+'userstories\''" th:text="#{usDash.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="deleteEpicModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteEpicModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteEpicModalLabelFail" th:text="#{usDash.deleteModal.FailLabel}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{usDash.deleteNotificationModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{usDash.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
+        <div class="table-responsive">
+            <table width="100%" class="table table-striped table-bordered table-hover"
+                   th:unless="${#lists.isEmpty(userStoriesList)}" id="dataTable">
+                <thead>
+                <tr>
+                    <th colspan="6">
+                        <a href="#">
+                            <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
+                        </a>
+                        <a href="#">
+                            <span class="fa fa-file-excel-o pull-right fa-2x" style="color: #2b542c;"></span>
+                        </a>
+                        <a href="#">
+                            <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
+                        </a>
+                        <a href="#">
+                            <span class="fa fa-print pull-right fa-2x"></span>
+                        </a>
+                        <a th:href="'/project/'+${project.getIdProject()}+'/epics/create'">
+                        <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
+                              data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}"></span>
+                        </a>
+                    </th>
+                </tr>
+                <tr>
+                    <th th:text="#{usDash.Table.Thead.identifier}"></th>
+                    <th th:text="#{usDash.Table.Thead.name}"></th>
+                    <th th:text="#{usDash.Table.Thead.requirementsNumber}"></th>
+                    <th th:text="#{usDash.Table.Thead.author}"></th>
+                    <th th:text="#{usDash.Table.Thead.assignedTo}"></th>
+                    <th th:text="#{usDash.Table.Thead.options}"></th>
+                </tr>
+                </thead>
+                <tbody th:unless="${#lists.isEmpty(userStoriesList)}">
+                <tr th:each="userStory : ${userStoriesList}">
+                    <td th:text="${userStory.getIdentifier()}"></td>
+                    <td th:text="${userStory.getName()}"></td>
+                    <td th:text="0"></td>
+                    <td th:text="${userStory.getAuthor()}"></td>
+                    <td th:text="${userStory.getAssignedTo()}"></td>
+                    <td>
+                        <a th:href="'/project/'+${userStory.getProjectId()}+'/epic/'+${epicId}+'/userstory/'+${userStory.getIdUserStory()}">
+                                <span class="fa fa-info-circle fa-2x" style="color: #204d74"
+                                      data-toggle="tooltip" data-placement="top"
+                                      th:title="#{usDash.Table.Tbody.usInformation}">
+                                </span>
+                        </a>
+                        <a href="" data-toggle="modal" data-target="#deleteUsModal"
+                           th:onclick="'modalValue('+${userStory.getIdUserStory()}+')'">
+                                <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
+                                      data-toggle="tooltip" data-placement="top"
+                                      th:title="#{usDash.Table.Tbody.deleteUserStory}">
+                                </span>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="alert alert-info" th:if="${#lists.isEmpty(userStoriesList)}">
+                <p th:text="#{usDash.Table.Tbody.emptyList}"></p>
+                <a href="#">
+                        <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
+                              data-toggle="tooltip" data-placement="top" th:title="#{userStory.createButton}"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(
+            startTable()
+        );
+    </script>
+</div>
+</body>
+</html>

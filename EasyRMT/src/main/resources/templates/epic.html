@@ -31,6 +31,74 @@
         </h2>
     </div>
     <div class="row">
+        <!-- Deletion Modal -->
+        <div class="modal fade" id="deleteUsModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteUsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteUsModalLabel" th:text="#{usDash.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{usDash.deleteModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{usDash.deleteModal.cancelButton}"></button>
+                        <button type="button" class="btn btn-danger"
+                                th:onclick="'deleteUserStory('+${project.getIdProject()}+','+${epic.getIdEpic()}+',this.value)'"
+                                th:text="#{usDash.deleteModal.deleteButton}" id="delete_button"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion modal -->
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="deleteUsModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="deleteUsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteUsModalLabelOk" th:text="#{usDash.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{usDash.deleteNotificationModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                                th:onclick="'window.location = \'/project/'+${project.getIdProject()}+'/epic/'+
+                                ${epic.getIdEpic()}+'userstories\''" th:text="#{usDash.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="deleteEpicModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteEpicModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteEpicModalLabelFail" th:text="#{usDash.deleteModal.FailLabel}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{usDash.deleteNotificationModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{usDash.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
         <a href="#">
             <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
         </a>
@@ -157,7 +225,7 @@
                         <tr>
                             <th colspan="6">
                                 <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epic.getIdEpic()}+
-                                '/userstory/create'">
+                                '/userstories/create'">
                                 <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                                 data-toggle="tooltip" data-placement="top"
                                       th:title="#{epic.tab.userStoriesTab.Table.Thead.createButton}">
@@ -194,7 +262,7 @@
                                 <a href="#">
                                 <span class="fa fa-print pull-right fa-2x"></span>
                                 </a>
-                                <a href="" data-toggle="modal" data-target="#deleteEpicModal"
+                                <a href="" data-toggle="modal" data-target="#deleteUsModal"
                                    th:onclick="'modalValueUs('+${userStory.getIdUserStory()}+')'">
                                 <span class="fa fa-times-circle fa-2x pull-right" style="color: #b52b27"
                                       data-toggle="tooltip" data-placement="top"

@@ -27,6 +27,22 @@ function deleteEpic(projectId, epicId) {
     });
 }
 
+function deleteUserStory(projectId, epicId, userStoryId) {
+    $.ajax({
+        url: '/project/'+projectId+'/epic/'+epicId+'/userstory/'+userStoryId,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteUsModal").modal('hide');
+            $("#deleteUsModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteUsModal").modal('hide');
+            $("#deleteUsModalFail").modal('show');
+        }
+    });
+}
+
+
 function modalValue(id){
     var button = document.getElementById("delete_button");
     var att = document.createAttribute("value");

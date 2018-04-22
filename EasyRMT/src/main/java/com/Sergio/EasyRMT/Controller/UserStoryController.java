@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 public class UserStoryController {
-    final String PATH_BASE = "/project/{projectId}/epic/{epicId}";
+    final String PATH_BASE = "/project/{projectId}/epic/{epicId}/";
     ProjectService projectService;
     EpicService epicService;
     UserStoryService userStoryService;
@@ -48,10 +48,13 @@ public class UserStoryController {
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<UserStoryDom> userStoryDomList = userStoryService.getUserStories(epicId);
         ProjectDom project = projectService.getProject(projectId);
+        EpicDom epicDom = epicService.getEpic(epicId);
         mav.setViewName("userStoriesDashboard");
         mav.addObject("project", project);
         mav.addObject("userStoriesList", userStoryDomList);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("epicId",epicDom.getIdEpic());
+        mav.addObject("epicName", epicDom.getName());
         return mav;
     }
 
@@ -69,10 +72,13 @@ public class UserStoryController {
                                          @PathVariable int userStoryId, ModelAndView mav){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
+        EpicDom epicDom = epicService.getEpic(epicId);
         mav.setViewName("userStory");
         mav.addObject("userStory", userStoryService.getUserStory(userStoryId));
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("epicId",epicDom.getIdEpic());
+        mav.addObject("epicName", epicDom.getName());
         return mav;
     }
 
@@ -201,7 +207,7 @@ public class UserStoryController {
      * @param userStoryId userStory id to be deleted
      * @return HttpStatus.ok if correct. HttpStatus.INTERNAL_SERVER_ERROR if not correct.
      */
-    @RequestMapping(value = PATH_BASE+"/userStory/{epicId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = PATH_BASE+"userStory/{epicId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteEpic(@PathVariable int projectId, @PathVariable int epicId, @PathVariable int userStoryId){
         boolean deleted = userStoryService.deleteUserStory(userStoryId);
         if(deleted){
