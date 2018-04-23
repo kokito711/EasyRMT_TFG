@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018. Sergio López Jiménez and Universidad de Valladolid
- * All rights reserved
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
  */
 
 package com.Sergio.EasyRMT.Model;
@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,17 +21,16 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "Epic")
+@Table(name = "feature")
 @EqualsAndHashCode
-@EntityListeners(AuditingEntityListener.class)
-public class Epic implements Serializable {
+public class Feature implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "idobject")
     @Getter
     @Setter
-    private int idEpic;
+    private int idFeature;
 
     @NotNull
     @Length(min=1, max = 64)
@@ -52,12 +50,6 @@ public class Epic implements Serializable {
     @Lob
     @Column(name = "description")
     private String description;
-
-    @Getter
-    @Setter
-    @Lob
-    @Column(name = "definitionofdone")
-    private String definitionOfDone;
 
     @Getter
     @Setter
@@ -177,6 +169,6 @@ public class Epic implements Serializable {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "epic")
-    private List<UserStory> userStories;
+    @OneToMany(mappedBy = "feature")
+    private List<UseCase> useCases;
 }

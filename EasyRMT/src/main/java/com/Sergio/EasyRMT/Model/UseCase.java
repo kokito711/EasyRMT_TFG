@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018. Sergio López Jiménez and Universidad de Valladolid
- * All rights reserved
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
  */
 
 package com.Sergio.EasyRMT.Model;
@@ -19,20 +19,19 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "Epic")
+@Table(name = "use_case")
 @EqualsAndHashCode
 @EntityListeners(AuditingEntityListener.class)
-public class Epic implements Serializable {
+public class UseCase implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "idobject")
     @Getter
     @Setter
-    private int idEpic;
+    private int idUseCase;
 
     @NotNull
     @Length(min=1, max = 64)
@@ -52,12 +51,6 @@ public class Epic implements Serializable {
     @Lob
     @Column(name = "description")
     private String description;
-
-    @Getter
-    @Setter
-    @Lob
-    @Column(name = "definitionofdone")
-    private String definitionOfDone;
 
     @Getter
     @Setter
@@ -167,6 +160,30 @@ public class Epic implements Serializable {
     @Column(name = "testcases")
     private String testCases;
 
+    @Getter
+    @Setter
+    @Lob
+    @Column(name = "actors")
+    private String actors;
+
+    @Getter
+    @Setter
+    @Lob
+    @Column(name = "preconditions")
+    private String preconditions;
+
+    @Getter
+    @Setter
+    @Lob
+    @Column(name = "postconditions")
+    private String postconditions;
+
+    @Getter
+    @Setter
+    @Lob
+    @Column(name = "steps")
+    private String steps;
+
     @JsonManagedReference
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "object_idobject")
@@ -175,8 +192,11 @@ public class Epic implements Serializable {
     @Setter
     private ObjectEntity object;
 
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "feature", referencedColumnName = "idobject")
+    @NotNull
     @Getter
     @Setter
-    @OneToMany(mappedBy = "epic")
-    private List<UserStory> userStories;
+    private Feature feature;
 }
