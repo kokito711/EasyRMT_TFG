@@ -118,12 +118,13 @@ public class FeatureDom {
     }
 
     public FeatureDom(int idFeature, String name, String identifier, Integer author, Integer assignedTo,
-                      List<UseCaseDom> useCases) {
+                      int projectId, List<UseCaseDom> useCases) {
         this.idFeature = idFeature;
         this.name = name;
         this.identifier = identifier;
         this.author = author;
         this.assignedTo = assignedTo;
+        this.projectId = projectId;
         this.useCases = useCases;
     }
 

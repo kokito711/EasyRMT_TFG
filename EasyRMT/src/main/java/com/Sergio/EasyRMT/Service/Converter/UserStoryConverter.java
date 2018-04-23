@@ -8,6 +8,7 @@ package com.Sergio.EasyRMT.Service.Converter;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.UserStory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,6 +16,10 @@ import java.util.List;
 
 @Component
 public class UserStoryConverter {
+
+    @Autowired
+    public UserStoryConverter() {
+    }
 
     /**
     * this method converts an UserStoryList (Model) to an USerStory(Domain)
