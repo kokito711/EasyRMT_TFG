@@ -187,9 +187,9 @@ public class UserStoryService {
 
     /**
      * This method calls the JPA Repository to delete an userStory with the userStoryId received as parameter.
-     * Then, calls again the {@link ObjectRepository} to check if epic has been deleted.
+     * Then, calls again the {@link ObjectRepository} to check if user story has been deleted.
      * If not exists in database, method will return true and false if exists.
-     * @param userStoryId epicId to be deleted
+     * @param userStoryId userStoryId to be deleted
      * @return If not exists in database, method will return true and false if exists.
      */
     @Transactional(rollbackFor = Exception.class)
