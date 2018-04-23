@@ -11,8 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +56,6 @@ public class FeatureDom {
 
     @Getter
     @Setter
-    @Column(name="storypoints")
     private Integer storyPoints;
 
     @Getter
@@ -91,7 +88,6 @@ public class FeatureDom {
 
     @Getter
     @Setter
-    @NotNull
     private Integer author;
 
     @Getter

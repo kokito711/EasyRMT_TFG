@@ -27,6 +27,21 @@ function deleteEpic(projectId, epicId) {
     });
 }
 
+function deleteFeature(projectId, featureId) {
+    $.ajax({
+        url: '/project/'+projectId+'/feature/'+featureId,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteFeatureModal").modal('hide');
+            $("#deleteFeatureModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteFeatureModal").modal('hide');
+            $("#deleteFEatureModalFail").modal('show');
+        }
+    });
+}
+
 function deleteUserStory(projectId, epicId, userStoryId) {
     $.ajax({
         url: '/project/'+projectId+'/epic/'+epicId+'/userstory/'+userStoryId,
@@ -38,6 +53,21 @@ function deleteUserStory(projectId, epicId, userStoryId) {
         error: function () {
             $("#deleteUsModal").modal('hide');
             $("#deleteUsModalFail").modal('show');
+        }
+    });
+}
+
+function deleteUseCase(projectId, featureId, useCaseId) {
+    $.ajax({
+        url: '/project/'+projectId+'/feature/'+featureId+'/usecase/'+useCaseId,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteUcModal").modal('hide');
+            $("#deleteUcModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteUcModal").modal('hide');
+            $("#deleteUcModalFail").modal('show');
         }
     });
 }
