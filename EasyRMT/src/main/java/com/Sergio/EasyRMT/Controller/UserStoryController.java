@@ -227,7 +227,7 @@ public class UserStoryController {
      * @return HttpStatus.ok if correct. HttpStatus.INTERNAL_SERVER_ERROR if not correct.
      */
     @RequestMapping(value = PATH_BASE+"userstory/{userStoryId}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteEpic(@PathVariable int projectId, @PathVariable int epicId, @PathVariable int userStoryId){
+    public ResponseEntity deleteUserStory(@PathVariable int projectId, @PathVariable int epicId, @PathVariable int userStoryId){
         boolean deleted = userStoryService.deleteUserStory(userStoryId);
         if(deleted){
             return ResponseEntity.status(HttpStatus.OK).body("");

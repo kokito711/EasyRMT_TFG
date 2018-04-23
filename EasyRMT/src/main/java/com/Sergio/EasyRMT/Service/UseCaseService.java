@@ -219,4 +219,15 @@ public class UseCaseService {
             return false;
         }
     }
+
+    /**
+     * This method returns a list of all use cases related with a project
+     * @param projectId
+     * @return List of {@link UseCaseDom}
+     */
+    public List<UseCaseDom> getByProjectID(int projectId) {
+        List<UseCase> useCaseList = useCaseRepository.findByProjectId(projectId);
+        List<UseCaseDom> useCaseDomList = useCaseConverter.toDomain(useCaseList);
+        return useCaseDomList;
+    }
 }
