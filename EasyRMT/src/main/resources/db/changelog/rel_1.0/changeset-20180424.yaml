@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - logicalFilePath: changeset-rel_1.0
+  
+  - preConditions:
+                   
+  - changeSet:
+      id: 20180424-create_schema_1.0
+      author: sergio
+      changes:
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \;
+            path: ./install/20180424/00-create_requirement_tables.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
