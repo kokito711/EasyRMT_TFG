@@ -40,7 +40,7 @@ public class UseCaseController {
      * @return model and view with use cases list
      */
     @RequestMapping(value = PATH_BASE+"usecases", method = RequestMethod.GET)
-    public ModelAndView getUserStoriesListView(@PathVariable int projectId, @PathVariable int featureId, ModelAndView mav){
+    public ModelAndView getUserCasesListView(@PathVariable int projectId, @PathVariable int featureId, ModelAndView mav){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<UseCaseDom> useCaseDomList = useCaseService.getUseCases(featureId);
         ProjectDom project = projectService.getProject(projectId);
@@ -62,7 +62,7 @@ public class UseCaseController {
      * @return model and view with user stories list
      */
     @RequestMapping(value ="/project/{projectId}/features/usecases" , method = RequestMethod.GET)
-    public ModelAndView getUserStoriesListView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getUserCasesListView(@PathVariable int projectId, ModelAndView mav){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<UseCaseDom> useCaseDomList = useCaseService.getByProjectID(projectId);
         ProjectDom project = projectService.getProject(projectId);
@@ -138,7 +138,7 @@ public class UseCaseController {
      *       {@link UseCaseDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"usecase/create", method = RequestMethod.POST)
-    public ModelAndView createUserStory(@PathVariable int projectId, @PathVariable int featureId,
+    public ModelAndView createUseCase(@PathVariable int projectId, @PathVariable int featureId,
                                    @ModelAttribute @Valid UseCaseDom useCaseDom){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
@@ -164,7 +164,7 @@ public class UseCaseController {
      * @return model and view with page
      */
     @RequestMapping(value = PATH_BASE+"usecase/update/{useCaseId}", method = RequestMethod.GET)
-    public ModelAndView getUpdateUserStoryView(@PathVariable int projectId,@PathVariable int featureId,
+    public ModelAndView getUpdateUseCaseView(@PathVariable int projectId,@PathVariable int featureId,
                                           @PathVariable int useCaseId, ModelAndView mav){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
@@ -197,7 +197,7 @@ public class UseCaseController {
      *       {@link UseCaseDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"usecase/{useCaseId}", method = RequestMethod.POST)
-    public ModelAndView updateUserStory(@PathVariable int projectId, @PathVariable int featureId,
+    public ModelAndView updateUseCase(@PathVariable int projectId, @PathVariable int featureId,
                                         @PathVariable int useCaseId, @ModelAttribute @Valid UseCaseDom useCaseDom){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);

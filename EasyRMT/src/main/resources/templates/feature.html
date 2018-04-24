@@ -279,7 +279,7 @@
                 </div>
                 <br th:if="${#lists.isEmpty(feature.useCases)}"/>
                 <div class="alert alert-info" th:if="${#lists.isEmpty(feature.useCases)}">
-                    <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${feature.getIdentifier()}+
+                    <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${feature.getIdFeature()}+
                 '/usecases/create'" class="text-center">
                         <p th:text="#{featuresDashboard.Table.Tbody.emptyList}"></p>
                         <span class="fa fa-plus-circle fa-2x pull-right" style="color: #5cb85c;"
