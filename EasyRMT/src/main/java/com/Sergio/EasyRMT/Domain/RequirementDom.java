@@ -11,22 +11,23 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @ToString
 @EqualsAndHashCode
-public class UseCaseDom {
+public class RequirementDom implements Serializable {
 
     @Getter
     @Setter
-    private int idUseCase;
+    private int idRequirement;
 
     @Getter
     @Setter
     private String name;
 
-    @Getter
     @Setter
+    @Getter
     private String identifier;
 
     @Getter
@@ -57,8 +58,8 @@ public class UseCaseDom {
     @Setter
     private Integer storyPoints;
 
-    @Getter
     @Setter
+    @Getter
     private String source;
 
     @Getter
@@ -77,8 +78,8 @@ public class UseCaseDom {
     @Setter
     private Date lastUpdated;
 
-    @Getter
     @Setter
+    @Getter
     private String version;
 
     @Getter
@@ -103,49 +104,32 @@ public class UseCaseDom {
 
     @Getter
     @Setter
-    private String actors;
+    private Integer requirementTypeId;
 
     @Getter
     @Setter
-    private String preconditions;
+    private Integer projectId;
 
-    @Getter
-    @Setter
-    private String postconditions;
-
-    @Getter
-    @Setter
-    private String steps;
-
-    @Getter
-    @Setter
-    private int projectId;
-
-    @Getter
-    @Setter
-    private int featureId;
-
-    public UseCaseDom() {
+    public RequirementDom() {
     }
 
-    public UseCaseDom(int idUseCase, String name, String identifier, Integer author, Integer assignedTo,
-                      int projectId, int featureId) {
-        this.idUseCase = idUseCase;
+    public RequirementDom(int idRequirement, String name, String identifier, Integer author, Integer assignedTo,
+                          Integer requirementType, Integer projectId) {
+        this.idRequirement = idRequirement;
         this.name = name;
         this.identifier = identifier;
         this.author = author;
         this.assignedTo = assignedTo;
+        this.requirementTypeId = requirementType;
         this.projectId = projectId;
-        this.featureId = featureId;
     }
 
-    public UseCaseDom(int idUseCase, String name, String identifier, String description, Priority priority,
-                      Complexity complexity, State state, Double cost, Double estimatedHours, Integer storyPoints,
-                      String source, Scope scope, Risk risk, Date created, Date lastUpdated, String version,
-                      String validationMethod, Integer author, Integer assignedTo, String justification,
-                      String testCases, String actors, String preconditions, String postconditions,
-                      String steps, int projectId, int featureId) {
-        this.idUseCase = idUseCase;
+    public RequirementDom(int idRequirement, String name, String identifier, String description, Priority priority,
+                          Complexity complexity, State state, Double cost, Double estimatedHours, Integer storyPoints,
+                          String source, Scope scope, Risk risk, Date created, Date lastUpdated, String version,
+                          String validationMethod, Integer author, Integer assignedTo, String justification,
+                          String testCases, Integer requirementTypeId, Integer projectId) {
+        this.idRequirement = idRequirement;
         this.name = name;
         this.identifier = identifier;
         this.description = description;
@@ -166,11 +150,7 @@ public class UseCaseDom {
         this.assignedTo = assignedTo;
         this.justification = justification;
         this.testCases = testCases;
-        this.actors = actors;
-        this.preconditions = preconditions;
-        this.postconditions = postconditions;
-        this.steps = steps;
+        this.requirementTypeId = requirementTypeId;
         this.projectId = projectId;
-        this.featureId = featureId;
     }
 }
