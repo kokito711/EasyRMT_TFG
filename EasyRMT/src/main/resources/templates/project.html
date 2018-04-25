@@ -235,7 +235,7 @@
                         <div class="col-xs-3">
                             <i class="fa fa-book fa-5x"></i>
                         </div>
-                        <div th:if="${project.getType().name() == 'AGILE'}" class="col-xs-9 text-right "
+                        <div th:if="${project.getType().name() == 'AGILE'}" class="col-xs-9 text-right h3"
                              id="elements-panel-userStories" th:text="#{project.userStory}">
                         </div>
                         <div th:unless="${project.getType().name() == 'AGILE'}" class="col-xs-9 text-right huge"
@@ -277,7 +277,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="">
+                <a th:href="'/project/'+${project.getIdProject()}+'/requirements'">
                     <div class="panel-footer">
                         <span class="pull-left" th:text="#{project.viewDetails}"></span>
                         <span class="pull-right">

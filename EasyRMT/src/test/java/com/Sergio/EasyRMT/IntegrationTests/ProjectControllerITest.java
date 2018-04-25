@@ -2,11 +2,11 @@ package com.Sergio.EasyRMT.IntegrationTests;
 
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -24,63 +24,67 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProjectControllerITest {
     @Autowired
     private WebApplicationContext wac;
     @Autowired
     ProjectRepository projectRepository;
     private MockMvc mockMvc;
+    Project project;
 
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        try {
+            project = projectRepository.findAll().get(0);
+        }
+        catch (Exception e){
+            System.out.println(e.toString());
+        }
     }
 
     @AfterAll
     public void rollback(){
-        List<Project> projectList = projectRepository.findAll();
-        int size = projectList.size();
-        Project project = projectList.get(size-1);
-        int id = project.getIdProject();
-        projectRepository.deleteProjectByIdProject(id);
+        projectRepository.deleteProjectByIdProject(project.getIdProject());
+    }
+    @Test
+    @DisplayName("Endpoint test for createProject")
+
+    public void AcreateProject() throws Exception {
+        this.mockMvc.perform(post("/projects")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("name", "Project_Test")
+                .param("type", "AGILE")
+                .param("description", "projectTest")
+                .param("stringReqTypes", "1,2")
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("project"))
+                .andExpect(model().attribute("project",hasProperty("name",notNullValue())))
+                .andExpect(model().attribute("project",hasProperty("description")))
+                .andExpect(model().attribute("project", hasProperty("type", notNullValue())));
     }
 
     @Test
     @DisplayName("Endpoint test for createProject view")
-    public void getCreateProjectView() throws Exception {
+    public void BgetCreateProjectView() throws Exception {
         this.mockMvc.perform(get("/createProject"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("createProject"));
     }
 
     @Test
-    @DisplayName("Endpoint test for createProject")
-    public void createProject() throws Exception {
-        this.mockMvc.perform(post("/projects")
-                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                                .param("name", "Project_Test")
-                                .param("type", "AGILE")
-                                .param("description", "projectTest")
-                                .param("stringReqTypes", "1,2")
-                            )
-                            .andExpect(status().isOk())
-                            .andExpect(view().name("project"))
-                            .andExpect(model().attribute("project",hasProperty("name",notNullValue())))
-                            .andExpect(model().attribute("project",hasProperty("description")))
-                            .andExpect(model().attribute("project", hasProperty("type", notNullValue())));
-    }
-
-    @Test
     @DisplayName("Endpoint test for updateProject view")
-    public void getUpdateProjectView() throws Exception {
-        this.mockMvc.perform(get("/updateProject/8"))
+    public void CgetUpdateProjectView() throws Exception {
+        this.mockMvc.perform(get("/updateProject/"+project.getIdProject()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("updateProject"));
     }
 
     @Test
     @DisplayName("Endpoint test for updateProject")
-    public void updateProject() throws Exception {
+    public void DupdateProject() throws Exception {
         List<Project> projectList = projectRepository.findAll();
         int size = projectList.size();
         Project project = projectList.get(size-1);
@@ -98,15 +102,15 @@ public class ProjectControllerITest {
 
     @Test
     @DisplayName("Endpoint test for project view")
-    public void getProjectView() throws Exception {
-        this.mockMvc.perform(get("/project/8"))
+    public void EgetProjectView() throws Exception {
+        this.mockMvc.perform(get("/project/"+project.getIdProject()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project"));
     }
 
     @Test
     @DisplayName("Endpoint test for delete project correct request")
-    public void deleteProject_ReturnsOk() throws Exception {
+    public void FdeleteProject_ReturnsOk() throws Exception {
         List<Project> projectList = projectRepository.findAll();
         int size = projectList.size();
         Project project = projectList.get(size-1);
@@ -115,7 +119,7 @@ public class ProjectControllerITest {
     }
     @Test
     @DisplayName("Endpoint test for delete project error request")
-    public void deleteProject_ReturnsError() throws Exception {
+    public void GdeleteProject_ReturnsError() throws Exception {
         List<Project> projectList = projectRepository.findAll();
         int size = projectList.size();
         Project project = projectList.get(size-1);

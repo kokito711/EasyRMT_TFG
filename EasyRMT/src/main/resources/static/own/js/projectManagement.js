@@ -72,6 +72,21 @@ function deleteUseCase(projectId, featureId, useCaseId) {
     });
 }
 
+function deleteRequirement(projectId, requirementId, useCaseId) {
+    $.ajax({
+        url: '/project/'+projectId+'/requirement/'+requirementId,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteRequirementModal").modal('hide');
+            $("#deleteRequirementModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteRequirementModal").modal('hide');
+            $("#deleteRequirementModalFail").modal('show');
+        }
+    });
+}
+
 
 function modalValue(id){
     var button = document.getElementById("delete_button");

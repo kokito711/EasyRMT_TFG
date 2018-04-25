@@ -8,6 +8,7 @@ package com.Sergio.EasyRMT.Controller;
 import com.Sergio.EasyRMT.Domain.FeatureDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.RequirementDom;
+import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
 import com.Sergio.EasyRMT.Model.types.*;
 import com.Sergio.EasyRMT.Service.FeatureService;
 import com.Sergio.EasyRMT.Service.ProjectService;
@@ -45,10 +46,12 @@ public class RequirementController {
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<RequirementDom> requirementDomList = requirementService.getRequirements(projectId);
         ProjectDom project = projectService.getProject(projectId);
+        List<RequirementTypeDom> reqTypes = projectService.getReqTypes();
         mav.setViewName("requirementsDashboard");
         mav.addObject("project", project);
         mav.addObject("requirementList", requirementDomList);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("reqTypes", reqTypes);
         return mav;
     }
 
@@ -68,6 +71,7 @@ public class RequirementController {
         mav.addObject("requirement", requirementService.getRequirement(requirementId));
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("reqTypes", projectService.getReqTypes());
         return mav;
     }
 
@@ -115,6 +119,7 @@ public class RequirementController {
         mav.addObject("requirement", persistedRequirement);
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("reqTypes", projectService.getReqTypes());
         return mav;
     }
 
@@ -166,6 +171,7 @@ public class RequirementController {
         mav.addObject("requirement", persistedRequirement);
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("reqTypes", projectService.getReqTypes());
         return mav;
     }
 
