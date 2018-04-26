@@ -185,7 +185,7 @@ public class RequirementController {
      * @return HttpStatus.ok if correct. HttpStatus.INTERNAL_SERVER_ERROR if not correct.
      */
     @RequestMapping(value = PATH_BASE+"/requirement/{requirementId}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteEpic(@PathVariable int projectId, @PathVariable int requirementId){
+    public ResponseEntity deleteRequirement(@PathVariable int projectId, @PathVariable int requirementId){
         boolean deleted = requirementService.deleteRequirement(requirementId);
         if(deleted){
             return ResponseEntity.status(HttpStatus.OK).body("");
