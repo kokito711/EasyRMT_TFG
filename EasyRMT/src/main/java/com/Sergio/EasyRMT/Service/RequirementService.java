@@ -9,6 +9,7 @@ import com.Sergio.EasyRMT.Domain.RequirementDom;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Model.Requirement;
+import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
@@ -93,7 +94,9 @@ public class RequirementService {
         requirementDom.setAuthor(0); //TODO change this on second iteration
         requirement = requirementConverter.toModel(requirementDom);
         requirement.setIdRequirement(objectEntity.getIdobject());
-        requirement.setRequirementType(reqTypeRepository.findByIdType(requirementDom.getRequirementTypeId()).get());
+        Integer reqTypeId = requirementDom.getRequirementTypeId();
+        Optional<RequirementType> requirementType = reqTypeRepository.findByIdType(reqTypeId);
+        requirement.setRequirementType(requirementType.get());
         requirement.setObject(objectEntity);
         requirement = requirementRepository.save(requirement);
         requirementDom = requirementConverter.toDomain(requirement);

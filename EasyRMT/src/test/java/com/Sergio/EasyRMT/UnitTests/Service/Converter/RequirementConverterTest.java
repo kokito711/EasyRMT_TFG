@@ -39,6 +39,7 @@ public class RequirementConverterTest {
     @Description("Method toDomain receives a list of Requirements and returns a list of RequirementDom")
     public void toDomain_RequirementListProvided_RequirementDomListReturned(){
         Requirement requirement = createRequirement(true);
+        requirement.setAssignedTo(null);
         List<Requirement> requirementList = new ArrayList<>();
         List<RequirementDom> expected = new ArrayList<>();
 
@@ -47,7 +48,7 @@ public class RequirementConverterTest {
         requirementDom.setName("Test");
         requirementDom.setIdentifier("1234");
         requirementDom.setAuthor(0);
-        requirementDom.setAssignedTo(27);
+        requirementDom.setAssignedTo(0);
         requirementDom.setRequirementTypeId(1);
         requirementDom.setProjectId(1);
 
