@@ -22,7 +22,8 @@ public class RequirementConverter {
 
     /**
      * this method converts an RequirementList (Model) to an RequirementList(Domain)
-     * @param requirementList List of {@link Requirement} obtained from DB
+     * @param requirementList List of {@link Requirement} obtained from DBdated=Thu Apr 26 23:12:06 CEST 2018, version=version, validationMethod=validation, author=0, assignedTo=27, justification=justification, testCases=test cases, requirementTypeId=1, projectId=1)>
+     * com.Sergio.EasyRMT.Domain.RequirementDom<RequirementDom(idRequirement=1, name=Test, identifier=1234, description=description, priority=NORMAL, complexity=NORMAL, state=DRAFT, cost=0.0, estimatedHours=27.0, storyPoints=0, source=source, scope=FEATURE, risk=HIGH, created=Thu Apr 26 23:12:06 CEST 2018, lastUpdated=Thu Apr 26 23:12:06 CEST 2018, version=version, validationMethod=validation, author=0, assignedTo=27, justification=justification, testCases
      * @return List of {@link RequirementDom}
      */
     public List<RequirementDom> toDomain(List<Requirement> requirementList) {

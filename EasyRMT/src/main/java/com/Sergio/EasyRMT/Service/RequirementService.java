@@ -5,17 +5,19 @@
 
 package com.Sergio.EasyRMT.Service;
 
-import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.RequirementDom;
-import com.Sergio.EasyRMT.Model.*;
-import com.Sergio.EasyRMT.Repository.*;
-import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
+import com.Sergio.EasyRMT.Model.ObjectEntity;
+import com.Sergio.EasyRMT.Model.Project;
+import com.Sergio.EasyRMT.Model.Requirement;
+import com.Sergio.EasyRMT.Repository.ObjectRepository;
+import com.Sergio.EasyRMT.Repository.ProjectRepository;
+import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
+import com.Sergio.EasyRMT.Repository.RequirementRepository;
 import com.Sergio.EasyRMT.Service.Converter.RequirementConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
