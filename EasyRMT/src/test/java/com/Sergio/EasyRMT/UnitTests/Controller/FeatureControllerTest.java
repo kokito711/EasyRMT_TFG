@@ -6,9 +6,12 @@
 package com.Sergio.EasyRMT.UnitTests.Controller;
 
 import com.Sergio.EasyRMT.Controller.EpicController;
+import com.Sergio.EasyRMT.Controller.FeatureController;
 import com.Sergio.EasyRMT.Domain.EpicDom;
+import com.Sergio.EasyRMT.Domain.FeatureDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Service.EpicService;
+import com.Sergio.EasyRMT.Service.FeatureService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,235 +30,244 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class EpicControllerTest {
+public class FeatureControllerTest {
 
     @Mock
     ProjectService projectService;
     @Mock
-    EpicService epicService;
+    FeatureService featureService;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
-        epicService = mock(EpicService.class);
+        featureService = mock(FeatureService.class);
     }
 
     @Test
-    @DisplayName("Request a view with a list of epics")
-    public void getEpicListView_ProjectIdProvided_ReturnView(){
+    @DisplayName("Request a view with a list of features")
+    public void getFeatureListView_ProjectIdProvided_ReturnView(){
         List<ProjectDom> projectDomList = mock(List.class);
-        List<EpicDom> epicDomList = mock(List.class);
+        List<FeatureDom> featureDomList = mock(List.class);
+        ProjectDom project = mock(ProjectDom.class);
         when(projectService.getProjects()).thenReturn(projectDomList);
-        when(epicService.getEpics(anyInt())).thenReturn(epicDomList);
+        when(featureService.getFeatures(anyInt())).thenReturn(featureDomList);
+        when(projectService.getProject(anyInt())).thenReturn(project);
 
-        ModelAndView expected = new ModelAndView("epicsDashboard");
+        ModelAndView expected = new ModelAndView("featuresDashboard");
         expected.addObject("projectList", projectDomList);
-        expected.addObject("epicList", epicDomList);
+        expected.addObject("featureList", featureDomList);
+        expected.addObject("project", project);
 
-        EpicController epicController = createEpicController();
+        FeatureController featureController = createFeatureController();
 
-        ModelAndView obtained = epicController.getEpicListView(19, new ModelAndView());
+        ModelAndView obtained = featureController.getFeatureListView(19, new ModelAndView());
 
         //TestConditions
         assertEquals(expected.getView(),obtained.getView());
         assertFalse(obtained.getModel().isEmpty());
-        assertTrue(obtained.getModel().get("epicList").equals(expected.getModel().get("epicList")));
+        assertTrue(obtained.getModel().get("featureList").equals(expected.getModel().get("featureList")));
         assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
+        assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
         //Verify project service has been called
         verify(projectService,times(1)).getProjects();
+        verify(projectService,times(1)).getProject(19);
         //verify getEpics is called 1 time
-        verify(epicService,times(1)).getEpics(19);
+        verify(featureService,times(1)).getFeatures(19);
 
     }
 
     @Test
-    @DisplayName("Request a view with an epic")
-    public void getEpicView_ProjectIdAndEpicIdProvided_ReturnView(){
+    @DisplayName("Request a view with a feature")
+    public void getFeatureView_ProjectIdAndFeatureIdProvided_ReturnView(){
         List<ProjectDom> projectDomList = mock(List.class);
-        EpicDom epicDom = mock(EpicDom.class);
+        FeatureDom featureDom = mock(FeatureDom.class);
+        ProjectDom project = mock(ProjectDom.class);
         when(projectService.getProjects()).thenReturn(projectDomList);
-        when(epicService.getEpic(anyInt())).thenReturn(epicDom);
+        when(featureService.getFeature(anyInt())).thenReturn(featureDom);
+        when(projectService.getProject(anyInt())).thenReturn(project);
 
-        ModelAndView expected = new ModelAndView("epic");
+        ModelAndView expected = new ModelAndView("feature");
         expected.addObject("projectList", projectDomList);
-        expected.addObject("epic", epicDom);
+        expected.addObject("feature", featureDom);
+        expected.addObject("project", project);
 
-        EpicController epicController = createEpicController();
+        FeatureController featureController = createFeatureController();
 
-        ModelAndView obtained = epicController.getEpicView(19,1, new ModelAndView());
+        ModelAndView obtained = featureController.getFeatureView(19,19, new ModelAndView());
 
-        //Test conditions
+        //TestConditions
         assertEquals(expected.getView(),obtained.getView());
         assertFalse(obtained.getModel().isEmpty());
-        assertTrue(obtained.getModel().get("epic").equals(expected.getModel().get("epic")));
+        assertTrue(obtained.getModel().get("feature").equals(expected.getModel().get("feature")));
         assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
+        assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
         //Verify project service has been called
         verify(projectService,times(1)).getProjects();
-        //Verify getEpic is called
-        verify(epicService,times(1)).getEpic(1);
+        verify(projectService,times(1)).getProject(19);
+        //verify getEpics is called 1 time
+        verify(featureService,times(1)).getFeature(19);
     }
 
     @Test
-    @DisplayName("Request a view with a createEpic view")
-    public void getCreateEpicView_ProjectIdProvided_ReturnView(){
+    @DisplayName("Request a view with a createFeature view")
+    public void getCreateFeatureView_ProjectIdProvided_ReturnView(){
         List<ProjectDom> projectDomList = mock(List.class);
-        EpicDom epicDom = new EpicDom();
+        FeatureDom featureDom = new FeatureDom();
         ProjectDom project = mock(ProjectDom.class);
         when(projectService.getProjects()).thenReturn(projectDomList);
         when(projectService.getProject(anyInt())).thenReturn(project);
 
-        ModelAndView expected = new ModelAndView("createEpic");
+        ModelAndView expected = new ModelAndView("createFeature");
         expected.addObject("project", project);
         expected.addObject("projectList", projectDomList);
-        expected.addObject("epic", epicDom);
+        expected.addObject("feature", featureDom);
 
-        EpicController epicController = createEpicController();
+        FeatureController featureController = createFeatureController();
 
-        ModelAndView obtained = epicController.getCreateEpicView(19, new ModelAndView());
+        ModelAndView obtained = featureController.getCreateFeatureView(19, new ModelAndView());
+
+        //TestConditions
+        assertEquals(expected.getView(),obtained.getView());
+        assertFalse(obtained.getModel().isEmpty());
+        assertTrue(obtained.getModel().get("feature").equals(expected.getModel().get("feature")));
+        assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
+        assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
+        //Verify project service has been called
+        verify(projectService,times(1)).getProjects();
+        verify(projectService,times(1)).getProject(19);
+    }
+
+    @Test
+    @DisplayName("Request a view with a updateFeature view")
+    public void getUpdateFeatureView_ProjectIdProvided_ReturnView(){
+        List<ProjectDom> projectDomList = mock(List.class);
+        FeatureDom featureDom = mock(FeatureDom.class);
+        ProjectDom project = mock(ProjectDom.class);
+        when(projectService.getProjects()).thenReturn(projectDomList);
+        when(projectService.getProject(anyInt())).thenReturn(project);
+        when(featureService.getFeature(anyInt())).thenReturn(featureDom);
+
+        ModelAndView expected = new ModelAndView("updateFeature");
+        expected.addObject("project", project);
+        expected.addObject("projectList", projectDomList);
+        expected.addObject("feature", featureDom);
+
+        FeatureController featureController = createFeatureController();
+
+        ModelAndView obtained = featureController.getUpdateFeatureView(19,1, new ModelAndView());
 
         //TestConditions
         assertEquals(expected.getView(),obtained.getView());
         assertFalse(obtained.getModel().isEmpty());
         assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
         assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
-        assertTrue(obtained.getModel().get("epic").equals(expected.getModel().get("epic")));
-        //Verify project service has been called
-        verify(projectService,times(1)).getProjects();
-        //Verify  getProject has been called
-        verify(projectService, times(1)).getProject(anyInt());
-    }
-
-    @Test
-    @DisplayName("Request a view with a updateEpic view")
-    public void getUpdateEpicView_ProjectIdProvided_ReturnView(){
-        List<ProjectDom> projectDomList = mock(List.class);
-        EpicDom epicDom = mock(EpicDom.class);
-        ProjectDom project = mock(ProjectDom.class);
-        when(projectService.getProjects()).thenReturn(projectDomList);
-        when(projectService.getProject(anyInt())).thenReturn(project);
-        when(epicService.getEpic(anyInt())).thenReturn(epicDom);
-
-        ModelAndView expected = new ModelAndView("updateEpic");
-        expected.addObject("project", project);
-        expected.addObject("projectList", projectDomList);
-        expected.addObject("epic", epicDom);
-
-        EpicController epicController = createEpicController();
-
-        ModelAndView obtained = epicController.getUpdateEpicView(19,1, new ModelAndView());
-
-        //TestConditions
-        assertEquals(expected.getView(),obtained.getView());
-        assertFalse(obtained.getModel().isEmpty());
-        assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
-        assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
-        assertTrue(obtained.getModel().get("epic").equals(expected.getModel().get("epic")));
+        assertTrue(obtained.getModel().get("feature").equals(expected.getModel().get("feature")));
         //Verify project service has been called
         verify(projectService,times(1)).getProjects();
         //Verify  getProject has been called
         verify(projectService, times(1)).getProject(anyInt());
         //verify getReqs is called 1 time
-        verify(epicService,times(1)).getEpic(1);
+        verify(featureService,times(1)).getFeature(1);
     }
 
     @Test
-    @DisplayName("createEpic method returns a modelAndView object")
-    public void createEpic_ProjectIdAndEpicDomProvided_ReturnsMAV(){
+    @DisplayName("createFeature method returns a modelAndView object")
+    public void createFeature_ProjectIdAndFeatureDomProvided_ReturnsMAV(){
         List<ProjectDom> projectDomList = mock(List.class);
-        EpicDom epicDom = mock(EpicDom.class);
+        FeatureDom featureDom = mock(FeatureDom.class);
         ProjectDom project = mock(ProjectDom.class);
         when(projectService.getProjects()).thenReturn(projectDomList);
         when(projectService.getProject(anyInt())).thenReturn(project);
-        when(epicService.create(epicDom, 17)).thenReturn(epicDom);
+        when(featureService.create(featureDom, 17)).thenReturn(featureDom);
 
-        ModelAndView expected = new ModelAndView("epic");
+        ModelAndView expected = new ModelAndView("feature");
         expected.addObject("projectList", projectDomList);
-        expected.addObject("epic", epicDom);
+        expected.addObject("feature", featureDom);
         expected.addObject("project", project);
 
-        EpicController epicController = createEpicController();
+        FeatureController featureController = createFeatureController();
 
-        ModelAndView obtained = epicController.createEpic(17,epicDom);
+        ModelAndView obtained = featureController.createFeature(17,featureDom);
 
         //Test conditions
         assertEquals(expected.getView(),obtained.getView());
         assertFalse(obtained.getModel().isEmpty());
-        assertTrue(obtained.getModel().get("epic").equals(expected.getModel().get("epic")));
+        assertTrue(obtained.getModel().get("feature").equals(expected.getModel().get("feature")));
         assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
         assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
         //Verify project service has been called
         verify(projectService,times(1)).getProjects();
         //verify getReqs is called 1 time
-        verify(epicService,times(1)).create(epicDom,17);
+        verify(featureService,times(1)).create(featureDom,17);
         //Verify  getProject has been called
         verify(projectService, times(1)).getProject(anyInt());
     }
 
     @Test
-    @DisplayName("updateEpic method returns a modelAndView object")
-    public void updateEpic_ProjectIdAndEpicIdAndEpicDomProvided_ReturnsMAV(){
+    @DisplayName("updateFeature method returns a modelAndView object")
+    public void updateFeature_ProjectIdAndFeatureIdAndFeatureDomProvided_ReturnsMAV(){
         List<ProjectDom> projectDomList = mock(List.class);
-        EpicDom epicDom = mock(EpicDom.class);
+        FeatureDom featureDom = mock(FeatureDom.class);
         ProjectDom project = mock(ProjectDom.class);
         when(projectService.getProjects()).thenReturn(projectDomList);
         when(projectService.getProject(anyInt())).thenReturn(project);
-        when(epicService.update(epicDom,1, 17)).thenReturn(epicDom);
+        when(featureService.update(featureDom,1, 17)).thenReturn(featureDom);
 
-        ModelAndView expected = new ModelAndView("epic");
+        ModelAndView expected = new ModelAndView("feature");
         expected.addObject("projectList", projectDomList);
-        expected.addObject("epic", epicDom);
+        expected.addObject("feature", featureDom);
         expected.addObject("project", project);
 
-        EpicController epicController = createEpicController();
+        FeatureController featureController = createFeatureController();
 
-        ModelAndView obtained = epicController.updateEpic(17,1,epicDom);
+        ModelAndView obtained = featureController.updateFeature(17,1,featureDom);
 
         //Test conditions
         assertEquals(expected.getView(),obtained.getView());
         assertFalse(obtained.getModel().isEmpty());
-        assertTrue(obtained.getModel().get("epic").equals(expected.getModel().get("epic")));
+        assertTrue(obtained.getModel().get("feature").equals(expected.getModel().get("feature")));
         assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
         assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
         //Verify project service has been called
         verify(projectService,times(1)).getProjects();
         //verify getReqs is called 1 time
-        verify(epicService,times(1)).update(epicDom,1,17);
+        verify(featureService,times(1)).update(featureDom,1,17);
         //Verify  getProject has been called
         verify(projectService, times(1)).getProject(anyInt());
     }
 
     @Test
-    @DisplayName("deleteEpic method returns an http.ok when epic is deleted")
-    public void deleteEpic_idProjectAndEpicIdProvided_EpicDeleted_ReturnsOk(){
-        when(epicService.deleteEpic(anyInt())).thenReturn(true);
+    @DisplayName("deleteFeature method returns an http.ok when efeature is deleted")
+    public void deleteFeature_idProjectAndFeatureIdProvided_FeatureDeleted_ReturnsOk(){
+        when(featureService.deleteFeature(anyInt())).thenReturn(true);
         ResponseEntity expected = new ResponseEntity(HttpStatus.OK);
 
-        EpicController epicController = createEpicController();
+        FeatureController featureController = createFeatureController();
 
-        ResponseEntity obtained = epicController.deleteEpic(7,1);
+        ResponseEntity obtained = featureController.deleteFeature(7,1);
 
         //Test conditions
         assertEquals(expected.getStatusCode(),obtained.getStatusCode());
         //Verify project service has been called
-        verify(epicService,times(1)).deleteEpic(1);
+        verify(featureService,times(1)).deleteFeature(1);
     }
     @Test
-    @DisplayName("deleteEpic method returns an http.Internal_Server_Error when epic is not deleted")
+    @DisplayName("deleteFeature method returns an http.Internal_Server_Error when feature is not deleted")
     public void deleteEpic_idProjectAndEpicIdProvided_EpicDeleted_ReturnsInternalServerError(){
-        when(epicService.deleteEpic(anyInt())).thenReturn(false);
+        when(featureService.deleteFeature(anyInt())).thenReturn(false);
         ResponseEntity expected = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
 
-        EpicController epicController = createEpicController();
+        FeatureController featureController = createFeatureController();
 
-        ResponseEntity obtained = epicController.deleteEpic(7,1);
+        ResponseEntity obtained = featureController.deleteFeature(7,1);
 
         //Test conditions
         assertEquals(expected.getStatusCode(),obtained.getStatusCode());
         //Verify project service has been called
-        verify(epicService,times(1)).deleteEpic(1);
+        verify(featureService,times(1)).deleteFeature(1);
     }
 
-    private EpicController createEpicController(){
-        return new EpicController(projectService,epicService);
+    private FeatureController createFeatureController(){
+        return new FeatureController(projectService, featureService);
     }
 }

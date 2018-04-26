@@ -176,7 +176,7 @@ public class FeatureController {
      * @return HttpStatus.ok if correct. HttpStatus.INTERNAL_SERVER_ERROR if not correct.
      */
     @RequestMapping(value = PATH_BASE+"/feature/{featureId}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteEpic(@PathVariable int projectId, @PathVariable int featureId){
+    public ResponseEntity deleteFeature(@PathVariable int projectId, @PathVariable int featureId){
         boolean deleted = featureService.deleteFeature(featureId);
         if(deleted){
             return ResponseEntity.status(HttpStatus.OK).body("");
