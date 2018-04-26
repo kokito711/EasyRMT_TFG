@@ -17,25 +17,24 @@
                 <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
                 </a>
                 /
-                <a th:href="'/project/'+${project.getIdProject()}+'/requirements'"
-                   th:text="#{requirement.Breadcrumb.requirementlistLabel}">
+                <a th:href="'/project/'+${project.getIdProject()}+'/requirements'" th:text="#{requirement.Breadcrumb.requirementlistLabel}">
+                </a>
+                /
+                <a th:href="'/project/'+${project.getIdProject()}+'/requirement/'+${requirement.getIdRequirement()}"
+                   th:text="#{feature.Breadcrumb.featurelistLabel}">
                 </a>
             </p>
         </div>
-        <h2 class="page-header" th:text="#{createRequirement.createLabel}">
+        <h2 class="page-header" th:text="${requirement.getName()}">
         </h2>
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="panel-body">
-                <form role="form" id="create-requirement-form" th:action="@{'/project/'+${project.getIdProject()}+'/requirements'}"
+                <form role="form" id="update-req-form" th:action="@{'/project/'+${project.getIdProject()}+'/requirement/'+
+                ${requirement.getIdRequirement()}+'/update'}"
                       th:object="${requirement}" method="post">
                     <div class="form-group col-lg-12">
-                        <div class="col-lg-6">
-                            <label for="req-name" th:text="#{createEpic.form.name}"></label>
-                            <input id="req-name" class="form-control" required="required" type="text"
-                                   maxlength="64" name="name" th:field="*{name}"/>
-                        </div>
                         <div class="col-lg-3">
                             <label for="req-id" th:text="#{createEpic.form.identifier}"></label>
                             <input class="form-control"  type="text" id="req-id"
@@ -135,7 +134,7 @@
                                    th:field="*{justification}"></textarea>
                     </div>
                     <div class="col-lg-1 col-lg-offset-5 submit-button" >
-                        <button class="btn btn-primary" type="submit" th:text="#{createRequirement.createLabel}"></button>
+                        <button class="btn btn-primary" type="submit" th:text="#{updateRequirement.form.submitButton}"></button>
                     </div>
                 </form>
             </div>

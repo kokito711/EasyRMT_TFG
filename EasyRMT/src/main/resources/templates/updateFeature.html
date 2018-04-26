@@ -21,7 +21,7 @@
                 </a>
                 /
                 <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${feature.getIdFeature()}"
-                   th:text="#{feature.Breadcrumb.featurelistLabel}">
+                   th:text="${feature.getName()}">
                 </a>
             </p>
         </div>

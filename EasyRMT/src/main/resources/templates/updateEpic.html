@@ -21,7 +21,7 @@
                 </a>
                 /
                 <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epic.getIdEpic()}"
-                   th:text="#{epic.Breadcrumb.epiclistLabel}">
+                   th:text="${epic.getName()}">
                 </a>
             </p>
         </div>

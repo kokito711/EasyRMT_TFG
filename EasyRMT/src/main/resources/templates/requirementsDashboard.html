@@ -126,8 +126,9 @@
                         <tr th:each="requirement : ${requirementList}">
                             <td th:text="${requirement.getIdentifier()}"></td>
                             <td th:text="${requirement.getName()}"></td>
-                            <td th:each="reqType : ${reqTypes}">
-                                <p th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}" th:text="${reqType.getName()}"></p>
+                            <td th:each="reqType : ${reqTypes}"
+                                th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}" th:text="${reqType.getName()}">
+                                <p></p>
                             </td>
                             <td th:text="${requirement.getAuthor()}"></td>
                             <td th:text="${requirement.getAssignedTo()}"></td>
