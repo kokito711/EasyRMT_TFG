@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+  ~                             All rights reserved
+  -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="tab-content" th:fragment="fileTabFragment(path,fileList)">
+    <div class="row">
+    <h3 class="page-header" th:text="#{fileTab.page_header}"></h3>
+    </div>
+    <div class="row">
+        <a href="" data-toggle="modal" data-target="#uploadFileModal" th:value="path">
+                                <span class="fa fa-times-circle fa-2x pull-right" style="color: #5cb85c"
+                                      data-toggle="tooltip" data-placement="top"
+                                      th:title="#{fileTab.uploadFileButton}">
+                                </span>
+        </a>
+    </div>
+    <div class="row" th:unless="${#lists.isEmpty(fileList)}" th:each="file : ${fileList}">
+        <div class="col-lg-2">
+            <div class="panel panel-default">
+                <div class="panel panel-body">
+                    <h5 style="font-weight: bold" th:text="${file.name}"></h5>
+                    <label th:text="#{fileTab.size}+':'"></label>
+                    <p th:text="${file.size}"></p>
+                    <br/>
+                    <label th:text="#{fileTab.description}+':'"></label>
+                    <p th:text="${file.description}"></p>
+                    <br/>
+                    <label th:text="#{fileTab.type}+':'"></label>
+                    <p th:text="${file.type}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<form class="box" method="post" action="" enctype="multipart/form-data">
+        <div class="box__input">
+            <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
+            <label for="file"><strong th:text="#{fileTab.chooseFile}"></strong><span class="box__dragndrop" th:text="#{fileTab.dragFile}"></span></label>
+            <button class="box__button" type="submit" th:text="#{fileTab.submitButton}"></button>
+        </div>
+        <div class="box__uploading" th:text="#{fileTab.box_uploading}"></div>
+        <div class="box__success" th:text="#{fileTab.done}"></div>
+        <div class="box__error" th:text="#{fileTab.error}"><span></span></div>
+    </form>-->
+</div>
+</body>
+</html>
