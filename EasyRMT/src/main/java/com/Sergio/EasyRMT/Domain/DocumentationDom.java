@@ -1,7 +1,6 @@
 package com.Sergio.EasyRMT.Domain;
 
 import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.Project;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -38,5 +37,8 @@ public class DocumentationDom implements Serializable{
     private ObjectEntity object;
 
     @NotNull
-    private Project project;
+    private ProjectDom project;
+
+    public DocumentationDom() {
+    }
 }
