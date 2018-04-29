@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "Epic")
+@Table(name = "epic")
 @EqualsAndHashCode
 @EntityListeners(AuditingEntityListener.class)
 public class Epic implements Serializable {
