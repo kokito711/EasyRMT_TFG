@@ -301,15 +301,14 @@
                 <div class="col-lg-12">
                     <h1 id="project-info" class="page-header" th:text="#{project.projectInformationLabel}"></h1>
                 </div>
+                <div class="row">
+                    <!--here goes all the reporting information-->
+                </div>
             </div>
             <div class="tab-pane fade" id="fileTab"
-                 th:replace="fragments/fileTab :: fileTab(path='/project/'+${project.getIdProject()},fileList = ${fileList})">
+                 th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()},fileList = ${fileList})">
             </div>
         </div>
-
-    </div>
-    <div class="row">
-        <!--here goes all the reporting information-->
     </div>
 </div>
 </body>

@@ -373,7 +373,7 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="fileTab"
-                 th:replace="fragments/fileTab :: fileTab(path='/project/'+${project.getIdProject()},fileList = ${fileList})">
+                 th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()},fileList = ${fileList})">
             </div>
         </div>
     </div>
