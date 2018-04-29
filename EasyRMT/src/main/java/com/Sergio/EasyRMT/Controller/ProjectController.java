@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -132,6 +133,7 @@ public class ProjectController {
         ProjectDom projectDom = projectService.getProject(id);
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("fileList",new ArrayList<>());
         return modelAndView;
     }
 
