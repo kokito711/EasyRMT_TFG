@@ -57,6 +57,7 @@
             <li>
                 <a href="#traceability" data-toggle="tab" th:text="#{requirement.tab.traceability}"></a>
             </li>
+            <li><a href="#fileTab" data-toggle="tab" th:text="#{fileTab.page_header}"></a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
@@ -234,6 +235,9 @@
                     </div>
                     <hr/>
                 </div>
+            </div>
+            <div class="tab-pane fade" id="fileTab"
+                 th:replace="fragments/fileTab :: fileTab(path='/project/'+${project.getIdProject()},fileList = ${fileList})">
             </div>
         </div>
     </div>
