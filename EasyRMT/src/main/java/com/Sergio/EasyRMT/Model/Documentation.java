@@ -56,12 +56,12 @@ public class Documentation implements Serializable {
 
     @JsonManagedReference
     @ManyToOne(cascade = CascadeType.ALL, optional = true)
-    @JoinColumn(referencedColumnName = "idobject")
+    @JoinColumn(name="idobject", referencedColumnName = "idobject")
     private ObjectEntity object;
 
     @JsonManagedReference
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "project", referencedColumnName = "idproject")
+    @JoinColumn(name = "idproject", referencedColumnName = "idproject")
     @NotNull
     private Project project;
 }
