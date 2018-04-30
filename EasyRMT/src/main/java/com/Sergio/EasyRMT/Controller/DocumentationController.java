@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 public class DocumentationController {
     final String PATH_BASE = "/project/{projectId}/";
     final String UPLOAD_PATH = "uploadFile";
+    final String OBJECT_PATH = "object/{objectId}/";
     DocumentService documentService;
 
     @Autowired
@@ -33,6 +34,18 @@ public class DocumentationController {
     @RequestMapping(value = PATH_BASE+UPLOAD_PATH, method = RequestMethod.POST)
     public ResponseEntity uploadFile(@PathVariable int projectId, @RequestParam("file")MultipartFile file){
         return upload(projectId, null ,file);
+    }
+
+    /**
+     * TODO this javadoc
+     * @param projectId
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = PATH_BASE+OBJECT_PATH+UPLOAD_PATH, method = RequestMethod.POST)
+    public ResponseEntity uploadFile(@PathVariable int projectId, @PathVariable int objectId,
+                                     @RequestParam("file")MultipartFile file){
+        return upload(projectId, objectId ,file);
     }
 
     private ResponseEntity upload(int projectId, @Nullable Integer objectId, MultipartFile file){
