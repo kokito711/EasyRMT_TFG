@@ -55,8 +55,8 @@ public class Documentation implements Serializable {
     private String path = "/";
 
     @JsonManagedReference
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "object", referencedColumnName = "idobject")
+    @ManyToOne(cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(referencedColumnName = "idobject")
     private ObjectEntity object;
 
     @JsonManagedReference

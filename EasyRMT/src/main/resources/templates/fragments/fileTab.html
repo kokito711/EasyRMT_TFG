@@ -9,7 +9,7 @@
     <div class="row">
     <h3 class="page-header" th:text="#{fileTab.page_header}"></h3>
     </div>
-    <div class="row">
+    <div class="row" th:unless="${#lists.isEmpty(fileList)}">
         <a href="" data-toggle="modal" data-target="#uploadFileModal" th:value="path">
                                 <span class="fa fa-times-circle fa-2x pull-right" style="color: #5cb85c"
                                       data-toggle="tooltip" data-placement="top"
@@ -50,7 +50,7 @@
         </div>
     </div>
     <div class="row" th:if="${#lists.isEmpty(fileList)}">
-        <form class="box dropzone dz-clickable" method="post" th:action="${path}+'/upload'" enctype="multipart/form-data">
+        <form class="box dropzone dz-clickable" method="post" th:action="${path}+'/uploadFile'" enctype="multipart/form-data">
             <div class="box__input">
                 <input class="dz-hidden-input" type="file" name="file" id="file"
                        multiple="multiple" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;"/>

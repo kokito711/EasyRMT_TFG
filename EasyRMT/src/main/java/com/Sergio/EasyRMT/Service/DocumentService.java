@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
+ */
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.DocumentationDom;
@@ -42,15 +46,12 @@ public class DocumentService {
         if(file.isEmpty()){
             return false;
         }
-        String path = "/";
+        String path = "./"+Integer.toString(projectId);
         // Determines the path when file is going to be saved
-        if(objectId.equals(null)){
-            path.concat(Integer.toString(projectId));
+        if(objectId != null){
+            path = path.concat('/'+Integer.toString(objectId));
         }
-        else{
-            path.concat(Integer.toString(projectId)+'/'+objectId);
-        }
-        Double size = Double.longBitsToDouble((file.getSize()/1024)/1024);
+        Double size = (((double)file.getSize())/1024)/1024;
         DocumentationDom document = new DocumentationDom();
         document.setName(file.getOriginalFilename());
         document.setPath(path);
@@ -60,7 +61,7 @@ public class DocumentService {
         Documentation documentation = documentationConverter.toModel(document);
         Optional<Project> project = projectRepository.findByIdProject(projectId);
         documentation.setProject(project.get());
-        if(!objectId.equals(null)) {
+        if(objectId !=null) {
             ObjectEntity object = objectRepository.findOne(objectId);
         }
         else {

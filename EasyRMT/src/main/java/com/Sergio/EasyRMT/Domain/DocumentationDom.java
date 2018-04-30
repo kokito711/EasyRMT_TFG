@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
+ */
 package com.Sergio.EasyRMT.Domain;
 
 import com.Sergio.EasyRMT.Model.ObjectEntity;
@@ -40,5 +44,6 @@ public class DocumentationDom implements Serializable{
     private ProjectDom project;
 
     public DocumentationDom() {
+        this.project = new ProjectDom();
     }
 }

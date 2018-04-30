@@ -1,14 +1,13 @@
+/*
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
+ */
 package com.Sergio.EasyRMT.Service;
 
-import com.Sergio.EasyRMT.Repository.ObjectRepository;
-import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import javassist.bytecode.stackmap.TypeData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,7 +43,7 @@ public class SpaceAllocatorService {
         try {
             File folder = new File(path);
             if (!(folder.exists() && folder.isDirectory())) {
-                folder.mkdirs();
+                boolean status =folder.mkdirs();
             }
             /**
              * checks if file exists
@@ -56,9 +55,9 @@ public class SpaceAllocatorService {
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
                 String formatDate = sdf.format(date);
-                path.concat('/'+formatDate+file.getOriginalFilename());
+                path = path.concat('/'+formatDate+file.getOriginalFilename());
             }else {
-                path.concat('/'+file.getOriginalFilename());
+               path = path.concat('/'+file.getOriginalFilename());
             }
 
             byte[] bytes = file.getBytes();
