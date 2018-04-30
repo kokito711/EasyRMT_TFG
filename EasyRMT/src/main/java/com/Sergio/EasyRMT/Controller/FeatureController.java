@@ -8,6 +8,7 @@ package com.Sergio.EasyRMT.Controller;
 import com.Sergio.EasyRMT.Domain.FeatureDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Model.types.*;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.FeatureService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,14 @@ public class FeatureController {
     final String PATH_BASE = "/project/{projectId}/";
     ProjectService projectService;
     FeatureService featureService;
+    DocumentService documentService;
 
     @Autowired
-    public FeatureController(ProjectService projectService, FeatureService featureService) {
+    public FeatureController(ProjectService projectService, FeatureService featureService,
+                            DocumentService documentService) {
         this.projectService = projectService;
         this.featureService = featureService;
+        this.documentService = documentService;
     }
 
     /**
@@ -66,6 +70,7 @@ public class FeatureController {
         mav.addObject("feature", featureService.getFeature(featureId));
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("fileList", documentService.getFileList(projectId,featureId));
         return mav;
     }
 

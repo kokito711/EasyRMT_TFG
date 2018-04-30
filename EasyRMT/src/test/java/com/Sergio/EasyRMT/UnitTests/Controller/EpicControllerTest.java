@@ -8,6 +8,7 @@ package com.Sergio.EasyRMT.UnitTests.Controller;
 import com.Sergio.EasyRMT.Controller.EpicController;
 import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.junit.Test;
@@ -33,11 +34,14 @@ public class EpicControllerTest {
     ProjectService projectService;
     @Mock
     EpicService epicService;
+    @Mock
+    DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
         epicService = mock(EpicService.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -256,6 +260,6 @@ public class EpicControllerTest {
     }
 
     private EpicController createEpicController(){
-        return new EpicController(projectService,epicService);
+        return new EpicController(projectService,epicService, documentService);
     }
 }

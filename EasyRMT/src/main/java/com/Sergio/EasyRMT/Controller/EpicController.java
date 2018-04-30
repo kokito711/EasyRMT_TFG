@@ -8,6 +8,7 @@ package com.Sergio.EasyRMT.Controller;
 import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Model.types.*;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,13 @@ public class EpicController {
     final String PATH_BASE = "/project/{projectId}/";
     ProjectService projectService;
     EpicService epicService;
+    DocumentService documentService;
 
     @Autowired
-    public EpicController(ProjectService projectService, EpicService epicService) {
+    public EpicController(ProjectService projectService, EpicService epicService, DocumentService documentService) {
         this.projectService = projectService;
         this.epicService = epicService;
+        this.documentService = documentService;
     }
 
     /**
@@ -66,6 +69,7 @@ public class EpicController {
         mav.addObject("epic", epicService.getEpic(epicId));
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("fileList", documentService.getFileList(projectId,epicId));
         return mav;
     }
 

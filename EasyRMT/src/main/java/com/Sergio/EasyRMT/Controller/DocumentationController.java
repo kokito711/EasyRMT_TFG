@@ -4,10 +4,10 @@
  */
 package com.Sergio.EasyRMT.Controller;
 
+import com.Sergio.EasyRMT.Domain.DocumentationDom;
 import com.Sergio.EasyRMT.Service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,10 +26,11 @@ public class DocumentationController {
     }
 
     /**
-     * TODO this javadoc
-     * @param projectId
-     * @param file
-     * @return
+     * This method receives a file to be stored in project path. Then calls method upload which will persist file and
+     * a register in database to find file
+     * @param projectId id of project
+     * @param file MultipartFile received
+     * @return response entity 200 if file has been stored and 500 if not
      */
     @RequestMapping(value = PATH_BASE+UPLOAD_PATH, method = RequestMethod.POST)
     public ResponseEntity uploadFile(@PathVariable int projectId, @RequestParam("file")MultipartFile file){
@@ -37,15 +38,45 @@ public class DocumentationController {
     }
 
     /**
-     * TODO this javadoc
-     * @param projectId
-     * @param file
-     * @return
+     * This method receives a file to be stored in an object path. Then calls method upload which will persist file and
+     * a register in database to find file
+     * @param projectId id of project
+     * @param objectId od of object
+     * @param file MultipartFile received
+     * @return response entity 200 if file has been stored and 500 if not
      */
     @RequestMapping(value = PATH_BASE+OBJECT_PATH+UPLOAD_PATH, method = RequestMethod.POST)
     public ResponseEntity uploadFile(@PathVariable int projectId, @PathVariable int objectId,
                                      @RequestParam("file")MultipartFile file){
         return upload(projectId, objectId ,file);
+    }
+
+    /**
+     * This method returns a file stored in project path. Method calls {@link DocumentService} to get the file and serve it
+     * @param projectId id of project
+     * @param fileId id of file
+     * @return response entity 200 if file has been stored and 500 if not
+     */
+    @RequestMapping(value = PATH_BASE+"file/{fileId}", method = RequestMethod.GET)
+    public HttpEntity<byte[]> getFile(@PathVariable int projectId, @PathVariable int fileId){
+        DocumentationDom file = documentService.getDBFile(fileId);
+        HttpEntity<byte[]> response = download(projectId, null,file);
+        return response;
+    }
+
+    private HttpEntity<byte[]> download(int projectId, @Nullable Integer objectId, DocumentationDom file) {
+        /*
+        Creation of header
+         */
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.valueOf(file.getType()));
+        header.set(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment;filename="+ file.getName());
+        //Get File from documentService
+        byte[] content = documentService.getFile(file);
+        header.setContentLength(content.length);
+        HttpEntity<byte[]> response = new HttpEntity<>(content, header);
+        return response;
     }
 
     private ResponseEntity upload(int projectId, @Nullable Integer objectId, MultipartFile file){

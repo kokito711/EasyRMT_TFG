@@ -24,11 +24,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static jdk.nashorn.internal.objects.NativeMath.round;
 
 @Service
 public class DocumentService {
@@ -39,7 +43,7 @@ public class DocumentService {
     DocumentationConverter documentationConverter;
     DocumentationRepository documentationRepository;
 
-//TODO javadoc
+
     @Autowired
     public DocumentService(ObjectRepository objectRepository, ProjectRepository projectRepository,
                             DocumentationConverter documentationConverter,
@@ -51,13 +55,13 @@ public class DocumentService {
     }
 
     /**
-     *
-     * @param file
-     * @param projectId
-     * @param objectId
-     * @return
+     * This method will persist a file and will add a row into Documentation table with information of persisted file.
+     * @param file File to be persisted
+     * @param projectId Id of project
+     * @param objectId id of object which can be null if file is going to be attached to a project
+     * @return true if has been stored and false if not
      */
-    @Transactional(rollbackFor = Exception.class, noRollbackFor=IOException.class)
+    @Transactional(rollbackFor = Exception.class/*, noRollbackFor=IOException.class*/)
     public boolean uploadFile(MultipartFile file, int projectId, @Nullable Integer objectId){
         if(file.isEmpty()){
             return false;
@@ -68,12 +72,13 @@ public class DocumentService {
             path = path.concat('/'+Integer.toString(objectId));
         }
         File filepath = new File(path+'/'+file.getOriginalFilename());
-        Double size = (((double)file.getSize())/1024)/1024;
+        Double size =(((double)file.getSize())/1024)/1024;
+        DecimalFormat df = new DecimalFormat("###.##");
         DocumentationDom document = new DocumentationDom();
         document.setName(file.getOriginalFilename());
         document.setPath(path);
         document.setType(file.getContentType());
-        document.setSize(size);
+        document.setSize(Double.parseDouble(df.format(size).replaceAll(",", ".")));
         //Save file calling space allocator service
         if(!filePersist(file,path, document)){
             return false;
@@ -88,14 +93,58 @@ public class DocumentService {
         return true;
     }
 
-    //TODO JAVADoc
+    /**
+     * This method calls {@link DocumentationRepository} to find a file information with fileId given.
+     * Repository will return a {@link Documentation} object that will be converted to a {@link DocumentationDom}
+     * using for this {@link DocumentationConverter}.
+     * @param fileId id of file to be found in db
+     * @return {@link DocumentationDom} object
+     */
+    @Transactional(readOnly = true)
+    public DocumentationDom getDBFile(int fileId) {
+        Documentation documentation = documentationRepository.findOne(fileId);
+        DocumentationDom documentationDom = documentationConverter.toDomain(documentation);
+        return documentationDom;
+    }
 
     /**
-     *
-     * @param file
-     * @param path
-     * @return
+     * This method obtains a file from filesystem. The file will be found using the {@link DocumentationDom} passed as
+     * argument
+     * @param documentationDom  {@link DocumentationDom} with file information
+     * @return byte[] with file attached
      */
+    public byte[] getFile(DocumentationDom documentationDom) {
+        try{
+            Path path = Paths.get(documentationDom.getPath());
+            byte[] file = Files.readAllBytes(path);
+            return file;
+        }
+        catch (IOException e){
+            LOGGER.log(Level.WARNING, "System failed to attach file");
+            return null;
+        }
+    }
+
+    /**
+     * This method search in DB all the existing files in a project or an object. Then method calls
+     * {@link DocumentationConverter} to convert the list obtained to {@link DocumentationDom} list.
+     * @param projectId id of project
+     * @param objectId id of object (Can be null)
+     * @return List of {@link DocumentationDom}
+     */
+    public List<DocumentationDom> getFileList(int projectId, @Nullable Integer objectId){
+        List<Documentation> documentationList;
+        List<DocumentationDom> documentationDomList;
+        if(objectId!=null) {
+            documentationList = documentationRepository.findByProjectAndObject(projectId,objectId);
+        }
+        else {
+            documentationList = documentationRepository.findByProject(projectId);
+        }
+        documentationDomList = documentationConverter.toDomain(documentationList);
+        return documentationDomList;
+    }
+
     private boolean filePersist(MultipartFile file, String path, DocumentationDom documentationDom){
         /**
          *  Check if a folder exists.
@@ -134,8 +183,4 @@ public class DocumentService {
             return false;
         }
     }
-
-    /*private String generatePath( String path, DocumentationDom documentationDom){
-
-    }*/
 }

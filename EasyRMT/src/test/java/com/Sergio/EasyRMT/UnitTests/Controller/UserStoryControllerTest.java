@@ -11,6 +11,7 @@ import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.UserStory;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.UserStoryService;
@@ -39,12 +40,15 @@ public class UserStoryControllerTest {
     UserStoryService userStoryService;
     @Mock
     EpicService epicService;
+    @Mock
+    DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
         userStoryService = mock(UserStoryService.class);
         epicService = mock(EpicService.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -378,6 +382,6 @@ public class UserStoryControllerTest {
     }
 
     private UserStoryController createUserStoryController(){
-        return new UserStoryController(projectService, epicService, userStoryService);
+        return new UserStoryController(projectService, epicService, userStoryService, documentService);
     }
 }

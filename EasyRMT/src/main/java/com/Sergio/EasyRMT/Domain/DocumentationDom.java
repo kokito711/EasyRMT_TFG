@@ -37,7 +37,6 @@ public class DocumentationDom implements Serializable{
     @Length(max = 255, min = 1)
     private String path = "/";
 
-
     private ObjectEntity object;
 
     @NotNull
@@ -45,5 +44,16 @@ public class DocumentationDom implements Serializable{
 
     public DocumentationDom() {
         this.project = new ProjectDom();
+    }
+
+    public DocumentationDom(int idDocumentation, String name, Double size, String type, String path,
+                            ObjectEntity object, ProjectDom project) {
+        this.idDocumentation = idDocumentation;
+        this.name = name;
+        this.size = size;
+        this.type = type;
+        this.path = path;
+        this.object = object;
+        this.project = project;
     }
 }

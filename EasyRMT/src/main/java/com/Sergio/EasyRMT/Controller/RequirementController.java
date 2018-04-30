@@ -9,6 +9,7 @@ import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.RequirementDom;
 import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
 import com.Sergio.EasyRMT.Model.types.*;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.RequirementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,14 @@ public class RequirementController {
     final String PATH_BASE = "/project/{projectId}/";
     ProjectService projectService;
     RequirementService requirementService;
+    DocumentService documentService;
 
     @Autowired
-    public RequirementController(ProjectService projectService, RequirementService requirementService) {
+    public RequirementController(ProjectService projectService, RequirementService requirementService,
+                                 DocumentService documentService) {
         this.projectService = projectService;
         this.requirementService = requirementService;
+        this.documentService = documentService;
     }
 
     /**
@@ -70,6 +74,7 @@ public class RequirementController {
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
         mav.addObject("reqTypes", projectService.getReqTypes());
+        mav.addObject("fileList", documentService.getFileList(projectId,requirementId));
         return mav;
     }
 

@@ -2,6 +2,7 @@ package com.Sergio.EasyRMT.UnitTests.Controller;
 
 import com.Sergio.EasyRMT.Controller.ProjectController;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,10 +25,13 @@ public class ProjectContollerTest {
 
     @Mock
     ProjectService projectService;
+    @Mock
+    DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
+        documentService = mock(DocumentService.class);
     }
     @Test
     @DisplayName("createProjectView method returns a modelAndView object")
@@ -219,6 +223,6 @@ public class ProjectContollerTest {
         verify(projectService,times(1)).getProject(7);
     }
     private ProjectController createProjectController(){
-        return new ProjectController(projectService);
+        return new ProjectController(projectService, documentService);
     }
 }

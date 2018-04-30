@@ -10,6 +10,7 @@ import com.Sergio.EasyRMT.Controller.FeatureController;
 import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.FeatureDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
 import com.Sergio.EasyRMT.Service.FeatureService;
 import com.Sergio.EasyRMT.Service.ProjectService;
@@ -36,11 +37,14 @@ public class FeatureControllerTest {
     ProjectService projectService;
     @Mock
     FeatureService featureService;
+    @Mock
+    DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
         featureService = mock(FeatureService.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -268,6 +272,6 @@ public class FeatureControllerTest {
     }
 
     private FeatureController createFeatureController(){
-        return new FeatureController(projectService, featureService);
+        return new FeatureController(projectService, featureService, documentService);
     }
 }

@@ -9,6 +9,7 @@ import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.types.*;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.UserStoryService;
@@ -27,12 +28,15 @@ public class UserStoryController {
     ProjectService projectService;
     EpicService epicService;
     UserStoryService userStoryService;
+    DocumentService documentService;
 
     @Autowired
-    public UserStoryController(ProjectService projectService, EpicService epicService, UserStoryService userStoryService) {
+    public UserStoryController(ProjectService projectService, EpicService epicService, UserStoryService userStoryService,
+                               DocumentService documentService) {
         this.projectService = projectService;
         this.epicService = epicService;
         this.userStoryService = userStoryService;
+        this.documentService = documentService;
     }
 
     /**
@@ -98,6 +102,7 @@ public class UserStoryController {
         mav.addObject("projectList", projectDomList);
         mav.addObject("epicId",epicDom.getIdEpic());
         mav.addObject("epicName", epicDom.getName());
+        mav.addObject("fileList", documentService.getFileList(projectId,userStoryId));
         return mav;
     }
 

@@ -7,6 +7,7 @@
 package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,12 @@ import java.util.List;
 public class ProjectController {
 
     ProjectService projectService;
+    DocumentService documentService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, DocumentService documentService) {
         this.projectService = projectService;
+        this.documentService = documentService;
     }
 
     /**
@@ -133,7 +136,7 @@ public class ProjectController {
         ProjectDom projectDom = projectService.getProject(id);
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
-        modelAndView.addObject("fileList",new ArrayList<>());
+        modelAndView.addObject("fileList", documentService.getFileList(id, null));
         return modelAndView;
     }
 

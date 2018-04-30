@@ -10,6 +10,7 @@ import com.Sergio.EasyRMT.Domain.FeatureDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UseCaseDom;
 import com.Sergio.EasyRMT.Model.types.*;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.FeatureService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.UseCaseService;
@@ -28,12 +29,15 @@ public class UseCaseController {
     ProjectService projectService;
     FeatureService featureService;
     UseCaseService useCaseService;
+    DocumentService documentService;
 
     @Autowired
-    public UseCaseController(ProjectService projectService, FeatureService featureService, UseCaseService useCaseService) {
+    public UseCaseController(ProjectService projectService, FeatureService featureService, UseCaseService useCaseService,
+                             DocumentService documentService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.useCaseService = useCaseService;
+        this.documentService = documentService;
     }
 
     /**
@@ -99,6 +103,7 @@ public class UseCaseController {
         mav.addObject("projectList", projectDomList);
         mav.addObject("featureId",featureDom.getIdFeature());
         mav.addObject("featureName", featureDom.getName());
+        mav.addObject("fileList", documentService.getFileList(projectId,useCaseId));
         return mav;
     }
 

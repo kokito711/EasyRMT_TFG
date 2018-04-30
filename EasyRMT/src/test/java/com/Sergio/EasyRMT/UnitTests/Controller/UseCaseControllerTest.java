@@ -34,12 +34,15 @@ public class UseCaseControllerTest {
     UseCaseService useCaseService;
     @Mock
     FeatureService featureService;
+    @Mock
+    DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
         useCaseService = mock(UseCaseService.class);
         featureService = mock(FeatureService.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -373,6 +376,6 @@ public class UseCaseControllerTest {
     }
 
     private UseCaseController createUseCaseController(){
-        return new UseCaseController(projectService, featureService, useCaseService);
+        return new UseCaseController(projectService, featureService, useCaseService, documentService);
     }
 }

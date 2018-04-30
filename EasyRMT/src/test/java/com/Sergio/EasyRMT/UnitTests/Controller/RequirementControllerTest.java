@@ -10,6 +10,7 @@ import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.RequirementDom;
 import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
 import com.Sergio.EasyRMT.Model.types.*;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.RequirementService;
 import org.junit.Test;
@@ -35,11 +36,14 @@ public class RequirementControllerTest {
     ProjectService projectService;
     @Mock
     RequirementService requirementService;
+    @Mock
+    DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
         requirementService = mock(RequirementService.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -294,6 +298,6 @@ public class RequirementControllerTest {
     }
 
     private RequirementController createRequirementController(){
-        return new RequirementController(projectService, requirementService);
+        return new RequirementController(projectService, requirementService, documentService);
     }
 }
