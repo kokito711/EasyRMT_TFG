@@ -35,4 +35,10 @@ public class UserService {
         UserDom userDom = userConverter.toDomain(user);
         return userDom;
     }
+
+    public void createUser(UserDom userDom){
+        User user = userConverter.toModel(userDom);
+        user.setPassword(bCryptPasswordEncoder.encode(userDom.getPassword()));
+        userRepository.save(user);
+    }
 }
