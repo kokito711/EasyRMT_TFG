@@ -24,4 +24,12 @@ public class RoleDom {
     @NotNull
     @NotEmpty
     private String role;
+
+    public RoleDom() {
+    }
+
+    public RoleDom(int roleId, String role) {
+        this.roleId = roleId;
+        this.role = role;
+    }
 }

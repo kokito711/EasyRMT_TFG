@@ -14,6 +14,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @EqualsAndHashCode
 @ToString
@@ -47,4 +48,27 @@ public class UserDom {
 
     @Length(min=1, max = 15)
     private String phone;
+
+    private Set<RoleDom> roles;
+
+    public UserDom() {
+    }
+
+    public UserDom(int userId, String username, String email, String password) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserDom(int userId, String username, String email, String password, String name, String lastName, String phone, Set<RoleDom> roles) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.roles = roles;
+    }
 }
