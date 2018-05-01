@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Nullable;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -76,7 +77,7 @@ public class DocumentService {
         DecimalFormat df = new DecimalFormat("###.##");
         DocumentationDom document = new DocumentationDom();
         document.setName(file.getOriginalFilename());
-        document.setPath(path);
+        document.setPath(filepath.getPath());
         document.setType(file.getContentType());
         document.setSize(Double.parseDouble(df.format(size).replaceAll(",", ".")));
         //Save file calling space allocator service
@@ -88,6 +89,7 @@ public class DocumentService {
         documentation.setProject(project.get());
         if(objectId !=null) {
             ObjectEntity object = objectRepository.findOne(objectId);
+            documentation.setObject(object);
         }
         documentationRepository.save(documentation);
         return true;
@@ -145,6 +147,66 @@ public class DocumentService {
         return documentationDomList;
     }
 
+    /**
+     * This method deletes a file if is persisted in filesystem
+     * @param fileId id of file
+     * @return {@code True} if deleted. {@code False} if not deleted.
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteFile (int fileId){
+        Documentation documentation = documentationRepository.findOne(fileId);
+        DocumentationDom documentationDom = documentationConverter.toDomain(documentation);
+        /*
+        Check if file exists. If exists app tries to delete it
+         */
+        try{
+            Path path = Paths.get(documentationDom.getPath());
+            if(Files.deleteIfExists(path)){
+                documentationRepository.deleteFile(fileId);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch (IOException e){
+            LOGGER.log(Level.WARNING, "System failed to delete file");
+            return false;
+        }
+    }
+
+    /**
+     * This method delete all the files related with the projectId and objectId related
+     * @param projectId
+     * @param objectId
+     */
+    public void deleteFiles(int projectId, @Nullable Integer objectId){
+        List<Documentation> files = documentationRepository.findByProjectAndObject(projectId,objectId);
+        boolean problem = false;
+        for(Documentation document : files){
+            String loggerMessage = "File " + document.getName() + " deleted from project " + projectId;
+            try {
+                Path path = Paths.get(document.getPath());
+                if(Files.deleteIfExists(path)){
+                    documentationRepository.deleteFile(document.getIdDocumentation());
+                }
+                if(objectId == null) {
+                    LOGGER.log(Level.INFO, loggerMessage);
+                }
+                else {
+                    LOGGER.log(Level.INFO, loggerMessage+" and object "+objectId.toString());
+                }
+            }
+            catch (Exception e){
+                problem = true;
+                LOGGER.log(Level.WARNING, "System failed to delete file. File path: "+document.getPath());
+            }
+        }
+        if(!problem){
+            LOGGER.log(Level.INFO, "All files deleted as requested");
+        }
+    }
+
     private boolean filePersist(MultipartFile file, String path, DocumentationDom documentationDom){
         /**
          *  Check if a folder exists.
@@ -170,6 +232,7 @@ public class DocumentService {
                 documentationDom.setPath(path);
             }else {
                 path = path.concat('/'+file.getOriginalFilename());
+                documentationDom.setPath(path);
             }
 
             byte[] bytes = file.getBytes();
@@ -183,4 +246,6 @@ public class DocumentService {
             return false;
         }
     }
+
+
 }

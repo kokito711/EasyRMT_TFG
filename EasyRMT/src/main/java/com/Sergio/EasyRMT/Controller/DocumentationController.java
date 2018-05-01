@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Nullable;
+import java.net.URI;
 
 @RestController
 public class DocumentationController {
@@ -62,6 +63,54 @@ public class DocumentationController {
         DocumentationDom file = documentService.getDBFile(fileId);
         HttpEntity<byte[]> response = download(projectId, null,file);
         return response;
+    }
+    /**
+    * This method returns a file stored in object path. Method calls {@link DocumentService} to get the file and serve it
+    * @param projectId id of project
+    * @param objectId id of object
+    * @param fileId id of file
+    * @return response entity 200 if file has been stored and 500 if not
+    */
+    @RequestMapping(value = PATH_BASE+OBJECT_PATH+"file/{fileId}", method = RequestMethod.GET)
+    public HttpEntity<byte[]> getFile(@PathVariable int projectId, @PathVariable int objectId, @PathVariable int fileId){
+        DocumentationDom file = documentService.getDBFile(fileId);
+        HttpEntity<byte[]> response = download(projectId, null,file);
+        return response;
+    }
+
+    /**
+     * This method is a request to delete a file that is own by a project
+     * @param projectId id of project
+     * @param fileId id of file
+     * @return status of deletion. 200 if ok and 500 if not ok
+     */
+    @RequestMapping(value = PATH_BASE+"file/{fileId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteFile(@PathVariable int projectId, @PathVariable int fileId){
+        boolean response = documentService.deleteFile(fileId);
+        if(response){
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+        }
+    }
+
+    /**
+     * This method is a request to delete a file that is own by an object
+     * @param projectId id of project
+     * @param objectId id of object
+     * @param fileId id of file
+     * @return status of deletion. 200 if ok and 500 if not ok
+     */
+    @RequestMapping(value = PATH_BASE+OBJECT_PATH+UPLOAD_PATH+"file/{fileId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteFile(@PathVariable int projectId, @PathVariable int objectId, @PathVariable int fileId){
+        boolean response = documentService.deleteFile(fileId);
+        if(response){
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+        }
     }
 
     private HttpEntity<byte[]> download(int projectId, @Nullable Integer objectId, DocumentationDom file) {

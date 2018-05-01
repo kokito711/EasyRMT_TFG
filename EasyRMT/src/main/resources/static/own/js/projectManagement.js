@@ -87,6 +87,21 @@ function deleteRequirement(projectId, requirementId, useCaseId) {
     });
 }
 
+function deleteFile(path, fileId) {
+    $.ajax({
+        url: path+'/file/'+fileId,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteFileModal").modal('hide');
+            $("#deleteFileModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteFileModalModal").modal('hide');
+            $("#deleteFileModalFail").modal('show');
+        }
+    });
+}
+
 
 function modalValue(id){
     var button = document.getElementById("delete_button");

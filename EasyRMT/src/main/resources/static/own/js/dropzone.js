@@ -695,8 +695,6 @@ var Dropzone = function (_Emitter) {
 
         // END OPTIONS
         // (Required by the dropzone documentation parser)
-
-
         /*
          Those functions register themselves to the events on init and handle all
          the user interface specific stuff. Overwriting them won't break the upload
@@ -958,12 +956,16 @@ var Dropzone = function (_Emitter) {
         // When the upload is finished, either with success or an error.
         // Receives `file`
         complete: function complete(file) {
-          if (file._removeLink) {
+            var path = location.pathname;
+
+            location.reload();
+
+          /*if (file._removeLink) {
             file._removeLink.textContent = this.options.dictRemoveFile;
           }
           if (file.previewElement) {
             return file.previewElement.classList.add("dz-complete");
-          }
+          }*/
         },
         completemultiple: function completemultiple() {},
         maxfilesexceeded: function maxfilesexceeded() {},

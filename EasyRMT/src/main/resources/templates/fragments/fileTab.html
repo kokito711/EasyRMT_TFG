@@ -3,9 +3,105 @@
   ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
   ~                             All rights reserved
   -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <body>
 <div class="tab-pane fade" th:fragment="fileTabFragment(path,fileList)" id="fileTab">
+    <!-- upload Modal -->
+    <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog"
+         aria-labelledby="uploadFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="uploadFileModalLabel" th:text="#{fileTab.Modal.label}"></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="box dropzone dz-clickable" method="post" th:action="${path}+'/uploadFile'" enctype="multipart/form-data">
+                        <div class="box">
+                            <input class="dz-hidden-input" type="file" name="file" id="file"
+                                   multiple="multiple" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;"/>
+                            <label for="file">
+                                <strong th:text="#{fileTab.chooseFile}"></strong>
+                                <span th:text="#{fileTab.dragFile}"></span>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /. upload modal -->
+    <!-- delete file modal -->
+    <div class="modal fade" id="deleteFileModal" tabindex="-1" role="dialog"
+         aria-labelledby="deleteFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteFileModalLabel" th:text="#{fileTab.deleteModal.label}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{fileTab.deleteModal.text}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{featuresDashboard.deleteModal.cancelButton}"></button>
+                    <button type="button" class="btn btn-danger"
+                            th:onclick="'deleteFile(\''+${path}+'\',this.value)'"
+                            th:text="#{featuresDashboard.deleteModal.deleteButton}" id="delete_button"></button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /. deletion modal -->
+    <!-- Deletion notify Modal -->
+    <div class="modal fade" id="deleteFileModalOk" tabindex="-1" role="dialog"
+         aria-labelledby="deleteFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteFileModalLabelOk" th:text="#{fileTab.deleteModal.label}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{fileTab.deleteNotificationModal.text}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                            th:onclick="'location.reload();'"
+                            th:text="#{featuresDashboard.deleteNotificationModal.dismissButton}">
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /. deletion notify modal -->
+    <!-- Deletion fail Modal -->
+    <div class="modal fade" id="deleteFileModalFail" tabindex="-1" role="dialog"
+         aria-labelledby="deleteFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteFileModalLabelFail"
+                        th:text="#{fileTab.deleteModal.FailLabel}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{fileTab.deleteModal.FailLabel}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{featuresDashboard.deleteNotificationModal.dismissButton}"></button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /. deletion fail modal -->
     <div class="row col-lg-12">
     <h3 class="page-header" th:text="#{fileTab.page_header}"></h3>
     </div>
@@ -19,7 +115,7 @@
     </div>
     <br/>
     <div class="row col-lg-12" th:unless="${#lists.isEmpty(fileList)}">
-        <div class="col-lg-2"  th:each="file : ${fileList}">
+        <div class="col-lg-2"  th:each="file : ${fileList}" id="uploaded-files">
             <div class="panel panel-default">
                 <div class="panel-body" data-toggle="tooltip" data-placement="top"
                      th:title="${file.getName()}">
@@ -48,50 +144,19 @@
             </div>
         </div>
     </div>
-    <div class="row" th:if="${#lists.isEmpty(fileList)}">
-        <form class="box dropzone dz-clickable" method="post" th:action="${path}+'/uploadFile'" enctype="multipart/form-data">
-            <div class="box__input">
+    <div class="col-lg-12" th:if="${#lists.isEmpty(fileList)}" >
+        <form class="box dropzone dz-clickable table-bordered" method="post" th:action="${path}+'/uploadFile'"
+              enctype="multipart/form-data" >
+            <div class="box col-lg-12 " style="height: 250px;">
                 <input class="dz-hidden-input" type="file" name="file" id="file"
                        multiple="multiple" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;"/>
                 <label for="file">
                     <strong th:text="#{fileTab.chooseFile}"></strong>
-                    <span class="box__dragndrop" th:text="#{fileTab.dragFile}"></span>
+                    <span th:text="#{fileTab.dragFile}"></span>
                 </label>
-                <button class="box__button" type="submit" th:text="#{fileTab.submitButton}"></button>
             </div>
-<!--            <div class="box__uploading" th:text="#{fileTab.box_uploading}"></div>
-            <div class="box__success" th:text="#{fileTab.done}"></div>
-            <div class="box__error" th:text="#{fileTab.error}"><span></span></div>-->
         </form>
     </div>
-    <!-- upload Modal -->
-    <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog"
-         aria-labelledby="uploadFileModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                    <h4 class="modal-title" id="uploadFileModalLabel" th:text="#{fileTab.Modal.label}"></h4>
-                </div>
-                <div class="modal-body">
-                    <form class="box dropzone dz-clickable" method="post" th:action="${path}+'/uploadFile'" enctype="multipart/form-data">
-                        <div class="box">
-                            <input class="dz-hidden-input" type="file" name="file" id="file"
-                                   multiple="multiple" style="visibility: hidden; position: absolute; top: 0px; left: 0px; height: 0px; width: 0px;"/>
-                            <label for="file">
-                                <strong th:text="#{fileTab.chooseFile}"></strong>
-                                <span th:text="#{fileTab.dragFile}"></span>
-                            </label>
-<!--                            <button class="box__button" type="submit" th:text="#{fileTab.submitButton}"></button>-->
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /. upload modal -->
 </div>
 </body>
 </html>
