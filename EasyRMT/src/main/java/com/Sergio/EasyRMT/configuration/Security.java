@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -51,7 +50,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login*").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/**").hasAnyAuthority("ANALYST", "PROJECT_MANAGER", "STAKEHOLDER")
-                .anyRequest().authenticated()
+                .anyRequest().authenticated().and().csrf().disable().formLogin()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -59,18 +58,20 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login?error=true")
                 .and()
                 .logout().logoutSuccessUrl("/");
+
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/resources/static/**");
+                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder;
     }
+
+
 }
