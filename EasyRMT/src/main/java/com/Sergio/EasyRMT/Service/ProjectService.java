@@ -22,13 +22,17 @@ public class ProjectService {
     ReqTypeRepository reqTypeRepository;
     ProjectConverter projectConverter;
     ReqTypeConverter reqTypeConverter;
+    DocumentService documentService;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository, ProjectConverter projectConverter, ReqTypeConverter reqTypeConverter) {
+    public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository,
+                          ProjectConverter projectConverter, ReqTypeConverter reqTypeConverter,
+                          DocumentService documentService) {
         this.projectRepository = projectRepository;
         this.reqTypeRepository = reqTypeRepository;
         this.projectConverter = projectConverter;
         this.reqTypeConverter = reqTypeConverter;
+        this.documentService = documentService;
     }
 
     /**
@@ -127,6 +131,7 @@ public class ProjectService {
     @Transactional(rollbackFor=Exception.class)
     public boolean deleteProject(int id) {
         if (projectRepository.existsByIdProject(id)){
+            documentService.deleteFiles(id,null);
             projectRepository.deleteProjectByIdProject(id);
             return !projectRepository.existsByIdProject(id);
         }

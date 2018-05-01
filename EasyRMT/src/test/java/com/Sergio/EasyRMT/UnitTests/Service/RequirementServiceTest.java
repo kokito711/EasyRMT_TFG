@@ -13,6 +13,7 @@ import com.Sergio.EasyRMT.Model.types.*;
 import com.Sergio.EasyRMT.Repository.*;
 import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
 import com.Sergio.EasyRMT.Service.Converter.RequirementConverter;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
 import com.Sergio.EasyRMT.Service.RequirementService;
 import org.junit.Test;
@@ -49,6 +50,8 @@ public class RequirementServiceTest {
     private RequirementRepository requirementRepository;
     @Mock
     private ReqTypeRepository reqTypeRepository;
+    @Mock
+    private DocumentService documentService;
 
     private Date date;
     @BeforeEach
@@ -58,6 +61,7 @@ public class RequirementServiceTest {
         projectRepository = mock(ProjectRepository.class);
         requirementRepository = mock(RequirementRepository.class);
         reqTypeRepository = mock(ReqTypeRepository.class);
+        documentService = mock(DocumentService.class);
         date = new Date();
     }
 
@@ -234,7 +238,7 @@ public class RequirementServiceTest {
 
     private RequirementService createRequirementService(){
         return new RequirementService(objectRepository,projectRepository,requirementConverter,requirementRepository,
-                                        reqTypeRepository);
+                                        reqTypeRepository, documentService);
     }
 
     private Requirement createRequirement(boolean attributes) {

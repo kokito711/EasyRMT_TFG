@@ -29,14 +29,17 @@ public class FeatureService {
     FeatureRepository featureRepository;
     ProjectRepository projectRepository;
     FeatureConverter featureConverter;
+    DocumentService documentService;
 
     @Autowired
     public FeatureService(ObjectRepository objectRepository, FeatureRepository featureRepository,
-                          ProjectRepository projectRepository, FeatureConverter featureConverter) {
+                          ProjectRepository projectRepository, FeatureConverter featureConverter,
+                          DocumentService documentService) {
         this.objectRepository = objectRepository;
         this.featureRepository = featureRepository;
         this.projectRepository = projectRepository;
         this.featureConverter = featureConverter;
+        this.documentService = documentService;
     }
 
     /**
@@ -199,9 +202,13 @@ public class FeatureService {
             Feature feature = featureRepository.findOne(featureId);
             if(!feature.getUseCases().isEmpty()){
                 for(UseCase useCase: feature.getUseCases()){
+                    ObjectEntity object = feature.getObject();
+                    documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
                     objectRepository.deleteObject(useCase.getIdUseCase());
                 }
             }
+            ObjectEntity object = feature.getObject();
+            documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
             objectRepository.deleteObject(featureId);
             if(objectRepository.exists(featureId) ||featureRepository.exists(featureId)){
                 return false;

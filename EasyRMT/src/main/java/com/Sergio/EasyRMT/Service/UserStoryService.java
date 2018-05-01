@@ -30,15 +30,18 @@ public class UserStoryService {
     ProjectRepository projectRepository;
     UserStoryRepository userStoryRepository;
     UserStoryConverter userStoryConverter;
+    DocumentService documentService;
 
     @Autowired
     public UserStoryService(ObjectRepository objectRepository, EpicRepository epicRepository,
-                            ProjectRepository projectRepository, UserStoryRepository userStoryRepository, UserStoryConverter userStoryConverter) {
+                            ProjectRepository projectRepository, UserStoryRepository userStoryRepository,
+                            UserStoryConverter userStoryConverter,  DocumentService documentService) {
         this.objectRepository = objectRepository;
         this.epicRepository = epicRepository;
         this.projectRepository = projectRepository;
         this.userStoryRepository = userStoryRepository;
         this.userStoryConverter = userStoryConverter;
+        this.documentService = documentService;
     }
 
     /**
@@ -195,6 +198,8 @@ public class UserStoryService {
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteUserStory(int userStoryId) {
         if (objectRepository.exists(userStoryId)){
+            ObjectEntity object= objectRepository.findOne(userStoryId);
+            documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
             objectRepository.deleteObject(userStoryId);
             if(objectRepository.exists(userStoryId) ||userStoryRepository.exists(userStoryId)){
                 return false;

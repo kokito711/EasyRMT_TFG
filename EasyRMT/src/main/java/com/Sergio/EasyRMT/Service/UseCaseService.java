@@ -30,15 +30,18 @@ public class UseCaseService {
     ProjectRepository projectRepository;
     UseCaseRepository useCaseRepository;
     UseCaseConverter useCaseConverter;
+    DocumentService documentService;
 
     @Autowired
     public UseCaseService(ObjectRepository objectRepository, FeatureRepository featureRepository,
-                          ProjectRepository projectRepository, UseCaseRepository useCaseRepository, UseCaseConverter useCaseConverter) {
+                          ProjectRepository projectRepository, UseCaseRepository useCaseRepository,
+                          UseCaseConverter useCaseConverter,  DocumentService documentService) {
         this.objectRepository = objectRepository;
         this.featureRepository = featureRepository;
         this.projectRepository = projectRepository;
         this.useCaseRepository = useCaseRepository;
         this.useCaseConverter = useCaseConverter;
+        this.documentService = documentService;
     }
 
     /**
@@ -206,6 +209,8 @@ public class UseCaseService {
     @Transactional(rollbackFor = Exception.class)
     public boolean deleteUseCase(int useCaseId) {
         if (objectRepository.exists(useCaseId)){
+            ObjectEntity object= objectRepository.findOne(useCaseId);
+            documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
             objectRepository.deleteObject(useCaseId);
             if(objectRepository.exists(useCaseId) ||useCaseRepository.exists(useCaseId)){
                 return false;

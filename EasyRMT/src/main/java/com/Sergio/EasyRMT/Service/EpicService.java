@@ -29,14 +29,17 @@ public class EpicService {
     EpicRepository epicRepository;
     ProjectRepository projectRepository;
     EpicConverter epicConverter;
+    DocumentService documentService;
 
     @Autowired
     public EpicService(ObjectRepository objectRepository, EpicRepository epicRepository,
-                       ProjectRepository projectRepository, EpicConverter epicConverter) {
+                       ProjectRepository projectRepository, EpicConverter epicConverter,
+                       DocumentService documentService) {
         this.objectRepository = objectRepository;
         this.epicRepository = epicRepository;
         this.projectRepository = projectRepository;
         this.epicConverter = epicConverter;
+        this.documentService = documentService;
     }
 
     /**
@@ -202,9 +205,13 @@ public class EpicService {
             Epic epic = epicRepository.findOne(epicId);
             if(!epic.getUserStories().isEmpty()){
                 for(UserStory userStory: epic.getUserStories()){
+                    ObjectEntity object = userStory.getObject();
+                    documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
                     objectRepository.deleteObject(userStory.getIdUserStory());
                 }
             }
+            ObjectEntity object = epic.getObject();
+            documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
             objectRepository.deleteObject(epicId);
             if(objectRepository.exists(epicId) ||epicRepository.exists(epicId)){
                 return false;

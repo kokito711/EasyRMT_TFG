@@ -30,16 +30,18 @@ public class RequirementService {
     ProjectRepository projectRepository;
     RequirementRepository requirementRepository;
     ReqTypeRepository reqTypeRepository;
+    DocumentService documentService;
 
     @Autowired
     public RequirementService(ObjectRepository objectRepository, ProjectRepository projectRepository,
                               RequirementConverter requirementConverter, RequirementRepository requirementRepository,
-                             ReqTypeRepository reqTypeRepository) {
+                             ReqTypeRepository reqTypeRepository,  DocumentService documentService) {
         this.objectRepository = objectRepository;
         this.projectRepository = projectRepository;
         this.requirementConverter = requirementConverter;
         this.requirementRepository = requirementRepository;
         this.reqTypeRepository = reqTypeRepository;
+        this.documentService = documentService;
     }
 
     /**
@@ -217,12 +219,8 @@ public class RequirementService {
     public boolean deleteRequirement(int requirementId) {
         if (objectRepository.exists(requirementId)){
             //TODO change this when traceability is done
-            /*Re epic = epicRepository.findOne(requirementId);
-            if(!epic.getUserStories().isEmpty()){
-                for(UserStory userStory: epic.getUserStories()){
-                    objectRepository.deleteObject(userStory.getIdUserStory());
-                }
-            }*/
+            ObjectEntity object= objectRepository.findOne(requirementId);
+            documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
             objectRepository.deleteObject(requirementId);
             if(objectRepository.exists(requirementId) ||requirementRepository.exists(requirementId)){
                 return false;

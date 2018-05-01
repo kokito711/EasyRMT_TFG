@@ -14,6 +14,7 @@ import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +44,8 @@ public class EpicServiceTest {
     private ProjectRepository projectRepository;
     @Mock
     private EpicConverter epicConverter;
+    @Mock
+    private DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
@@ -50,6 +53,7 @@ public class EpicServiceTest {
         epicRepository = mock(EpicRepository.class);
         projectRepository = mock(ProjectRepository.class);
         epicConverter = mock(EpicConverter.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -186,7 +190,7 @@ public class EpicServiceTest {
     }
 
     private EpicService createEpicService(){
-        return new EpicService(objectRepository,epicRepository,projectRepository,epicConverter);
+        return new EpicService(objectRepository,epicRepository,projectRepository,epicConverter, documentService);
     }
 
 }

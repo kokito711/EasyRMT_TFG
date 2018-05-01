@@ -11,6 +11,7 @@ import com.Sergio.EasyRMT.Repository.FeatureRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Service.Converter.FeatureConverter;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.FeatureService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +42,8 @@ public class FeatureServiceTest {
     private ProjectRepository projectRepository;
     @Mock
     private FeatureConverter featureConverter;
+    @Mock
+    private DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
@@ -48,6 +51,7 @@ public class FeatureServiceTest {
         featureRepository = mock(FeatureRepository.class);
         projectRepository = mock(ProjectRepository.class);
         featureConverter = mock(FeatureConverter.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -183,7 +187,7 @@ public class FeatureServiceTest {
     }
 
     private FeatureService createFeatureService(){
-        return new FeatureService(objectRepository,featureRepository,projectRepository,featureConverter);
+        return new FeatureService(objectRepository,featureRepository,projectRepository,featureConverter, documentService);
     }
 
 }

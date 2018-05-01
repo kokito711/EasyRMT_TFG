@@ -141,7 +141,7 @@ public class DocumentService {
             documentationList = documentationRepository.findByProjectAndObject(projectId,objectId);
         }
         else {
-            documentationList = documentationRepository.findByProject(projectId);
+            documentationList = documentationRepository.findByProjectWithoutObject(projectId);
         }
         documentationDomList = documentationConverter.toDomain(documentationList);
         return documentationDomList;
@@ -181,7 +181,13 @@ public class DocumentService {
      * @param objectId
      */
     public void deleteFiles(int projectId, @Nullable Integer objectId){
-        List<Documentation> files = documentationRepository.findByProjectAndObject(projectId,objectId);
+        List<Documentation> files;
+        if(objectId != null) {
+            files = documentationRepository.findByProjectAndObject(projectId, objectId);
+        }
+        else {
+            files = documentationRepository.findByProject(projectId);
+        }
         boolean problem = false;
         for(Documentation document : files){
             String loggerMessage = "File " + document.getName() + " deleted from project " + projectId;

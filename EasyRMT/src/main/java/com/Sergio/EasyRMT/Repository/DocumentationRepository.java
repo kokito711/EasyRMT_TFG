@@ -12,7 +12,12 @@ public interface DocumentationRepository extends JpaRepository<Documentation, In
             nativeQuery = true)
     List<Documentation> findByProjectAndObject(int projectId, Integer objectId);
 
-    @Query(value = "SELECT * FROM easyrmt.documentation where documentation.idproject = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM easyrmt.documentation where documentation.idproject = ?1 and documentation.idobject is null",
+            nativeQuery = true)
+    List<Documentation> findByProjectWithoutObject(int projectId);
+
+    @Query(value = "SELECT * FROM easyrmt.documentation where documentation.idproject = ?1",
+            nativeQuery = true)
     List<Documentation> findByProject(int projectId);
 
     @Modifying

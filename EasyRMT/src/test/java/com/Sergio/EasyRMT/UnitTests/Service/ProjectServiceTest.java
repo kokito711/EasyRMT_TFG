@@ -8,6 +8,7 @@ import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
 import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
 import com.Sergio.EasyRMT.Service.Converter.ReqTypeConverter;
+import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,8 @@ public class ProjectServiceTest {
     private ProjectConverter projectConverter;
     @Mock
     private ReqTypeConverter reqTypeConverter;
+    @Mock
+    private DocumentService documentService;
 
     @BeforeEach
     public void initMocks(){
@@ -44,6 +47,7 @@ public class ProjectServiceTest {
         reqTypeRepository = mock(ReqTypeRepository.class);
         projectConverter = mock(ProjectConverter.class);
         reqTypeConverter = mock(ReqTypeConverter.class);
+        documentService = mock(DocumentService.class);
     }
 
     @Test
@@ -200,6 +204,6 @@ public class ProjectServiceTest {
     }
 
     private ProjectService createProjectService(){
-        return new ProjectService(projectRepository, reqTypeRepository, projectConverter, reqTypeConverter);
+        return new ProjectService(projectRepository, reqTypeRepository, projectConverter, reqTypeConverter, documentService);
     }
 }
