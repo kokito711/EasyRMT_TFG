@@ -102,7 +102,20 @@ function deleteFile(path, fileId) {
     });
 }
 
-
+function deleteUser(user) {
+    $.ajax({
+        url: '/admin/users/user/'+user,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteUserModal").modal('hide');
+            $("#deleteUserModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteUserModal").modal('hide');
+            $("#deleteUserModalFail").modal('show');
+        }
+    });
+}
 function modalValue(id){
     var button = document.getElementById("delete_button");
     var att = document.createAttribute("value");

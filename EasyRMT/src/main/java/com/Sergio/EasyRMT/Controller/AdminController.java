@@ -123,7 +123,7 @@ public class AdminController {
     public ModelAndView getUserList(){
         List<UserDom> users = userService.getUsers();
         ModelAndView modelAndView = new ModelAndView(USER_BASE_PATH);
-        modelAndView.addObject(users);
+        modelAndView.addObject("userList",users);
         return modelAndView;
     }
 }
