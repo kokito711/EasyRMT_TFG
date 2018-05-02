@@ -43,15 +43,15 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @Length(min=1, max = 30)
+    @Length(max = 30)
     @Column(name = "name")
     private String name;
 
-    @Length(min=1, max = 40)
+    @Length(max = 40)
     @Column(name = "lastname")
     private String lastName;
 
-    @Length(min=1, max = 15)
+    @Length(max = 15)
     @Column(name = "phone")
     private String phone;
 

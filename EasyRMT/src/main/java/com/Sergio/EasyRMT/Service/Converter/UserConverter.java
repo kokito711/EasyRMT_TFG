@@ -25,7 +25,10 @@ public class UserConverter {
     }
 
     public UserDom toDomain(User user) {
-        Set<RoleDom> roleDoms = roleConverter.toDomain(user.getRoles());
+        Set<RoleDom> roleDoms = new HashSet<>();
+        if(user.getRoles() != null) {
+           roleDoms = roleConverter.toDomain(user.getRoles());
+        }
         UserDom userDom = new UserDom(
                 user.getUserId(),
                 user.getUsername(),
@@ -54,7 +57,6 @@ public class UserConverter {
     }
 
     public User toModel(UserDom userDom){
-        Set<Role> roles = roleConverter.toModel(userDom.getRoles());
         User user = new User();
         user.setUsername(userDom.getUsername());
         user.setEmail(userDom.getEmail());
@@ -68,7 +70,6 @@ public class UserConverter {
         if (userDom.getPhone()!= null){
             user.setPhone(userDom.getPhone());
         }
-        user.setRoles(roles);
         return user;
     }
 
