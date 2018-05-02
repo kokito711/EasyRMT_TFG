@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Locale;
 
 @RestController
@@ -30,11 +31,19 @@ public class AdminController {
         this.userService = userService;
     }
 
+    /**
+     * This mehtod returns the view of admin dashboard
+     * @return Model And View admin dashboard
+     */
     @RequestMapping(value = BASE_PATH+"dashboard", method = RequestMethod.GET)
     public ModelAndView dashboard(){
         return new ModelAndView("/admin/dashboard");
     }
 
+    /**
+     * This method returns the view of create user with an empty user
+     * @return Model and view create user with empty user
+     */
     @RequestMapping(value = USER_BASE_PATH+"/create", method = RequestMethod.GET)
     public ModelAndView createUser() {
         UserDom userDom = new UserDom();
@@ -43,6 +52,13 @@ public class AdminController {
         return modelAndView;
     }
 
+    /**
+     * This method receives a request to create a user. Then, check errors or call userService to create it
+     * @param user User to be created
+     * @param bindingResult possible errors
+     * @param locale page language
+     * @return user with empty fields when field has an error or page with empty user if user has been created.
+     */
     @RequestMapping(value = USER_BASE_PATH+"/create", method = RequestMethod.POST)
     public ModelAndView createUser(@Valid UserDom user, BindingResult bindingResult, Locale locale) {
         ModelAndView modelAndView = new ModelAndView();
@@ -58,6 +74,8 @@ public class AdminController {
                         .rejectValue("username", "error.user",
                                 "There is already a user registered with the username provided");
             }
+            modelAndView.addObject("user",user);
+            modelAndView.addObject("success", false);
         }
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("/admin/createUser");
@@ -94,6 +112,18 @@ public class AdminController {
             modelAndView.addObject("user", new UserDom());
             modelAndView.setViewName("/admin/createUser");
         }
+        return modelAndView;
+    }
+
+    /**
+     * This method returns a view with all existing users
+     * @return Model and view with all existing users
+     */
+    @RequestMapping(value = USER_BASE_PATH, method = RequestMethod.GET)
+    public ModelAndView getUserList(){
+        List<UserDom> users = userService.getUsers();
+        ModelAndView modelAndView = new ModelAndView(USER_BASE_PATH);
+        modelAndView.addObject(users);
         return modelAndView;
     }
 }

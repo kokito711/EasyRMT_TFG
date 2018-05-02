@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -35,6 +36,12 @@ public class UserService {
         this.userConverter = userConverter;
     }
 
+    /**
+     * This method search in db for a user passing username to query as filter.
+     * @param username username to be found
+     * @return {@link UserDom} user with related username
+     */
+    @Transactional(readOnly = true)
     public UserDom findUser(String username){
         User user = userRepository.findByUsername(username);
         if(user != null) {
@@ -47,6 +54,10 @@ public class UserService {
 
     }
 
+    /**
+     * This method persists an user received from domain and converted in db model.
+     * @param userDom user to be persisted
+     */
     @Transactional(rollbackFor = Exception.class)
     public void createUser(UserDom userDom){
         User user = userConverter.toModel(userDom);
@@ -56,5 +67,16 @@ public class UserService {
         user.setRoles(roles);
         user.setPassword(bCryptPasswordEncoder.encode(userDom.getPassword()));
         userRepository.save(user);
+    }
+
+    /**
+     * This method obtains a list with all existing users in db
+     * @return List with existin users
+     */
+    @Transactional(readOnly = true)
+    public List<UserDom> getUsers() {
+        List<User> userList = userRepository.findAll();
+        List<UserDom> userDomList = userConverter.toDomain(userList);
+        return userDomList;
     }
 }

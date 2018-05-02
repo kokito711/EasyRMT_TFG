@@ -12,7 +12,9 @@ import com.Sergio.EasyRMT.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -48,8 +50,8 @@ public class UserConverter {
         return userDom;
     }
 
-    public Set<UserDom> toDomain(Set<User> users){
-        Set<UserDom> userDoms = new HashSet<>();
+    public List<UserDom> toDomain(List<User> users){
+        List<UserDom> userDoms = new ArrayList<>();
         for (User user :users){
             userDoms.add(toDomain(user));
         }
@@ -73,8 +75,8 @@ public class UserConverter {
         return user;
     }
 
-    public Set<User> toModel(Set<UserDom> userDoms){
-        Set<User> users = new HashSet<>();
+    public List<User> toModel(List<UserDom> userDoms){
+        List<User> users = new ArrayList<>();
         for (UserDom userDom :userDoms){
             users.add(toModel(userDom));
         }

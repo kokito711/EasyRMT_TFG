@@ -16,7 +16,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "app_user", schema = "easyrmt")
 @EqualsAndHashCode
 @Getter
 @Setter
@@ -25,7 +25,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
+    @Column(name = "user_id")
     private int userId;
 
     @NotNull
@@ -55,9 +55,7 @@ public class User implements Serializable {
     @Column(name = "phone")
     private String phone;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId", foreignKey = @ForeignKey(name = "userId")),
-            inverseJoinColumns = @JoinColumn(name = "role_Id", referencedColumnName = "idrole", foreignKey = @ForeignKey(name = "idrole")))
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 }

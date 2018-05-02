@@ -27,7 +27,7 @@
     </div>
         <div class="row">
         <!-- modal with success-->
-        <div th:if="${success}==true" class="modal fade in active" id="successCreation" tabindex="-1" role="dialog"
+        <div class="modal fade" id="successCreation" tabindex="-1" role="dialog"
              aria-labelledby="successCreationLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -48,24 +48,41 @@
         </div>
         </div>
             <!-- modal end-->
+        <!-- modal with fail-->
+        <div class="modal fade" id="failCreation" tabindex="-1" role="dialog"
+             aria-labelledby="successCreationLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="failCreationLabel" th:text="#{createUser.fail}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{createUser.fail}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{createUser.modalButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    <!-- modal end-->
         <div class="row col-md-6 col-md-offset-3">
             <form autocomplete="off" action="#" th:action="@{/admin/users/create}"
                   th:object="${user}" method="post" class="form-horizontal"
                   role="form">
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input th:unless="${success}==false" type="text" th:field="*{username}" th:placeholder="#{login.userName}"
+                        <input type="text" th:field="*{username}" th:placeholder="#{login.userName}"
                                class="form-control" required="required" maxlength="16" minlength="1"/>
-                        <input th:if="${#fields.hasErrors('username')}" type="text" th:field="*{username}"
-                               th:placeholder="#{login.userName}" class="form-control has-error" required="required" maxlength="16"
-                                minlength="1"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="password" th:field="*{password}" th:unless="${success}==false"
-                               th:placeholder="#{login.password}" class="form-control" required="required" maxlength="16"
-                               minlength="8" />
+                        <input type="password" th:field="*{password}" th:placeholder="#{login.password}"
+                               class="form-control" required="required" maxlength="16" minlength="8" />
                         <input type="password" th:field="*{password}" th:if="${#fields.hasErrors('password')}"
                            th:placeholder="#{login.password}" class="form-control"  required="required" maxlength="16"
                                minlength="8"/>
@@ -83,34 +100,26 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="text" th:field="*{email}" th:placeholder="#{createUser.Email}" th:unless="${success}==false"
-                               class="form-control" required="required" maxlength="255" minlength="1" />
-                        <input type="text" th:field="*{email}" th:placeholder="#{createUser.Email}" th:if="${#fields.hasErrors('email')}"
-                               class="form-control has-error" required="required" maxlength="255" minlength="1"/>
+                        <input type="text" th:field="*{email}" th:placeholder="#{createUser.Email}"
+                               class="form-control" required="required" maxlength="255" minlength="1"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="text" th:field="*{name}" th:placeholder="#{createUser.name}" th:unless="${success}==false"
+                        <input type="text" th:field="*{name}" th:placeholder="#{createUser.name}"
                                class="form-control"  maxlength="30" />
-                        <input type="text" th:field="*{name}" th:placeholder="#{createUser.name}" th:if="${#fields.hasErrors('name')}"
-                               class="form-control has-error"  maxlength="30" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <input type="text" th:field="*{lastName}" maxlength="40" th:unless="${success}==false"
+                        <input type="text" th:field="*{lastName}" maxlength="40"
                                th:placeholder="#{createUser.lastName}" class="form-control" />
-                        <input type="text" th:field="*{lastName}" maxlength="40" th:if="${#fields.hasErrors('lastName')}"
-                               th:placeholder="#{createUser.lastName}" class="form-control has-error" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-9">
                         <input type="text" th:field="*{phone}" th:placeholder="#{createUser.phone}"
-                               class="form-control" maxlength="15" th:unless="${success}==false"/>
-                        <input type="text" th:field="*{phone}" th:placeholder="#{createUser.phone}"
-                               class="form-control has-error"  maxlength="15" th:if="${#fields.hasErrors('phone')}"/>
+                               class="form-control" maxlength="15"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -121,5 +130,16 @@
             </form>
         </div>
     </div>
+    <label class="hidden" id="success" th:text="${success}"></label>
+    <script>
+        $('document').ready(function(){
+            if(document.getElementById('success').textContent=="true"){
+                $("#successCreation").modal('show');
+            }
+            else if(document.getElementById('success').textContent=="false"){
+                $("#failCreation").modal('show');
+            }
+        });
+    </script>
 </body>
 </html>

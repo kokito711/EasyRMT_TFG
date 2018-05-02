@@ -15,3 +15,11 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
+        - sqlFile:
+            dbms: mysql
+            encoding: utf8
+            endDelimiter: \;
+            path: ./install/20180502/02-alter_User_table.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
