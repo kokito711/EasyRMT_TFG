@@ -56,18 +56,19 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/homepage.html")
+                .successHandler(new SimpleUrlAuthenticationSuccessHandler())
                 .failureUrl("/login?error=true")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/");
-
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+                .antMatchers("/bootstrap/**", "/datatables/**", "/own/**", "/dist/**", "/font-awesome/**",
+                        "/images/**", "/jquery/**", "/metisMenu/**").mvcMatchers();
+       /* web.debug(true);*/
     }
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
