@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+  ~                             All rights reserved
+  -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div id="wrapper"  th:fragment="adminMenu">
+
+    <!--Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/admin/dashboard">Easy RMT (admin)</a>
+        </div>
+        <!-- /.navbar-header -->
+
+        <ul class="nav navbar-top-links navbar-right">
+            <li>
+                <a href="/logout">
+                    <i class="fa fa-sign-out fa-fw"></i>
+                    <p th:text="#{userMenu.logout}"></p>
+                </a>
+            </li>
+        </ul>
+        <!-- /.navbar-top-links -->
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav navbar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li>
+                        <a href="/admin/dashboard"><i class="fa fa-home fa-fw"></i><p th:text="#{mainMenu.home}+' (admin)'"></p></a>
+                    </li>
+                    <!--User management-->
+                    <li>
+                        <a href="#"><i class="fa fa-user fa-fw"></i><p th:text="#{adminMenu.users}"></p><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level list-project" id="project-nav">
+                            <li>
+                                <a href="/admin/users/create"><p th:text="#{adminMenu.createUser}"></p></a>
+                            </li>
+                            <li>
+                                <a href="/admin/users"><p th:text="#{adminMenu.listUsers}"></p></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Group Management -->
+                    <li>
+                        <a href="#"><i class="fa  fa-group fa-fw"></i><p th:text="#{adminMenu.groups}"></p>
+                            <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="/admin/groups/create"><p th:text="#{adminMenu.createGroup}"></p></a>
+                            </li>
+                            <li>
+                                <a href="/admin/groups"><p th:text="#{adminMenu.listGroups}"></p></a>
+                            </li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                </ul>
+                <!-- /.nav-second-level -->
+            </div>
+            <!-- /.sidebar-collapse -->
+            <div class="panel-footer-copyright sidebar">
+                <p class="text-info">
+                    &copy; 2018 Sergio López Jiménez and Universidad de Valladolid
+                </p>
+            </div>
+        </div>
+        <!-- /.navbar-static-side -->
+    </nav>
+</div>
+
+</body>
+</html>

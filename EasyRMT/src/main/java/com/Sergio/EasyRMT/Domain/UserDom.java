@@ -13,7 +13,9 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode
@@ -38,18 +40,21 @@ public class UserDom {
     @NotNull
     @Length(min=1, max = 150)
     @NotEmpty
+    @Transient
     private String password;
 
-    @Length(min=1, max = 30)
+    @Length(max = 30)
     private String name;
 
-    @Length(min=1, max = 40)
+    @Length(max = 40)
     private String lastName;
 
-    @Length(min=1, max = 15)
+    @Length(max = 15)
     private String phone;
 
     private Set<RoleDom> roles;
+
+    private List<String> stringRoles;
 
     public UserDom() {
     }

@@ -56,7 +56,8 @@ public class User implements Serializable {
     private String phone;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId", foreignKey = @ForeignKey(name = "userId")),
+            inverseJoinColumns = @JoinColumn(name = "role_Id", referencedColumnName = "idrole", foreignKey = @ForeignKey(name = "idrole")))
     private Set<Role> roles;
 }

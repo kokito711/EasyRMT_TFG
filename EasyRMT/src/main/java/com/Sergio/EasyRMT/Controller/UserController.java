@@ -34,34 +34,5 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value="/register", method = RequestMethod.GET)
-    public ModelAndView registration(){
-        ModelAndView modelAndView = new ModelAndView();
-        UserDom user = new UserDom();
-        modelAndView.addObject("user", user);
-        modelAndView.setViewName("registration");
-        return modelAndView;
-    }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@Valid UserDom user, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
-        UserDom userExists = userService.findUser(user.getUsername());
-        if (userExists != null) {
-            bindingResult
-                    .rejectValue("username", "error.user",
-                            "There is already a user registered with the username provided");
-        }
-        /*if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("registration");
-        }*/ else {
-            userService.createUser(user);
-
-            modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("user", new UserDom());
-            modelAndView.setViewName("registration");
-
-        }
-        return modelAndView;
-    }
 }

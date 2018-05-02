@@ -14,6 +14,7 @@ import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,10 +47,11 @@ public class UserService {
 
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void createUser(UserDom userDom){
         User user = userConverter.toModel(userDom);
         Set<Role> roles = new HashSet<>();
-        Role role = roleRepository.findByRole("ADMIN");
+        Role role = roleRepository.findByRole(userDom.getStringRoles().get(0));
         roles.add(role);
         user.setRoles(roles);
         user.setPassword(bCryptPasswordEncoder.encode(userDom.getPassword()));

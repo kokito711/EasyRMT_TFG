@@ -49,7 +49,6 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login*").permitAll()
-                .antMatchers("/register").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .antMatchers("/**").hasAnyAuthority("ANALYST", "PROJECT_MANAGER", "STAKEHOLDER")
                 .anyRequest().authenticated().and().csrf().disable().formLogin()
