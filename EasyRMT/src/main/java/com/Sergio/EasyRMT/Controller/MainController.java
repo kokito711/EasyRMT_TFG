@@ -8,29 +8,37 @@ package com.Sergio.EasyRMT.Controller;
 
 
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Service.ProjectService;
+import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 public class MainController {
+    UserService userService;
     ProjectService projectService;
 
     @Autowired
-    public MainController(ProjectService projectService) {
+    public MainController(ProjectService projectService, UserService userService)
+    {
         this.projectService = projectService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
-    public ModelAndView dashboard(){
+    public ModelAndView dashboard(Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ModelAndView modelAndView = new ModelAndView("dashboard");
         modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("user", principal.getName());
         return modelAndView;
     }
 
