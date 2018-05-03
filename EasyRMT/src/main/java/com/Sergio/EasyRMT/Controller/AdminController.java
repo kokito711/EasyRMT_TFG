@@ -169,7 +169,7 @@ public class AdminController {
     public ModelAndView editUser(@PathVariable int userId, @Valid UserDom user, BindingResult result){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("/admin/modifyUser");
-        UserDom userDom = userService.modifyUser(userId,user);
+        UserDom userDom = userService.modifyUser(userId,null,user);
         modelAndView.addObject("success", true);
         modelAndView.addObject("user", userDom);
         return modelAndView;

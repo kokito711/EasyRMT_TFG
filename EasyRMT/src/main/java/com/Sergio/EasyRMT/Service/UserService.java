@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -121,8 +122,17 @@ public class UserService {
      * @return user modified if there is any change or userInfo in no changes
      */
     @Transactional(rollbackFor = Exception.class)
-    public UserDom modifyUser(int userId, UserDom userInfo) {
-        User user = userRepository.findOne(userId);
+    public UserDom modifyUser(@Nullable Integer userId, @Nullable String username, UserDom userInfo) {
+        User user = new User();
+        if(userId != null) {
+            user = userRepository.findOne(userId);
+        }
+        else if (username != null){
+            user = userRepository.findByUsername(username);
+        }
+        else{
+            return userInfo;
+        }
         boolean modified = false;
         if(userInfo.getPassword()!= "") {
             String password = bCryptPasswordEncoder.encode(userInfo.getPassword());
@@ -147,23 +157,25 @@ public class UserService {
             user.setPhone(userInfo.getPhone());
             modified = true;
         }
-        List<Role> roleListPersisted = new ArrayList<>();
-        for (Role role : user.getRoles()){
-            roleListPersisted.add(role);
-        }
-        List<Role> roleList = new ArrayList<>();
-        for(String role : userInfo.getStringRoles()){
-            if(role!="NONE") {
-                roleList.add(roleRepository.findByRole(role));
+        if(userInfo.getStringRoles()!=null) {
+            List<Role> roleListPersisted = new ArrayList<>();
+            for (Role role : user.getRoles()) {
+                roleListPersisted.add(role);
             }
-        }
-        if(!roleListPersisted.equals(roleList)){
-            Set<Role> roleSet = new HashSet<>();
-            for(Role role: roleList){
-                roleSet.add(role);
+            List<Role> roleList = new ArrayList<>();
+            for (String role : userInfo.getStringRoles()) {
+                if (role != "NONE") {
+                    roleList.add(roleRepository.findByRole(role));
+                }
             }
-            user.setRoles(roleSet);
-            modified = true;
+            if (!roleListPersisted.equals(roleList)) {
+                Set<Role> roleSet = new HashSet<>();
+                for (Role role : roleList) {
+                    roleSet.add(role);
+                }
+                user.setRoles(roleSet);
+                modified = true;
+            }
         }
         if (modified){
             user = userRepository.save(user);

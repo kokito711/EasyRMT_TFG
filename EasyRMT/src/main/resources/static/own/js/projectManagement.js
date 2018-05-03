@@ -136,7 +136,6 @@ function modalValueExtended(id1, id2){
     dismiss.setAttributeNode(att3);
 }
 
-
 function startTable() {
     var locale = navigator.language;
     //http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/
@@ -151,3 +150,4 @@ function startTable() {
         },
     });
 }
+

@@ -35,6 +35,10 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * This method retunrns the login view
+     * @return login view
+     */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
@@ -42,6 +46,11 @@ public class UserController {
         return mav;
     }
 
+    /**
+     * This method returns the user profile view with an user obtained from db
+     * @param username user to be found in db
+     * @return view with user
+     */
     @RequestMapping(value = USER_BASE_PATH+"{username}", method = RequestMethod.GET)
     public ModelAndView getUserProfile(@PathVariable String username){
         UserDom user = userService.findUser(username);
@@ -52,5 +61,21 @@ public class UserController {
         return modelAndView;
     }
 
+    /**
+     * This metod receives a request to update an user. then calls the userService to update user.
+     * @param username username to be updated
+     * @param userInfo user information to be updated
+     * @return View with updated user
+     */
+    @RequestMapping(value = USER_BASE_PATH+"{username}", method = RequestMethod.POST)
+    public ModelAndView updateUserProfile(@PathVariable String username,  @Valid UserDom userInfo, BindingResult result){
+        UserDom user = userService.modifyUser(null,username, userInfo);
+        List<ProjectDom> projects = projectService.getProjects();
+        ModelAndView modelAndView = new ModelAndView("/user/profile");
+        modelAndView.addObject("success", true);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("projectList", projects);
+        return modelAndView;
+    }
 
 }
