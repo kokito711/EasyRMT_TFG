@@ -174,4 +174,13 @@ public class AdminController {
         modelAndView.addObject("user", userDom);
         return modelAndView;
     }
+
+    /**
+     * This method returns a list with all existing groups in db
+     * @return View with all existing groups
+     */
+    @RequestMapping(value = GROUP_BASE_PATH, method = RequestMethod.GET)
+    public ModelAndView getGroupList(){
+        return null;
+    }
 }

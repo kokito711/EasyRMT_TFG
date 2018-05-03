@@ -98,11 +98,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-9">
+                <div class="col-sm-9" th:unless="${user.getRoles().toArray()[0].getRole() == 'ADMIN'}">
                     <label th:text="#{updateUser.SecondRole}" for="secondRole"></label>
                     <select class="form-control" id="secondRole" th:field="*{stringRoles}">
                         <option th:text="#{createUser.role.none}" value="NONE"></option>
-                        <option th:text="#{createUser.role.admin}" value="ADMIN"></option>
                         <option th:text="#{createUser.role.analyst}" value="ANALYST"></option>
                         <option th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
                         <option th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
