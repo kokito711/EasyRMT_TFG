@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -49,7 +50,8 @@ public class UseCaseController {
      * @return model and view with use cases list
      */
     @RequestMapping(value = PATH_BASE+"usecases", method = RequestMethod.GET)
-    public ModelAndView getUserCasesListView(@PathVariable int projectId, @PathVariable int featureId, ModelAndView mav){
+    public ModelAndView getUserCasesListView(@PathVariable int projectId, @PathVariable int featureId, ModelAndView mav,
+                                             Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<UseCaseDom> useCaseDomList = useCaseService.getUseCases(featureId);
         ProjectDom project = projectService.getProject(projectId);
@@ -60,6 +62,7 @@ public class UseCaseController {
         mav.addObject("projectList", projectDomList);
         mav.addObject("featureId",featureDom.getIdFeature());
         mav.addObject("featureName", featureDom.getName());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -71,7 +74,7 @@ public class UseCaseController {
      * @return model and view with user stories list
      */
     @RequestMapping(value ="/project/{projectId}/features/usecases" , method = RequestMethod.GET)
-    public ModelAndView getUserCasesListView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getUserCasesListView(@PathVariable int projectId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<UseCaseDom> useCaseDomList = useCaseService.getByProjectID(projectId);
         ProjectDom project = projectService.getProject(projectId);
@@ -79,6 +82,7 @@ public class UseCaseController {
         mav.addObject("project", project);
         mav.addObject("useCasesList", useCaseDomList);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -93,7 +97,7 @@ public class UseCaseController {
      */
     @RequestMapping(value = PATH_BASE+"usecase/{useCaseId}", method = RequestMethod.GET)
     public ModelAndView getUseCaseView(@PathVariable int projectId, @PathVariable int featureId,
-                                         @PathVariable int useCaseId, ModelAndView mav){
+                                         @PathVariable int useCaseId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         FeatureDom featureDom = featureService.getFeature(featureId);
@@ -104,6 +108,7 @@ public class UseCaseController {
         mav.addObject("featureId",featureDom.getIdFeature());
         mav.addObject("featureName", featureDom.getName());
         mav.addObject("fileList", documentService.getFileList(projectId,useCaseId));
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -117,7 +122,7 @@ public class UseCaseController {
      */
     @RequestMapping(value = PATH_BASE+"usecases/create", method = RequestMethod.GET)
     public ModelAndView getCreateUseCaseView(@PathVariable int projectId, @PathVariable int featureId,
-                                               ModelAndView mav){
+                                               ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         FeatureDom featureDom = featureService.getFeature(featureId);
@@ -133,6 +138,7 @@ public class UseCaseController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -149,7 +155,7 @@ public class UseCaseController {
      */
     @RequestMapping(value = PATH_BASE+"usecase/create", method = RequestMethod.POST)
     public ModelAndView createUseCase(@PathVariable int projectId, @PathVariable int featureId,
-                                   @ModelAttribute @Valid UseCaseDom useCaseDom){
+                                   @ModelAttribute @Valid UseCaseDom useCaseDom, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         UseCaseDom persistedUseCase = useCaseService.create(useCaseDom, featureId, projectId);
@@ -161,6 +167,7 @@ public class UseCaseController {
         mav.addObject("featureId",featureDom.getIdFeature());
         mav.addObject("featureName", featureDom.getName());
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -175,7 +182,7 @@ public class UseCaseController {
      */
     @RequestMapping(value = PATH_BASE+"usecase/update/{useCaseId}", method = RequestMethod.GET)
     public ModelAndView getUpdateUseCaseView(@PathVariable int projectId,@PathVariable int featureId,
-                                          @PathVariable int useCaseId, ModelAndView mav){
+                                          @PathVariable int useCaseId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         FeatureDom featureDom = featureService.getFeature(featureId);
@@ -191,6 +198,7 @@ public class UseCaseController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -207,7 +215,7 @@ public class UseCaseController {
      *       {@link UseCaseDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"usecase/{useCaseId}", method = RequestMethod.POST)
-    public ModelAndView updateUseCase(@PathVariable int projectId, @PathVariable int featureId,
+    public ModelAndView updateUseCase(@PathVariable int projectId, @PathVariable int featureId, Principal principal,
                                         @PathVariable int useCaseId, @ModelAttribute @Valid UseCaseDom useCaseDom){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
@@ -220,6 +228,7 @@ public class UseCaseController {
         mav.addObject("projectList", projectDomList);
         mav.addObject("featureId",feature.getIdFeature());
         mav.addObject("featureName", feature.getName());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 

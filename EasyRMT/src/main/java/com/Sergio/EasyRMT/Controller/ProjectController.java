@@ -45,6 +45,7 @@ public class ProjectController {
         model.addObject("project", projectDom);
         model.addObject("reqTypes", projectService.getReqTypes());
         model.addObject("projectList", projectDomList);
+        model.addObject("user", principal.getName());
         return model;
     }
 
@@ -58,12 +59,13 @@ public class ProjectController {
      *       {@link ProjectDom} as object.
      */
     @RequestMapping(value = "/projects", method = RequestMethod.POST)
-    public ModelAndView createProject(@ModelAttribute @Valid ProjectDom project){
+    public ModelAndView createProject(@ModelAttribute @Valid ProjectDom project, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom projectDom = projectService.createProject(project);
         ModelAndView modelAndView = new ModelAndView("project");
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("user", principal.getName());
         return modelAndView;
     }
 
@@ -76,13 +78,14 @@ public class ProjectController {
      * @return ModelAndView with a project view and the persisted {@link ProjectDom} as object.
      */
     @RequestMapping(value = "/updateProject/{id}", method = RequestMethod.GET)
-    public ModelAndView getUpdateView(@PathVariable int id){
+    public ModelAndView getUpdateView(@PathVariable int id, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ModelAndView modelAndView = new ModelAndView("updateProject");
         ProjectDom projectDom = projectService.getProject(id);
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
         modelAndView.addObject("reqTypes", projectService.getReqTypes());
+        modelAndView.addObject("user", principal.getName());
         return modelAndView;
     }
 
@@ -94,12 +97,13 @@ public class ProjectController {
      * @return ModelAndView with new project information, redirected to update project
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.POST)
-    public ModelAndView updateProject(@PathVariable int id, @ModelAttribute @Valid ProjectDom project){
+    public ModelAndView updateProject(@PathVariable int id, @ModelAttribute @Valid ProjectDom project, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom projectDom = projectService.updateProject(id,project);
         ModelAndView modelAndView = new ModelAndView("project");
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("user", principal.getName());
         return modelAndView;
     }
 
@@ -131,13 +135,14 @@ public class ProjectController {
      *       {@link ProjectDom} as object.
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
-    public ModelAndView getProject(@PathVariable int id){
+    public ModelAndView getProject(@PathVariable int id, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ModelAndView modelAndView = new ModelAndView("project");
         ProjectDom projectDom = projectService.getProject(id);
         modelAndView.addObject("project", projectDom);
         modelAndView.addObject("projectList", projectDomList);
         modelAndView.addObject("fileList", documentService.getFileList(id, null));
+        modelAndView.addObject("user", principal.getName());
         return modelAndView;
     }
 

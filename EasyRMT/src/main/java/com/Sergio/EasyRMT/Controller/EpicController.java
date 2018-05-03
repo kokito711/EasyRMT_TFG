@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -42,7 +43,7 @@ public class EpicController {
      * @return model and view with epic list
      */
     @RequestMapping(value = PATH_BASE+"epics", method = RequestMethod.GET)
-    public ModelAndView getEpicListView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getEpicListView(@PathVariable int projectId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<EpicDom> epicDomList = epicService.getEpics(projectId);
         ProjectDom project = projectService.getProject(projectId);
@@ -50,6 +51,7 @@ public class EpicController {
         mav.addObject("project", project);
         mav.addObject("epicList", epicDomList);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -62,7 +64,7 @@ public class EpicController {
      * @return model and view with epic
      */
     @RequestMapping(value = PATH_BASE+"epic/{epicId}", method = RequestMethod.GET)
-    public ModelAndView getEpicView(@PathVariable int projectId, @PathVariable int epicId, ModelAndView mav){
+    public ModelAndView getEpicView(@PathVariable int projectId, @PathVariable int epicId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         mav.setViewName("epic");
@@ -70,6 +72,7 @@ public class EpicController {
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
         mav.addObject("fileList", documentService.getFileList(projectId,epicId));
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -81,7 +84,7 @@ public class EpicController {
      * @return model and view with page
      */
     @RequestMapping(value = PATH_BASE+"epics/create", method = RequestMethod.GET)
-    public ModelAndView getCreateEpicView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getCreateEpicView(@PathVariable int projectId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         EpicDom epicDom = new EpicDom();
@@ -94,6 +97,7 @@ public class EpicController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -108,7 +112,7 @@ public class EpicController {
      *       {@link EpicDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"epics", method = RequestMethod.POST)
-    public ModelAndView createEpic(@PathVariable int projectId, @ModelAttribute @Valid EpicDom epic){
+    public ModelAndView createEpic(@PathVariable int projectId, @ModelAttribute @Valid EpicDom epic, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         EpicDom persistedEpic = epicService.create(epic, projectId);
@@ -117,7 +121,7 @@ public class EpicController {
         mav.addObject("epic", persistedEpic);
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
-
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -130,7 +134,7 @@ public class EpicController {
      * @return model and view with page
      */
     @RequestMapping(value = PATH_BASE+"epic/update/{epicId}", method = RequestMethod.GET)
-    public ModelAndView getUpdateEpicView(@PathVariable int projectId,@PathVariable int epicId, ModelAndView mav){
+    public ModelAndView getUpdateEpicView(@PathVariable int projectId,@PathVariable int epicId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         EpicDom epicDom = epicService.getEpic(epicId);
@@ -143,6 +147,7 @@ public class EpicController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -158,7 +163,7 @@ public class EpicController {
      *       {@link EpicDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"epic/{epicId}/update", method = RequestMethod.POST)
-    public ModelAndView updateEpic(@PathVariable int projectId, @PathVariable int epicId, @ModelAttribute @Valid EpicDom epic){
+    public ModelAndView updateEpic(@PathVariable int projectId, @PathVariable int epicId, @ModelAttribute @Valid EpicDom epic, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         EpicDom persistedEpic = epicService.update(epic, epicId,projectId);
@@ -167,6 +172,7 @@ public class EpicController {
         mav.addObject("epic", persistedEpic);
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -48,7 +49,8 @@ public class UserStoryController {
      * @return model and view with user stories list
      */
     @RequestMapping(value = PATH_BASE+"userstories", method = RequestMethod.GET)
-    public ModelAndView getUserStoriesListView(@PathVariable int projectId, @PathVariable int epicId, ModelAndView mav){
+    public ModelAndView getUserStoriesListView(@PathVariable int projectId, @PathVariable int epicId, ModelAndView mav,
+                                               Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<UserStoryDom> userStoryDomList = userStoryService.getUserStories(epicId);
         ProjectDom project = projectService.getProject(projectId);
@@ -59,6 +61,7 @@ public class UserStoryController {
         mav.addObject("projectList", projectDomList);
         mav.addObject("epicId",epicDom.getIdEpic());
         mav.addObject("epicName", epicDom.getName());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -70,7 +73,7 @@ public class UserStoryController {
      * @return model and view with user stories list
      */
     @RequestMapping(value ="/project/{projectId}/epics/userstories" , method = RequestMethod.GET)
-    public ModelAndView getUserStoriesListView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getUserStoriesListView(@PathVariable int projectId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<UserStoryDom> userStoryDomList = userStoryService.getByProjectID(projectId);
         ProjectDom project = projectService.getProject(projectId);
@@ -78,6 +81,7 @@ public class UserStoryController {
         mav.addObject("project", project);
         mav.addObject("userStoriesList", userStoryDomList);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -92,7 +96,7 @@ public class UserStoryController {
      */
     @RequestMapping(value = PATH_BASE+"userstory/{userStoryId}", method = RequestMethod.GET)
     public ModelAndView getUserStoryView(@PathVariable int projectId, @PathVariable int epicId,
-                                         @PathVariable int userStoryId, ModelAndView mav){
+                                         @PathVariable int userStoryId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         EpicDom epicDom = epicService.getEpic(epicId);
@@ -103,6 +107,7 @@ public class UserStoryController {
         mav.addObject("epicId",epicDom.getIdEpic());
         mav.addObject("epicName", epicDom.getName());
         mav.addObject("fileList", documentService.getFileList(projectId,userStoryId));
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -116,7 +121,7 @@ public class UserStoryController {
      */
     @RequestMapping(value = PATH_BASE+"userstories/create", method = RequestMethod.GET)
     public ModelAndView getCreateUserStoryView(@PathVariable int projectId, @PathVariable int epicId,
-                                               ModelAndView mav){
+                                               ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         EpicDom epicDom = epicService.getEpic(epicId);
@@ -132,6 +137,7 @@ public class UserStoryController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -148,7 +154,7 @@ public class UserStoryController {
      */
     @RequestMapping(value = PATH_BASE+"userstory/create", method = RequestMethod.POST)
     public ModelAndView createUserStory(@PathVariable int projectId, @PathVariable int epicId,
-                                   @ModelAttribute @Valid UserStoryDom userStoryDom){
+                                   @ModelAttribute @Valid UserStoryDom userStoryDom, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         UserStoryDom persistedUserStory = userStoryService.create(userStoryDom, epicId, projectId);
@@ -160,6 +166,7 @@ public class UserStoryController {
         mav.addObject("epicId",epicDom.getIdEpic());
         mav.addObject("epicName", epicDom.getName());
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -174,7 +181,7 @@ public class UserStoryController {
      */
     @RequestMapping(value = PATH_BASE+"userstory/update/{userStoryId}", method = RequestMethod.GET)
     public ModelAndView getUpdateUserStoryView(@PathVariable int projectId,@PathVariable int epicId,
-                                          @PathVariable int userStoryId, ModelAndView mav){
+                                          @PathVariable int userStoryId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         EpicDom epicDom = epicService.getEpic(epicId);
@@ -190,6 +197,7 @@ public class UserStoryController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -207,7 +215,7 @@ public class UserStoryController {
      */
     @RequestMapping(value = PATH_BASE+"userstory/{userStoryId}", method = RequestMethod.POST)
     public ModelAndView updateUserStory(@PathVariable int projectId, @PathVariable int epicId, @PathVariable int userStoryId,
-                                        @ModelAttribute @Valid UserStoryDom userStoryDom){
+                                        @ModelAttribute @Valid UserStoryDom userStoryDom, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         UserStoryDom persistedUserStory = userStoryService.update(projectId,epicId,userStoryId,userStoryDom);
@@ -219,6 +227,7 @@ public class UserStoryController {
         mav.addObject("projectList", projectDomList);
         mav.addObject("epicId",epic.getIdEpic());
         mav.addObject("epicName", epic.getName());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 

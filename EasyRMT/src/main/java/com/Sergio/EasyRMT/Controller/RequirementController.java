@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -44,7 +45,8 @@ public class RequirementController {
      * @return model and view with feature list
      */
     @RequestMapping(value = PATH_BASE+"requirements", method = RequestMethod.GET)
-    public ModelAndView getRequirementListView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getRequirementListView(@PathVariable int projectId, ModelAndView mav,
+                                               Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<RequirementDom> requirementDomList = requirementService.getRequirements(projectId);
         ProjectDom project = projectService.getProject(projectId);
@@ -54,6 +56,7 @@ public class RequirementController {
         mav.addObject("requirementList", requirementDomList);
         mav.addObject("projectList", projectDomList);
         mav.addObject("reqTypes", reqTypes);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -66,7 +69,8 @@ public class RequirementController {
      * @return model and view with requirement
      */
     @RequestMapping(value = PATH_BASE+"requirement/{requirementId}", method = RequestMethod.GET)
-    public ModelAndView getRequirementView(@PathVariable int projectId, @PathVariable int requirementId, ModelAndView mav){
+    public ModelAndView getRequirementView(@PathVariable int projectId, @PathVariable int requirementId, ModelAndView mav,
+                                           Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         mav.setViewName("requirement");
@@ -75,6 +79,7 @@ public class RequirementController {
         mav.addObject("projectList", projectDomList);
         mav.addObject("reqTypes", projectService.getReqTypes());
         mav.addObject("fileList", documentService.getFileList(projectId,requirementId));
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -86,7 +91,7 @@ public class RequirementController {
      * @return model and view with page
      */
     @RequestMapping(value = PATH_BASE+"requirements/create", method = RequestMethod.GET)
-    public ModelAndView getCreateRequirementView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getCreateRequirementView(@PathVariable int projectId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         RequirementDom requirementDom = new RequirementDom();
@@ -99,6 +104,7 @@ public class RequirementController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -113,7 +119,8 @@ public class RequirementController {
      *       {@link RequirementDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"requirements", method = RequestMethod.POST)
-    public ModelAndView createRequirement(@PathVariable int projectId, @ModelAttribute @Valid RequirementDom requirementDom){
+    public ModelAndView createRequirement(@PathVariable int projectId, @ModelAttribute @Valid RequirementDom requirementDom,
+                                          Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         RequirementDom persistedRequirement = requirementService.create(requirementDom, projectId);
@@ -123,6 +130,7 @@ public class RequirementController {
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
         mav.addObject("reqTypes", projectService.getReqTypes());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -136,7 +144,7 @@ public class RequirementController {
      */
     @RequestMapping(value = PATH_BASE+"requirement/update/{requirementId}", method = RequestMethod.GET)
     public ModelAndView getUpdateRequirementView(@PathVariable int projectId,@PathVariable int requirementId,
-                                                 ModelAndView mav){
+                                                 ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         RequirementDom requirementDom = requirementService.getRequirement(requirementId);
@@ -149,6 +157,7 @@ public class RequirementController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -165,7 +174,7 @@ public class RequirementController {
      */
     @RequestMapping(value = PATH_BASE+"requirement/{requirementId}/update", method = RequestMethod.POST)
     public ModelAndView updateRequirement(@PathVariable int projectId, @PathVariable int requirementId,
-                                   @ModelAttribute @Valid RequirementDom requirementDom){
+                                   @ModelAttribute @Valid RequirementDom requirementDom, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         RequirementDom persistedRequirement = requirementService.update(requirementDom, requirementId,projectId);
@@ -175,6 +184,7 @@ public class RequirementController {
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
         mav.addObject("reqTypes", projectService.getReqTypes());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 

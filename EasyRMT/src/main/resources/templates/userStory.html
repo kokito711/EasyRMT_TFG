@@ -9,232 +9,234 @@
 
 </head>
 <body>
-<div id="wrapper" th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList})">
-</div>
-<div id="page-wrapper">
-    <div class="row">
-        <div class="breadcrumb">
-            <p>
-                <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
-                </a>
-                /
-                <a th:href="'/project/'+${project.getIdProject()}+'/epics'" th:text="#{epic.Breadcrumb.epiclistLabel}">
-                </a>
-                /
-                <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}" th:text="${epicName}"></a>
-                /
-                <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+'/userstories'"
-                   th:text="#{userStory.breadcrumb}"></a>
-                /
-                <span th:text="${userStory.getName()}"></span>
-            </p>
+<div id="wrapper" >
+    <!--Navigation -->
+    <nav th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList}, user=${user})"></nav>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="breadcrumb">
+                <p>
+                    <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
+                    </a>
+                    /
+                    <a th:href="'/project/'+${project.getIdProject()}+'/epics'" th:text="#{epic.Breadcrumb.epiclistLabel}">
+                    </a>
+                    /
+                    <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}" th:text="${epicName}"></a>
+                    /
+                    <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+'/userstories'"
+                       th:text="#{userStory.breadcrumb}"></a>
+                    /
+                    <span th:text="${userStory.getName()}"></span>
+                </p>
+            </div>
+            <h2 class="page-header" th:if="${userStory.getIdentifier()} ==null" th:text="${userStory.getName()}">
+            </h2>
+            <h2 class="page-header" th:unless="${userStory.getIdentifier()} ==null"
+                th:text="${userStory.getIdentifier()}+'  '+${userStory.getName()}">
+            </h2>
         </div>
-        <h2 class="page-header" th:if="${userStory.getIdentifier()} ==null" th:text="${userStory.getName()}">
-        </h2>
-        <h2 class="page-header" th:unless="${userStory.getIdentifier()} ==null"
-            th:text="${userStory.getIdentifier()}+'  '+${userStory.getName()}">
-        </h2>
-    </div>
-    <div class="row">
-        <a href="#">
-            <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
-        </a>
-        <a href="#">
-            <span class="fa fa-file-excel-o pull-right fa-2x" style="color: #2b542c;"></span>
-        </a>
-        <a href="#">
-            <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
-        </a>
-        <a href="#">
-            <span class="fa fa-print pull-right fa-2x"></span>
-        </a>
-        <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+'/userstory/update/'
-        +${userStory.getIdUserStory()}">
-        <span class="fa fa-edit pull-right fa-2x"
-              data-toggle="tooltip" data-placement="top" th:title="#{userStory.modifyButton}"></span>
-        </a>
-    </div>
-    <div class="row">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#generalInfo" data-toggle="tab" th:text="#{epic.tab.generalInfo}"></a>
-            </li>
-            <li><a href="#additionalInfo" data-toggle="tab" th:text="#{epic.tab.additionalInfo}"></a>
-            </li>
-            <li><a href="#fileTab" data-toggle="tab" th:text="#{fileTab.page_header}"></a></li>
-        </ul>
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="generalInfo">
-                <div class="col-lg-12">
-                    <div class="row">
-                        <h3 class="page-header" th:text="#{epic.tab.generalInfoTab.description}"></h3>
-                        <p th:text="${userStory.getDescription()}"></p>
-                    </div>
-                    <div class="row">
-                        <h3 class="page-header" th:text="#{epic.tab.generalInfoTab.dod}"></h3>
-                        <p th:text="${userStory.getDefinitionOfDone()}"></p>
-                    </div>
-                    <hr/>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.priority}"></strong>
+        <div class="row">
+            <a href="#">
+                <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
+            </a>
+            <a href="#">
+                <span class="fa fa-file-excel-o pull-right fa-2x" style="color: #2b542c;"></span>
+            </a>
+            <a href="#">
+                <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
+            </a>
+            <a href="#">
+                <span class="fa fa-print pull-right fa-2x"></span>
+            </a>
+            <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+'/userstory/update/'
+            +${userStory.getIdUserStory()}">
+            <span class="fa fa-edit pull-right fa-2x"
+                  data-toggle="tooltip" data-placement="top" th:title="#{userStory.modifyButton}"></span>
+            </a>
+        </div>
+        <div class="row">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#generalInfo" data-toggle="tab" th:text="#{epic.tab.generalInfo}"></a>
+                </li>
+                <li><a href="#additionalInfo" data-toggle="tab" th:text="#{epic.tab.additionalInfo}"></a>
+                </li>
+                <li><a href="#fileTab" data-toggle="tab" th:text="#{fileTab.page_header}"></a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="generalInfo">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <h3 class="page-header" th:text="#{epic.tab.generalInfoTab.description}"></h3>
+                            <p th:text="${userStory.getDescription()}"></p>
                         </div>
-                        <div class="col-lg-3">
-                            <p th:if="${userStory.getPriority() != null}" th:text="${userStory.getPriority().name()}"></p>
+                        <div class="row">
+                            <h3 class="page-header" th:text="#{epic.tab.generalInfoTab.dod}"></h3>
+                            <p th:text="${userStory.getDefinitionOfDone()}"></p>
                         </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.state}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:if="${userStory.getState() != null}" th:text="${userStory.getState().name()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.storyPoints}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getStoryPoints()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.risk}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:if="${userStory.getRisk() != null }" th:text="${userStory.getRisk().name()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getAuthor()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getAssignedTo()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.version}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getVersion()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.generalInfoTab.source}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getSource()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="additionalInfo">
-                <br/>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.additionalInfoTab.complexity}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:if="${userStory.getComplexity() != null}" th:text="${userStory.getComplexity().name()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.additionalInfoTab.cost}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getCost()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.additionalInfoTab.estHours}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getEstimatedHours()}"></p>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.additionalInfoTab.scope}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:if="${userStory.getScope() != null}" th:text="${userStory.getScope()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.additionalInfoTab.created}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getCreated().toLocaleString()}"></p>
-                        </div>
-                        <br/>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-3">
-                            <strong th:text="#{epic.tab.additionalInfoTab.lastUpdated}"></strong>
-                        </div>
-                        <div class="col-lg-3">
-                            <p th:text="${userStory.getLastUpdated().toLocaleString()}"></p>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-                <div class="col-lg-12">
-                    <div class="row">
-                        <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.validationMethod}"></h4>
-                        <p th:text="${userStory.getValidationMethod()}"></p>
                         <hr/>
                     </div>
-                    <div class="row">
-                        <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.justification}"></h4>
-                        <p th:text="${userStory.getJustification()}"></p>
-                        <hr/>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.priority}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:if="${userStory.getPriority() != null}" th:text="${userStory.getPriority().name()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.state}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:if="${userStory.getState() != null}" th:text="${userStory.getState().name()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.storyPoints}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getStoryPoints()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.risk}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:if="${userStory.getRisk() != null }" th:text="${userStory.getRisk().name()}"></p>
+                            </div>
+                            <br/>
+                        </div>
                     </div>
-                    <div class="row">
-                        <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.testCases}"></h4>
-                        <p th:text="${userStory.getTestCases()}"></p>
-                        <hr/>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getAuthor()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getAssignedTo()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.version}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getVersion()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.generalInfoTab.source}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getSource()}"></p>
+                            </div>
+                            <br/>
+                        </div>
                     </div>
-                    <hr/>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="fileTab"
-                 th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
-                 ${userStory.getIdUserStory()},fileList = ${fileList})">
+                <div class="tab-pane fade" id="additionalInfo">
+                    <br/>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.additionalInfoTab.complexity}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:if="${userStory.getComplexity() != null}" th:text="${userStory.getComplexity().name()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.additionalInfoTab.cost}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getCost()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.additionalInfoTab.estHours}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getEstimatedHours()}"></p>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.additionalInfoTab.scope}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:if="${userStory.getScope() != null}" th:text="${userStory.getScope()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.additionalInfoTab.created}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getCreated().toLocaleString()}"></p>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <strong th:text="#{epic.tab.additionalInfoTab.lastUpdated}"></strong>
+                            </div>
+                            <div class="col-lg-3">
+                                <p th:text="${userStory.getLastUpdated().toLocaleString()}"></p>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.validationMethod}"></h4>
+                            <p th:text="${userStory.getValidationMethod()}"></p>
+                            <hr/>
+                        </div>
+                        <div class="row">
+                            <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.justification}"></h4>
+                            <p th:text="${userStory.getJustification()}"></p>
+                            <hr/>
+                        </div>
+                        <div class="row">
+                            <h4 class="page-header" th:text="#{epic.tab.additionalInfoTab.testCases}"></h4>
+                            <p th:text="${userStory.getTestCases()}"></p>
+                            <hr/>
+                        </div>
+                        <hr/>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="fileTab"
+                     th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
+                     ${userStory.getIdUserStory()},fileList = ${fileList})">
+                </div>
             </div>
         </div>
     </div>

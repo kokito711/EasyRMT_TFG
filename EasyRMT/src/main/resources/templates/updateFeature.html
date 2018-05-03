@@ -8,129 +8,131 @@
 
 </head>
 <body>
-<div id="wrapper" th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList})">
-</div>
-<div id="page-wrapper">
-    <div class="row">
-        <div class="breadcrumb">
-            <p>
-                <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
-                </a>
-                /
-                <a th:href="'/project/'+${project.getIdProject()}+'/features'" th:text="#{feature.Breadcrumb.featurelistLabel}">
-                </a>
-                /
-                <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${feature.getIdFeature()}"
-                   th:text="${feature.getName()}">
-                </a>
-            </p>
+<div id="wrapper" >
+    <!--Navigation -->
+    <nav th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList}, user=${user})"></nav>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="breadcrumb">
+                <p>
+                    <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
+                    </a>
+                    /
+                    <a th:href="'/project/'+${project.getIdProject()}+'/features'" th:text="#{feature.Breadcrumb.featurelistLabel}">
+                    </a>
+                    /
+                    <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${feature.getIdFeature()}"
+                       th:text="${feature.getName()}">
+                    </a>
+                </p>
+            </div>
+            <h2 class="page-header" th:text="${feature.getName()}">
+            </h2>
         </div>
-        <h2 class="page-header" th:text="${feature.getName()}">
-        </h2>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel-body">
-                <form role="form" id="create-project-form" th:action="@{'/project/'+${project.getIdProject()}+'/feature/'+${feature.getIdFeature()}+'/update'}"
-                      th:object="${feature}" method="post">
-                    <div class="form-group col-lg-12">
-                        <div class="col-lg-3">
-                            <label th:text="#{createEpic.form.identifier}"></label>
-                            <input class="form-control"  type="text"
-                                   maxlength="10" name="name" th:field="*{identifier}"/>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <form role="form" id="create-project-form" th:action="@{'/project/'+${project.getIdProject()}+'/feature/'+${feature.getIdFeature()}+'/update'}"
+                          th:object="${feature}" method="post">
+                        <div class="form-group col-lg-12">
+                            <div class="col-lg-3">
+                                <label th:text="#{createEpic.form.identifier}"></label>
+                                <input class="form-control"  type="text"
+                                       maxlength="10" name="name" th:field="*{identifier}"/>
+                            </div>
+                            <div class="col-lg-3">
+                                <label th:text="#{createEpic.form.storyPoints}"></label>
+                                <input class="form-control" type="text"
+                                       maxlength="64" name="name" th:field="*{storyPoints}"/>
+                            </div>
                         </div>
-                        <div class="col-lg-3">
-                            <label th:text="#{createEpic.form.storyPoints}"></label>
+                        <div class="form-group col-lg-12">
+                            <label th:text="#{createEpic.form.description}"></label>
+                            <textarea id="feature-description" class="form-control" rows="5" name="description"
+                                      th:field="*{description}"/>
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label th:text="#{createEpic.form.priority}"></label>
+                            <select class="form-control" th:field="*{priority}">
+                                <option th:each="priorityValue : ${priority}"
+                                        th:text="${priorityValue.name()}" th:value="${priorityValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label th:text="#{createEpic.form.state}"></label>
+                            <select class="form-control" th:field="*{state}">
+                                <option th:each="stateValue : ${state}"
+                                        th:text="${stateValue.name()}" th:value="${stateValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label th:text="#{createEpic.form.risk}"></label>
+                            <select class="form-control" th:field="*{risk}">
+                                <option th:each="riskValue : ${risk}"
+                                        th:text="${riskValue.name()}" th:value="${riskValue.name()}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-4" >
+                            <label th:text="#{createEpic.form.complexity}"></label>
+                            <select class="form-control" th:field="*{complexity}">
+                                <option th:each="complexityValue : ${complexity}"
+                                        th:text="${complexityValue.name()}" th:value="${complexityValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label th:text="#{createEpic.form.scope}"></label>
+                            <select class="form-control" th:field="*{scope}" >
+                                <option th:each="scopeValue : ${scope}"
+                                        th:text="${scopeValue.name()}" th:value="${scopeValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label th:text="#{createEpic.form.cost}"></label>
                             <input class="form-control" type="text"
-                                   maxlength="64" name="name" th:field="*{storyPoints}"/>
+                                   name="name" th:field="*{cost}"/>
                         </div>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label th:text="#{createEpic.form.description}"></label>
-                        <textarea id="feature-description" class="form-control" rows="5" name="description"
-                                  th:field="*{description}"/>
-                    </div>
-                    <div class="form-group col-lg-4">
-                        <label th:text="#{createEpic.form.priority}"></label>
-                        <select class="form-control" th:field="*{priority}">
-                            <option th:each="priorityValue : ${priority}"
-                                    th:text="${priorityValue.name()}" th:value="${priorityValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label th:text="#{createEpic.form.state}"></label>
-                        <select class="form-control" th:field="*{state}">
-                            <option th:each="stateValue : ${state}"
-                                    th:text="${stateValue.name()}" th:value="${stateValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label th:text="#{createEpic.form.risk}"></label>
-                        <select class="form-control" th:field="*{risk}">
-                            <option th:each="riskValue : ${risk}"
-                                    th:text="${riskValue.name()}" th:value="${riskValue.name()}">
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group col-lg-4" >
-                        <label th:text="#{createEpic.form.complexity}"></label>
-                        <select class="form-control" th:field="*{complexity}">
-                            <option th:each="complexityValue : ${complexity}"
-                                    th:text="${complexityValue.name()}" th:value="${complexityValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label th:text="#{createEpic.form.scope}"></label>
-                        <select class="form-control" th:field="*{scope}" >
-                            <option th:each="scopeValue : ${scope}"
-                                    th:text="${scopeValue.name()}" th:value="${scopeValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label th:text="#{createEpic.form.cost}"></label>
-                        <input class="form-control" type="text"
-                               name="name" th:field="*{cost}"/>
-                    </div>
-                    <div class="form-group col-lg-4" >
-                        <label th:text="#{createEpic.form.source}"></label>
-                        <input class="form-control" type="text"
-                               name="name" th:field="*{source}"/>
-                        <br/>
-                        <label th:text="#{createEpic.form.version}"></label>
-                        <input class="form-control" type="text"
-                               name="name" maxlength="45" th:field="*{version}"/>
-                        <br/>
-                        <label th:text="#{createEpic.form.estimatedHours}"></label>
-                        <input class="form-control" type="text"
-                               name="name" required="required" th:field="*{estimatedHours}"/>
-                    </div>
-                    <div class="form-group col-lg-4">
-                        <label class="text-center" th:text="#{createEpic.form.assigned}"></label>
-                        <select class="form-control center-block" th:field="*{assignedTo}">
-                            <option th:value="0">0
-                            </option>
-                        </select>
-                        <br/>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label th:text="#{createEpic.form.validationMethod}"></label>
-                        <textarea id="validationMethod" class="form-control" rows="5" name="validationMethod"
-                                  th:field="*{validationMethod}"/>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label th:text="#{createEpic.form.testCases}"></label>
-                        <textarea  class="form-control" rows="5"
-                                  th:field="*{testCases}"/>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label th:text="#{createEpic.form.justification}"></label>
-                        <textarea  class="form-control" rows="5"
-                                   th:field="*{justification}"/>
-                    </div>
-                    <div class="col-lg-1 col-lg-offset-5 submit-button" >
-                        <button class="btn btn-primary" type="submit" th:text="#{updateFeature.form.submitButton}"></button>
-                    </div>
-                </form>
+                        <div class="form-group col-lg-4" >
+                            <label th:text="#{createEpic.form.source}"></label>
+                            <input class="form-control" type="text"
+                                   name="name" th:field="*{source}"/>
+                            <br/>
+                            <label th:text="#{createEpic.form.version}"></label>
+                            <input class="form-control" type="text"
+                                   name="name" maxlength="45" th:field="*{version}"/>
+                            <br/>
+                            <label th:text="#{createEpic.form.estimatedHours}"></label>
+                            <input class="form-control" type="text"
+                                   name="name" required="required" th:field="*{estimatedHours}"/>
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label class="text-center" th:text="#{createEpic.form.assigned}"></label>
+                            <select class="form-control center-block" th:field="*{assignedTo}">
+                                <option th:value="0">0
+                                </option>
+                            </select>
+                            <br/>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label th:text="#{createEpic.form.validationMethod}"></label>
+                            <textarea id="validationMethod" class="form-control" rows="5" name="validationMethod"
+                                      th:field="*{validationMethod}"/>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label th:text="#{createEpic.form.testCases}"></label>
+                            <textarea  class="form-control" rows="5"
+                                      th:field="*{testCases}"/>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label th:text="#{createEpic.form.justification}"></label>
+                            <textarea  class="form-control" rows="5"
+                                       th:field="*{justification}"/>
+                        </div>
+                        <div class="col-lg-1 col-lg-offset-5 submit-button" >
+                            <button class="btn btn-primary" type="submit" th:text="#{updateFeature.form.submitButton}"></button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

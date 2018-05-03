@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -43,7 +44,7 @@ public class FeatureController {
      * @return model and view with feature list
      */
     @RequestMapping(value = PATH_BASE+"features", method = RequestMethod.GET)
-    public ModelAndView getFeatureListView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getFeatureListView(@PathVariable int projectId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         List<FeatureDom> featureDomList = featureService.getFeatures(projectId);
         ProjectDom project = projectService.getProject(projectId);
@@ -51,6 +52,7 @@ public class FeatureController {
         mav.addObject("project", project);
         mav.addObject("featureList", featureDomList);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -63,7 +65,7 @@ public class FeatureController {
      * @return model and view with feature
      */
     @RequestMapping(value = PATH_BASE+"feature/{featureId}", method = RequestMethod.GET)
-    public ModelAndView getFeatureView(@PathVariable int projectId, @PathVariable int featureId, ModelAndView mav){
+    public ModelAndView getFeatureView(@PathVariable int projectId, @PathVariable int featureId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         mav.setViewName("feature");
@@ -71,6 +73,7 @@ public class FeatureController {
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
         mav.addObject("fileList", documentService.getFileList(projectId,featureId));
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -82,7 +85,7 @@ public class FeatureController {
      * @return model and view with page
      */
     @RequestMapping(value = PATH_BASE+"features/create", method = RequestMethod.GET)
-    public ModelAndView getCreateFeatureView(@PathVariable int projectId, ModelAndView mav){
+    public ModelAndView getCreateFeatureView(@PathVariable int projectId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         FeatureDom featureDom = new FeatureDom();
@@ -95,6 +98,7 @@ public class FeatureController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -109,7 +113,7 @@ public class FeatureController {
      *       {@link FeatureDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"features", method = RequestMethod.POST)
-    public ModelAndView createFeature(@PathVariable int projectId, @ModelAttribute @Valid FeatureDom feature){
+    public ModelAndView createFeature(@PathVariable int projectId, @ModelAttribute @Valid FeatureDom feature, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         FeatureDom persistedFeature = featureService.create(feature, projectId);
@@ -118,7 +122,7 @@ public class FeatureController {
         mav.addObject("feature", persistedFeature);
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
-
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -131,7 +135,7 @@ public class FeatureController {
      * @return model and view with page
      */
     @RequestMapping(value = PATH_BASE+"feature/update/{featureId}", method = RequestMethod.GET)
-    public ModelAndView getUpdateFeatureView(@PathVariable int projectId,@PathVariable int featureId, ModelAndView mav){
+    public ModelAndView getUpdateFeatureView(@PathVariable int projectId,@PathVariable int featureId, ModelAndView mav, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         FeatureDom featureDom = featureService.getFeature(featureId);
@@ -144,6 +148,7 @@ public class FeatureController {
         mav.addObject("risk", Risk.values());
         mav.addObject("complexity", Complexity.values());
         mav.addObject("scope", Scope.values());
+        mav.addObject("user", principal.getName());
         return mav;
     }
 
@@ -160,7 +165,7 @@ public class FeatureController {
      */
     @RequestMapping(value = PATH_BASE+"feature/{featureId}/update", method = RequestMethod.POST)
     public ModelAndView updateFeature(@PathVariable int projectId, @PathVariable int featureId,
-                                   @ModelAttribute @Valid FeatureDom featureDom){
+                                   @ModelAttribute @Valid FeatureDom featureDom, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom project = projectService.getProject(projectId);
         FeatureDom persistedFeature = featureService.update(featureDom, featureId,projectId);
@@ -169,6 +174,7 @@ public class FeatureController {
         mav.addObject("feature", persistedFeature);
         mav.addObject("project", project);
         mav.addObject("projectList", projectDomList);
+        mav.addObject("user", principal.getName());
         return mav;
     }
 

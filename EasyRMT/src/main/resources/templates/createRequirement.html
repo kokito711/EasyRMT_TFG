@@ -8,136 +8,138 @@
 
 </head>
 <body>
-<div id="wrapper" th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList})">
-</div>
-<div id="page-wrapper">
-    <div class="row">
-        <div class="breadcrumb">
-            <p>
-                <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
-                </a>
-                /
-                <a th:href="'/project/'+${project.getIdProject()}+'/requirements'"
-                   th:text="#{requirement.Breadcrumb.requirementlistLabel}">
-                </a>
-            </p>
+<div id="wrapper" >
+    <!--Navigation -->
+    <nav th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList}, user=${user})"></nav>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="breadcrumb">
+                <p>
+                    <a th:href="'/project/'+${project.getIdProject()}" th:text="${project.getName()}">
+                    </a>
+                    /
+                    <a th:href="'/project/'+${project.getIdProject()}+'/requirements'"
+                       th:text="#{requirement.Breadcrumb.requirementlistLabel}">
+                    </a>
+                </p>
+            </div>
+            <h2 class="page-header" th:text="#{createRequirement.createLabel}">
+            </h2>
         </div>
-        <h2 class="page-header" th:text="#{createRequirement.createLabel}">
-        </h2>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel-body">
-                <form role="form" id="create-requirement-form" th:action="@{'/project/'+${project.getIdProject()}+'/requirements'}"
-                      th:object="${requirement}" method="post">
-                    <div class="form-group col-lg-12">
-                        <div class="col-lg-6">
-                            <label for="req-name" th:text="#{createEpic.form.name}"></label>
-                            <input id="req-name" class="form-control" required="required" type="text"
-                                   maxlength="64" name="name" th:field="*{name}"/>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-body">
+                    <form role="form" id="create-requirement-form" th:action="@{'/project/'+${project.getIdProject()}+'/requirements'}"
+                          th:object="${requirement}" method="post">
+                        <div class="form-group col-lg-12">
+                            <div class="col-lg-6">
+                                <label for="req-name" th:text="#{createEpic.form.name}"></label>
+                                <input id="req-name" class="form-control" required="required" type="text"
+                                       maxlength="64" name="name" th:field="*{name}"/>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="req-id" th:text="#{createEpic.form.identifier}"></label>
+                                <input class="form-control"  type="text" id="req-id"
+                                       maxlength="10" name="name" th:field="*{identifier}"/>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="req-type" th:text="#{createRequirement.form.reqType}"></label>
+                                <select class="form-control" th:field="*{requirementTypeId}" id="req-type" >
+                                    <option th:each="reqType : ${project.getRequirementTypes()}"
+                                            th:text="${reqType.getName()}" th:value="${reqType.idType}">
+                                    </option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-lg-3">
-                            <label for="req-id" th:text="#{createEpic.form.identifier}"></label>
-                            <input class="form-control"  type="text" id="req-id"
-                                   maxlength="10" name="name" th:field="*{identifier}"/>
+                        <div class="form-group col-lg-12">
+                            <label for="req-description" th:text="#{createEpic.form.description}"></label>
+                            <textarea id="req-description" class="form-control" rows="5" name="description"
+                                      th:field="*{description}"></textarea>
                         </div>
-                        <div class="col-lg-3">
-                            <label for="req-type" th:text="#{createRequirement.form.reqType}"></label>
-                            <select class="form-control" th:field="*{requirementTypeId}" id="req-type" >
-                                <option th:each="reqType : ${project.getRequirementTypes()}"
-                                        th:text="${reqType.getName()}" th:value="${reqType.idType}">
+                        <div class="form-group col-lg-4">
+                            <label for="req-priority" th:text="#{createEpic.form.priority}"></label>
+                            <select class="form-control" th:field="*{priority}" id="req-priority">
+                                <option th:each="priorityValue : ${priority}"
+                                        th:text="${priorityValue.name()}" th:value="${priorityValue.name()}">
                                 </option>
                             </select>
+                            <br/>
+                            <label for="req-state" th:text="#{createEpic.form.state}"></label>
+                            <select class="form-control" th:field="*{state}" id="req-state">
+                                <option th:each="stateValue : ${state}"
+                                        th:text="${stateValue.name()}" th:value="${stateValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label for="req-risk" th:text="#{createEpic.form.risk}"></label>
+                            <select class="form-control" th:field="*{risk}" id="req-risk">
+                                <option th:each="riskValue : ${risk}"
+                                        th:text="${riskValue.name()}" th:value="${riskValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label for="req-assi" class="text-center" th:text="#{createEpic.form.assigned}"></label>
+                            <select class="form-control center-block" th:field="*{assignedTo}" id="req-assi">
+                                <option th:value="0">0
+                                </option>
+                            </select>
+                            <br/>
                         </div>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label for="req-description" th:text="#{createEpic.form.description}"></label>
-                        <textarea id="req-description" class="form-control" rows="5" name="description"
-                                  th:field="*{description}"></textarea>
-                    </div>
-                    <div class="form-group col-lg-4">
-                        <label for="req-priority" th:text="#{createEpic.form.priority}"></label>
-                        <select class="form-control" th:field="*{priority}" id="req-priority">
-                            <option th:each="priorityValue : ${priority}"
-                                    th:text="${priorityValue.name()}" th:value="${priorityValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label for="req-state" th:text="#{createEpic.form.state}"></label>
-                        <select class="form-control" th:field="*{state}" id="req-state">
-                            <option th:each="stateValue : ${state}"
-                                    th:text="${stateValue.name()}" th:value="${stateValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label for="req-risk" th:text="#{createEpic.form.risk}"></label>
-                        <select class="form-control" th:field="*{risk}" id="req-risk">
-                            <option th:each="riskValue : ${risk}"
-                                    th:text="${riskValue.name()}" th:value="${riskValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label for="req-assi" class="text-center" th:text="#{createEpic.form.assigned}"></label>
-                        <select class="form-control center-block" th:field="*{assignedTo}" id="req-assi">
-                            <option th:value="0">0
-                            </option>
-                        </select>
-                        <br/>
-                    </div>
-                    <div class="form-group col-lg-4" >
-                        <label for="req-comp" th:text="#{createEpic.form.complexity}"></label>
-                        <select class="form-control" th:field="*{complexity}" id="req-comp">
-                            <option th:each="complexityValue : ${complexity}"
-                                    th:text="${complexityValue.name()}" th:value="${complexityValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label for="req-scope" th:text="#{createEpic.form.scope}"></label>
-                        <select class="form-control" th:field="*{scope}" id="req-scope" >
-                            <option th:each="scopeValue : ${scope}"
-                                    th:text="${scopeValue.name()}" th:value="${scopeValue.name()}">
-                            </option>
-                        </select>
-                        <br/>
-                        <label for="req-cost" th:text="#{createEpic.form.cost}"></label>
-                        <input class="form-control" type="text" id="req-cost"
-                               name="name" th:field="*{cost}"/>
-                    </div>
-                    <div class="form-group col-lg-4" >
-                        <label for="req-sour" th:text="#{createEpic.form.source}"></label>
-                        <input class="form-control" type="text" id="req-sour"
-                               name="name" th:field="*{source}"/>
-                        <br/>
-                        <label for="req-version" th:text="#{createEpic.form.version}"></label>
-                        <input class="form-control" type="text" id="req-version"
-                               name="name" maxlength="45" th:field="*{version}"/>
-                        <br/>
-                        <label for="req-esthours" th:text="#{createEpic.form.estimatedHours}"></label>
-                        <input class="form-control" type="text" id="req-esthours"
-                               name="name" required="required" th:field="*{estimatedHours}"/>
-                        <br/>
-                        <label for="req-sp" th:text="#{createEpic.form.storyPoints}"></label>
-                        <input class="form-control" type="text" id="req-sp" th:field="*{storyPoints}"/>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label for="validationMethod" th:text="#{createEpic.form.validationMethod}"></label>
-                        <textarea id="validationMethod" class="form-control" rows="5" name="validationMethod"
-                                  th:field="*{validationMethod}"></textarea>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label  for="req-test" th:text="#{createEpic.form.testCases}"></label>
-                        <textarea  class="form-control" rows="5" id="req-test"
-                                   th:field="*{testCases}"></textarea>
-                    </div>
-                    <div class="form-group col-lg-12">
-                        <label  for="req-just" th:text="#{createEpic.form.justification}"></label>
-                        <textarea  class="form-control" rows="5" id="req-just"
-                                   th:field="*{justification}"></textarea>
-                    </div>
-                    <div class="col-lg-1 col-lg-offset-5 submit-button" >
-                        <button class="btn btn-primary" type="submit" th:text="#{createRequirement.createLabel}"></button>
-                    </div>
-                </form>
+                        <div class="form-group col-lg-4" >
+                            <label for="req-comp" th:text="#{createEpic.form.complexity}"></label>
+                            <select class="form-control" th:field="*{complexity}" id="req-comp">
+                                <option th:each="complexityValue : ${complexity}"
+                                        th:text="${complexityValue.name()}" th:value="${complexityValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label for="req-scope" th:text="#{createEpic.form.scope}"></label>
+                            <select class="form-control" th:field="*{scope}" id="req-scope" >
+                                <option th:each="scopeValue : ${scope}"
+                                        th:text="${scopeValue.name()}" th:value="${scopeValue.name()}">
+                                </option>
+                            </select>
+                            <br/>
+                            <label for="req-cost" th:text="#{createEpic.form.cost}"></label>
+                            <input class="form-control" type="text" id="req-cost"
+                                   name="name" th:field="*{cost}"/>
+                        </div>
+                        <div class="form-group col-lg-4" >
+                            <label for="req-sour" th:text="#{createEpic.form.source}"></label>
+                            <input class="form-control" type="text" id="req-sour"
+                                   name="name" th:field="*{source}"/>
+                            <br/>
+                            <label for="req-version" th:text="#{createEpic.form.version}"></label>
+                            <input class="form-control" type="text" id="req-version"
+                                   name="name" maxlength="45" th:field="*{version}"/>
+                            <br/>
+                            <label for="req-esthours" th:text="#{createEpic.form.estimatedHours}"></label>
+                            <input class="form-control" type="text" id="req-esthours"
+                                   name="name" required="required" th:field="*{estimatedHours}"/>
+                            <br/>
+                            <label for="req-sp" th:text="#{createEpic.form.storyPoints}"></label>
+                            <input class="form-control" type="text" id="req-sp" th:field="*{storyPoints}"/>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label for="validationMethod" th:text="#{createEpic.form.validationMethod}"></label>
+                            <textarea id="validationMethod" class="form-control" rows="5" name="validationMethod"
+                                      th:field="*{validationMethod}"></textarea>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label  for="req-test" th:text="#{createEpic.form.testCases}"></label>
+                            <textarea  class="form-control" rows="5" id="req-test"
+                                       th:field="*{testCases}"></textarea>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label  for="req-just" th:text="#{createEpic.form.justification}"></label>
+                            <textarea  class="form-control" rows="5" id="req-just"
+                                       th:field="*{justification}"></textarea>
+                        </div>
+                        <div class="col-lg-1 col-lg-offset-5 submit-button" >
+                            <button class="btn btn-primary" type="submit" th:text="#{createRequirement.createLabel}"></button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

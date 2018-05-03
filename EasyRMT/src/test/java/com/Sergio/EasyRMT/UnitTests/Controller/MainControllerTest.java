@@ -62,6 +62,7 @@ public class MainControllerTest {
     }
 
     private MainController createMainController(){
-        return new MainController(projectService, userService);
+       // return new MainController(projectService, userService);
+        return null;
     }
 }

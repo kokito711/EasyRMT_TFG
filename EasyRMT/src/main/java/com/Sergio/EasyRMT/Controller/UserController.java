@@ -56,7 +56,8 @@ public class UserController {
         UserDom user = userService.findUser(username);
         List<ProjectDom> projects = projectService.getProjects();
         ModelAndView modelAndView = new ModelAndView("/user/profile");
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("userProf", user);
+        modelAndView.addObject("user", user.getUsername());
         modelAndView.addObject("projectList", projects);
         return modelAndView;
     }
@@ -73,7 +74,8 @@ public class UserController {
         List<ProjectDom> projects = projectService.getProjects();
         ModelAndView modelAndView = new ModelAndView("/user/profile");
         modelAndView.addObject("success", true);
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("userProf", user);
+        modelAndView.addObject("user", user.getUsername());
         modelAndView.addObject("projectList", projects);
         return modelAndView;
     }
