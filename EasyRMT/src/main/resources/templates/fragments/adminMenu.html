@@ -61,6 +61,11 @@
                         </ul>
                         <!-- /.nav-second-level -->
                     </li>
+                    <!--<li th:each="attributeEntry : ${session}" >
+                        &lt;!&ndash;th:if="${attributeEntry.key=='Username' and attributeEntry.value=='Admin'}">&ndash;&gt;
+                        <span th:text="'key: '+${attributeEntry.key + ': value:' + attributeEntry.value}"></span>
+                        <a href="/admin/changePassword"><p th:text="#{adminMenu.changePassword}"></p> </a>
+                    </li>-->
                 </ul>
                 <!-- /.nav-second-level -->
             </div>

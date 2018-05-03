@@ -8,8 +8,11 @@ package com.Sergio.EasyRMT.Controller;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -84,7 +87,6 @@ public class AdminController {
                     case "username":
                         user.setUsername("");
                         break;
-
                     case "email":
                         user.setEmail("");
                         break;
@@ -124,6 +126,52 @@ public class AdminController {
         List<UserDom> users = userService.getUsers();
         ModelAndView modelAndView = new ModelAndView(USER_BASE_PATH);
         modelAndView.addObject("userList",users);
+        return modelAndView;
+    }
+
+    /**
+     * This method is a request to delete a user
+     * @param userId id of user
+     * @return status of deletion. 200 if ok and 500 if not ok
+     */
+    @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteUser(@PathVariable int userId){
+        boolean response = userService.deleteUser(userId);
+        if(response){
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+        }
+    }
+
+    /**
+     * This method request a view of an specific user. Controller will call service to get user information and then
+     * it will return this info.
+     * @param userId user to get the info
+     * @return Model And View with user information
+     */
+    @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.GET)
+    public ModelAndView getEditUser(@PathVariable int userId){
+        UserDom user = userService.findUserById(userId);
+        ModelAndView modelAndView = new ModelAndView("/admin/modifyUser");
+        modelAndView.addObject("user",user);
+        return modelAndView;
+    }
+
+    /**
+     * This method calls user service to update user, and returns a view with user updated
+     * @param userId id of user to be updated
+     * @param user user with updated information
+     * @return page with modified user if user has been updated.
+     */
+    @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.POST)
+    public ModelAndView editUser(@PathVariable int userId, @Valid UserDom user, BindingResult result){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/admin/modifyUser");
+        UserDom userDom = userService.modifyUser(userId,user);
+        modelAndView.addObject("success", true);
+        modelAndView.addObject("user", userDom);
         return modelAndView;
     }
 }

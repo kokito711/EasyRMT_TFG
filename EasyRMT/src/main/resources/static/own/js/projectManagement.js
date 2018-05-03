@@ -104,7 +104,7 @@ function deleteFile(path, fileId) {
 
 function deleteUser(user) {
     $.ajax({
-        url: '/admin/users/user/'+user,
+        url: '/admin/users/'+user,
         type: 'DELETE',
         success: function() {
             $("#deleteUserModal").modal('hide');

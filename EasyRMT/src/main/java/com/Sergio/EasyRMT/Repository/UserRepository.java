@@ -7,6 +7,7 @@ package com.Sergio.EasyRMT.Repository;
 
 import com.Sergio.EasyRMT.Model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Override
     @Query(value = "SELECT * FROM easyrmt.app_user where not username = 'Admin'", nativeQuery = true)
     List<User> findAll();
+
+    @Modifying
+    @Query(value = "DELETE FROM easyrmt.app_user WHERE user_Id = ?1", nativeQuery = true)
+    void deleteUser(int userId);
 }

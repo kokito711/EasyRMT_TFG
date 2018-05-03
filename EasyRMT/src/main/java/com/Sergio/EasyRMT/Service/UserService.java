@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,23 @@ public class UserService {
         else{
             return null;
         }
+    }
 
+    /**
+     * This method search in db for a user passing user_id to query as filter.
+     * @param userId userId to be found
+     * @return {@link UserDom} user with related username
+     */
+    @Transactional(readOnly = true)
+    public UserDom findUserById(int userId) {
+        User user = userRepository.findOne(userId);
+        if(user != null) {
+            UserDom userDom = userConverter.toDomain(user);
+            return userDom;
+        }
+        else{
+            return null;
+        }
     }
 
     /**
@@ -78,5 +95,80 @@ public class UserService {
         List<User> userList = userRepository.findAll();
         List<UserDom> userDomList = userConverter.toDomain(userList);
         return userDomList;
+    }
+
+    /**
+     * This method deletes an user
+     * @param userId
+     * @return true if deleted, false if not
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteUser(int userId) {
+        if(userRepository.exists(userId)){
+            userRepository.deleteUser(userId);
+            if (userRepository.exists(userId)){
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method tries to update an user if user has been modified
+     * @param userId id of user to be modified
+     * @param userInfo information to modify
+     * @return user modified if there is any change or userInfo in no changes
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public UserDom modifyUser(int userId, UserDom userInfo) {
+        User user = userRepository.findOne(userId);
+        boolean modified = false;
+        if(userInfo.getPassword()!= "") {
+            String password = bCryptPasswordEncoder.encode(userInfo.getPassword());
+            if(!user.getPassword().equals(password)){
+                user.setPassword(password);
+                modified = true;
+            }
+        }
+        if(userInfo.getEmail()!= null && !user.getEmail().equals(userInfo.getEmail())){
+            user.setEmail(userInfo.getEmail());
+            modified = true;
+        }
+        if (userInfo.getName()!= null && !user.getName().equals(userInfo.getName())){
+            user.setName(userInfo.getName());
+            modified = true;
+        }
+        if (userInfo.getLastName()!= null && !user.getLastName().equals(userInfo.getLastName())){
+            user.setLastName(userInfo.getLastName());
+            modified = true;
+        }
+        if (userInfo.getPhone()!= null && !user.getPhone().equals(userInfo.getPhone())){
+            user.setPhone(userInfo.getPhone());
+            modified = true;
+        }
+        List<Role> roleListPersisted = new ArrayList<>();
+        for (Role role : user.getRoles()){
+            roleListPersisted.add(role);
+        }
+        List<Role> roleList = new ArrayList<>();
+        for(String role : userInfo.getStringRoles()){
+            if(role!="NONE") {
+                roleList.add(roleRepository.findByRole(role));
+            }
+        }
+        if(!roleListPersisted.equals(roleList)){
+            Set<Role> roleSet = new HashSet<>();
+            for(Role role: roleList){
+                roleSet.add(role);
+            }
+            user.setRoles(roleSet);
+            modified = true;
+        }
+        if (modified){
+            user = userRepository.save(user);
+            userInfo = userConverter.toDomain(user);
+        }
+    return userInfo;
     }
 }
