@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class ProjectController {
      * @return ModelAndView which is model received as param
      */
     @RequestMapping(value="/createProject", method = RequestMethod.GET)
-    public ModelAndView createProjectView(ModelAndView model){
+    public ModelAndView createProjectView(ModelAndView model, Principal principal){
         List<ProjectDom> projectDomList = projectService.getProjects();
         ProjectDom projectDom = new ProjectDom();
         model.setViewName("createProject");

@@ -9,8 +9,10 @@
 
 </head>
 <body>
-    <div id="wrapper" th:replace="fragments/adminMenu :: adminMenu">
-    </div>
+    <div id="wrapper"  >
+    <!--Navigation -->
+    <nav th:replace="fragments/adminMenu :: adminMenu">
+    </nav>
     <div id="page-wrapper">
         <div class="row">
             <div class="breadcrumb">
@@ -138,6 +140,7 @@
                 </table>
             </div>
         </div>
+    </div>
     </div>
     <script>
         $(document).ready(

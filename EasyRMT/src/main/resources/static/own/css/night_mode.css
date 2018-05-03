@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
+ */
+body {
+    /*background-color: #fff;*/
+    transition: all 0.25s ease-out;
+}
+.container {
+    width: 900px;
+}
+.night-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+.night-mode{
+    filter: invert(100%);
+    background-color: #222222;
+}
+/* The important thing here is to not invert the photos */
+.night-mode img {
+    filter: invert(0%);
+}

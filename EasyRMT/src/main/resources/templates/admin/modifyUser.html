@@ -9,35 +9,59 @@
 
 </head>
 <body>
-<div id="wrapper" th:replace="fragments/adminMenu :: adminMenu">
-</div>
-<div id="page-wrapper">
-    <div class="row">
-        <div class="breadcrumb">
-            <p>
-                <a th:href="'/admin/dashboard'" th:text="#{adminBreadCrumb.dashboard}">
-                </a>
-                /
-                <a th:href="'/admin/users/'" th:text="#{adminBreadCrumb.users}">
-                </a>
-                /
-                <a th:href="'/admin/users/'+${user.getUserId()}" th:text="#{adminBreadCrumb.modifyUser}"></a>
-            </p>
+<div id="wrapper"  >
+    <!--Navigation -->
+    <nav th:replace="fragments/adminMenu :: adminMenu">
+    </nav>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="breadcrumb">
+                <p>
+                    <a th:href="'/admin/dashboard'" th:text="#{adminBreadCrumb.dashboard}">
+                    </a>
+                    /
+                    <a th:href="'/admin/users/'" th:text="#{adminBreadCrumb.users}">
+                    </a>
+                    /
+                    <a th:href="'/admin/users/'+${user.getUserId()}" th:text="#{adminBreadCrumb.modifyUser}"></a>
+                </p>
+            </div>
+            <h2 id="usersLabel" class="page-header" th:text="#{adminBreadCrumb.users}">
+            </h2>
         </div>
-        <h2 id="usersLabel" class="page-header" th:text="#{adminBreadCrumb.users}">
-        </h2>
-    </div>
-    <div class="row">
-        <!-- modal with success-->
-        <div class="modal fade" id="successCreation" tabindex="-1" role="dialog"
+        <div class="row">
+            <!-- modal with success-->
+            <div class="modal fade" id="successCreation" tabindex="-1" role="dialog"
+                 aria-labelledby="successCreationLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            <h4 class="modal-title" id="successCreationLabel" th:text="#{modifyUser.success}"></h4>
+                        </div>
+                        <div class="modal-body" th:text="#{modifyUser.success}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                    th:text="#{createUser.modalButton}"></button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+        </div>
+        <!-- modal end-->
+        <!-- modal with fail-->
+        <div class="modal fade" id="failCreation" tabindex="-1" role="dialog"
              aria-labelledby="successCreationLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                        <h4 class="modal-title" id="successCreationLabel" th:text="#{modifyUser.success}"></h4>
+                        <h4 class="modal-title" id="failCreationLabel" th:text="#{updateUser.fail}"></h4>
                     </div>
-                    <div class="modal-body" th:text="#{modifyUser.success}">
+                    <div class="modal-body" th:text="#{updateUser.fail}">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"
@@ -48,96 +72,75 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-    </div>
-    <!-- modal end-->
-    <!-- modal with fail-->
-    <div class="modal fade" id="failCreation" tabindex="-1" role="dialog"
-         aria-labelledby="successCreationLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                    <h4 class="modal-title" id="failCreationLabel" th:text="#{updateUser.fail}"></h4>
+        <!-- modal end-->
+        <div class="row col-md-6 col-md-offset-3">
+            <form autocomplete="off" action="#" th:action="@{'/admin/users/'+${user.getUserId()}}"
+                  th:object="${user}" method="post" class="form-horizontal"
+                  role="form">
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{username}" disabled="disabled" class="form-control"/>
+                    </div>
                 </div>
-                <div class="modal-body" th:text="#{updateUser.fail}">
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="password" th:field="*{password}" th:placeholder="#{login.password}"
+                               class="form-control" maxlength="16" minlength="8" />
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"
-                            th:text="#{createUser.modalButton}"></button>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <label th:text="#{updateUser.FirstRole}" for="firstRole"></label>
+                        <select class="form-control" id="firstRole" th:field="*{stringRoles}">
+                            <option th:text="#{createUser.role.admin}" value="ADMIN"></option>
+                            <option th:text="#{createUser.role.analyst}" value="ANALYST"></option>
+                            <option th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
+                            <option th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <!-- /.modal-content -->
+                <div class="form-group">
+                    <div class="col-sm-9" th:unless="${user.getRoles().toArray()[0].getRole() == 'ADMIN'}">
+                        <label th:text="#{updateUser.SecondRole}" for="secondRole"></label>
+                        <select class="form-control" id="secondRole" th:field="*{stringRoles}">
+                            <option th:text="#{createUser.role.none}" value="NONE"></option>
+                            <option th:text="#{createUser.role.analyst}" value="ANALYST"></option>
+                            <option th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
+                            <option th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{email}" th:placeholder="#{createUser.Email}"
+                               class="form-control" required="required" maxlength="255" minlength="1"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{name}" th:placeholder="#{createUser.name}"
+                               class="form-control"  maxlength="30" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{lastName}" maxlength="40"
+                               th:placeholder="#{createUser.lastName}" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{phone}" th:placeholder="#{createUser.phone}"
+                               class="form-control" maxlength="15"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary btn-block" th:text="#{updateUser.button}"></button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- modal end-->
-    <div class="row col-md-6 col-md-offset-3">
-        <form autocomplete="off" action="#" th:action="@{'/admin/users/'+${user.getUserId()}}"
-              th:object="${user}" method="post" class="form-horizontal"
-              role="form">
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <input type="text" th:field="*{username}" disabled="disabled" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <input type="password" th:field="*{password}" th:placeholder="#{login.password}"
-                           class="form-control" maxlength="16" minlength="8" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <label th:text="#{updateUser.FirstRole}" for="firstRole"></label>
-                    <select class="form-control" id="firstRole" th:field="*{stringRoles}">
-                        <option th:text="#{createUser.role.admin}" value="ADMIN"></option>
-                        <option th:text="#{createUser.role.analyst}" value="ANALYST"></option>
-                        <option th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
-                        <option th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9" th:unless="${user.getRoles().toArray()[0].getRole() == 'ADMIN'}">
-                    <label th:text="#{updateUser.SecondRole}" for="secondRole"></label>
-                    <select class="form-control" id="secondRole" th:field="*{stringRoles}">
-                        <option th:text="#{createUser.role.none}" value="NONE"></option>
-                        <option th:text="#{createUser.role.analyst}" value="ANALYST"></option>
-                        <option th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
-                        <option th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <input type="text" th:field="*{email}" th:placeholder="#{createUser.Email}"
-                           class="form-control" required="required" maxlength="255" minlength="1"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <input type="text" th:field="*{name}" th:placeholder="#{createUser.name}"
-                           class="form-control"  maxlength="30" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <input type="text" th:field="*{lastName}" maxlength="40"
-                           th:placeholder="#{createUser.lastName}" class="form-control" />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <input type="text" th:field="*{phone}" th:placeholder="#{createUser.phone}"
-                           class="form-control" maxlength="15"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <button type="submit" class="btn btn-primary btn-block" th:text="#{updateUser.button}"></button>
-                </div>
-            </div>
-        </form>
     </div>
 </div>
 <label class="hidden" id="success" th:text="${success}"></label>
