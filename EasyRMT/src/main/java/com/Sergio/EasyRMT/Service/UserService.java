@@ -183,4 +183,11 @@ public class UserService {
         }
     return userInfo;
     }
+
+    @Transactional(readOnly = true)
+    public List<UserDom> getNoAdminUsers() {
+        List<User> users = userRepository.findNotAdmin();
+        List<UserDom> userDomList = userConverter.toDomain(users);
+        return userDomList;
+    }
 }

@@ -191,4 +191,17 @@ public class AdminController {
         modelAndView.addObject("groupList", groups);
         return modelAndView;
     }
+
+    /**
+     * This method receives a request to send the view with the form to create groups and provides it
+     * @return view with create group page
+     */
+    @RequestMapping(value = GROUP_BASE_PATH+"/create", method = RequestMethod.GET)
+    public ModelAndView getCreateGroup(){
+        ModelAndView modelAndView = new ModelAndView("/admin/createGroup");
+        List<UserDom> users = userService.getNoAdminUsers();
+        modelAndView.addObject("userList", users);
+        modelAndView.addObject("group", new GroupDom());
+        return modelAndView;
+    }
 }

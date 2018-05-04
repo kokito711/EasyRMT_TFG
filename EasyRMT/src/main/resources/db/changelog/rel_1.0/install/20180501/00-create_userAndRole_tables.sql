@@ -53,7 +53,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Values for role table
 -- -----------------------------------------------------
-INSERT INTO role (role) VALUES ('ADMIN');
-INSERT INTO role (role) VALUES ('PROJECT_MANAGER');
-INSERT INTO role (role) VALUES ('ANALYST');
-INSERT INTO role (role) VALUES ('STAKEHOLDER');
+INSERT IGNORE INTO role (role) VALUES ('ADMIN');
+INSERT IGNORE INTO role (role) VALUES ('PROJECT_MANAGER');
+INSERT IGNORE INTO role (role) VALUES ('ANALYST');
+INSERT IGNORE INTO role (role) VALUES ('STAKEHOLDER');

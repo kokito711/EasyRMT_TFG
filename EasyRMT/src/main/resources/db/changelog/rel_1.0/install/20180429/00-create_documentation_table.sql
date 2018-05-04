@@ -3,7 +3,7 @@
 -- -----------------------------------------------------
 --DROP TABLE IF EXISTS `easyrmt`.`documentation` ;
 
-CREATE TABLE easyrmt.documentation (
+CREATE TABLE IF NOT EXISTS easyrmt.documentation (
   `iddocumentation` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(64) NOT NULL DEFAULT 'file',
   `size` DOUBLE NOT NULL DEFAULT 0.0,

@@ -18,18 +18,16 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Getter
 @Setter
+@AssociationOverrides({
+        @AssociationOverride(name = "primaryKey.user", joinColumns = @JoinColumn(name = "user_id")),
+        @AssociationOverride(name = "primaryKey.group", joinColumns = @JoinColumn(name="group_id"))
+})
 public class Group_user implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "groupId")
-    private Group group;
+    @EmbeddedId
+    private Group_UserKey primaryKey;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @NotNull
     @Column(name = "isPM")

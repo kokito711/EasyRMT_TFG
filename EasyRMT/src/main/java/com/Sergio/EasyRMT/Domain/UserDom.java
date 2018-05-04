@@ -5,6 +5,7 @@
 
 package com.Sergio.EasyRMT.Domain;
 
+import com.Sergio.EasyRMT.Model.Group_user;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +54,8 @@ public class UserDom {
     private String phone;
 
     private Set<RoleDom> roles;
+
+    private List<Group_user> groups;
 
     private List<String> stringRoles;
 

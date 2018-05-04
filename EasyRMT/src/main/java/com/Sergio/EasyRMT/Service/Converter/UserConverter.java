@@ -46,6 +46,9 @@ public class UserConverter {
         if (user.getPhone()!= null){
             userDom.setPhone(user.getPhone());
         }
+        if(user.getGroups()!=null){
+            userDom.setGroups(user.getGroups());
+        }
         userDom.setRoles(roleDoms);
         return userDom;
     }

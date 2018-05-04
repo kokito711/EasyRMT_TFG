@@ -16,7 +16,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "group")
+@Table(name = "app_group", schema = "easyrmt")
 @EqualsAndHashCode
 @Getter
 @Setter
@@ -25,14 +25,14 @@ public class Group implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "groupId")
-    private int groupId;
+    @Column(name = "group_id")
+    private int group_id;
 
     @NotNull
     @Length(min=1, max = 45)
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "primaryKey.group", cascade = CascadeType.ALL)
     List<Group_user> group;
 }

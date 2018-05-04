@@ -2,10 +2,10 @@
 -- Table easyrmt.group
 -- -----------------------------------------------------
 --DROP TABLE IF EXISTS easyrmt.group ;
-CREATE TABLE IF NOT EXISTS easyrmt.group (
-  `groupId` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS easyrmt.app_group (
+  `group_id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`groupId`),
+  PRIMARY KEY (`group_id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
@@ -14,14 +14,14 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 --DROP TABLE IF EXISTS easyrmt.group_user ;
 CREATE TABLE IF NOT EXISTS easyrmt.group_user (
-  `groupId` INT NOT NULL,
+  `group_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   `isPM` TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`groupId`, `user_id`),
+  PRIMARY KEY (`group_id`, `user_id`),
   INDEX `fk_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_group`
-    FOREIGN KEY (`groupId`)
-    REFERENCES `easyrmt`.`group` (`groupId`)
+    FOREIGN KEY (`group_id`)
+    REFERENCES `easyrmt`.`app_group` (`group_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_user_to_group`
