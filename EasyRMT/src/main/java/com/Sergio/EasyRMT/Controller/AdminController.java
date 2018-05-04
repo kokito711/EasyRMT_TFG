@@ -5,7 +5,10 @@
 
 package com.Sergio.EasyRMT.Controller;
 
+import com.Sergio.EasyRMT.Domain.GroupDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Model.Group;
+import com.Sergio.EasyRMT.Service.GroupService;
 import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +28,15 @@ import java.util.Locale;
 @RestController
 public class AdminController {
     private UserService userService;
+    private GroupService groupService;
     private final String BASE_PATH = "/admin/";
     private final String USER_BASE_PATH = BASE_PATH+"users";
     private final String GROUP_BASE_PATH = BASE_PATH+"groups";
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, GroupService groupService) {
         this.userService = userService;
+        this.groupService = groupService;
     }
 
     /**
@@ -181,6 +186,9 @@ public class AdminController {
      */
     @RequestMapping(value = GROUP_BASE_PATH, method = RequestMethod.GET)
     public ModelAndView getGroupList(){
-        return null;
+        ModelAndView modelAndView = new ModelAndView("/admin/groups");
+        List<GroupDom> groups = groupService.findAll();
+        modelAndView.addObject("groupList", groups);
+        return modelAndView;
     }
 }
