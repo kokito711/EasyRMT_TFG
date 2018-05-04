@@ -79,7 +79,7 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public void createUser(UserDom userDom){
         User user = userConverter.toModel(userDom);
-        Set<Role> roles = new HashSet<>();
+        List<Role> roles = new ArrayList<>();
         Role role = roleRepository.findByRole(userDom.getStringRoles().get(0));
         roles.add(role);
         user.setRoles(roles);
@@ -164,12 +164,12 @@ public class UserService {
             }
             List<Role> roleList = new ArrayList<>();
             for (String role : userInfo.getStringRoles()) {
-                if (role != "NONE") {
+                if (!role.equals("NONE")) {
                     roleList.add(roleRepository.findByRole(role));
                 }
             }
             if (!roleListPersisted.equals(roleList)) {
-                Set<Role> roleSet = new HashSet<>();
+                List<Role> roleSet = new ArrayList<>();
                 for (Role role : roleList) {
                     roleSet.add(role);
                 }

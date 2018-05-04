@@ -6,6 +6,7 @@
 package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.GroupDom;
+import com.Sergio.EasyRMT.Domain.RoleDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group;
 import com.Sergio.EasyRMT.Service.GroupService;
@@ -189,6 +190,29 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView("/admin/groups");
         List<GroupDom> groups = groupService.findAll();
         modelAndView.addObject("groupList", groups);
+        return modelAndView;
+    }
+
+    /**
+     * This method receives a request to create a group. Method checks if PM is in group list. If it is method will
+     * return error. If not, method will try to create a group
+     * @return view with error if PM is in user list or view with success and new group if group has been created
+     */
+    @RequestMapping(value = GROUP_BASE_PATH+"/create", method = RequestMethod.POST)
+    public ModelAndView createGroup(@Valid GroupDom group, BindingResult bindingResult){
+        ModelAndView modelAndView = new ModelAndView("/admin/createGroup");
+        List<UserDom> users = userService.getNoAdminUsers();
+        modelAndView.addObject("userList", users);
+        for(String user: group.getStringUsers()){
+            if (userService.findUser(user).getUserId() == group.getPm()){
+                modelAndView.addObject("group",group);
+                modelAndView.addObject("success",false);
+                return modelAndView;
+            }
+        }
+        groupService.createGroup(group);
+        modelAndView.addObject("group", new GroupDom());
+        modelAndView.addObject("success",true);
         return modelAndView;
     }
 

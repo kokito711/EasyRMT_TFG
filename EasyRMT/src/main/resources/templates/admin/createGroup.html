@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+  ~                             All rights reserved
+  -->
+
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head :: head">
+
+</head>
+<body>
+<div id="wrapper"  >
+    <!--Navigation -->
+    <nav th:replace="fragments/adminMenu :: adminMenu">
+    </nav>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="breadcrumb">
+                <p>
+                    <a th:href="'/admin/dashboard'" th:text="#{adminBreadCrumb.dashboard}">
+                    </a>
+                    /
+                    <a th:href="'/admin/groups/create'" th:text="#{adminBreadCrumb.createGroup}">
+                    </a>
+                </p>
+            </div>
+            <h2 class="page-header" th:text="#{adminBreadCrumb.createGroup}">
+            </h2>
+        </div>
+        <!-- modal with success-->
+        <div class="modal fade" id="successCreation" tabindex="-1" role="dialog"
+             aria-labelledby="successCreationLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="successCreationLabel" th:text="#{createGroup.success}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{createGroup.success}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{createUser.modalButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- modal end-->
+        <!-- modal with fail-->
+        <div class="modal fade" id="failCreation" tabindex="-1" role="dialog"
+             aria-labelledby="successCreationLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="failCreationLabel" th:text="#{createGroup.fail}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{createGroup.fail}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{createUser.modalButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- modal end-->
+        <div class="row col-lg-12">
+            <form autocomplete="off" action="#" th:action="@{/admin/groups/create}"
+                  th:object="${group}" method="post" class="form-horizontal"
+                  role="form">
+                <div class="form-group ">
+                    <div class="col-sm-3 col-md-offset-4">
+                        <label for="group_name" th:text="#{admin.groups.Table.Thead.name}"></label>
+                        <input type="text" id="group_name" th:field="*{name}" th:placeholder="#{admin.groups.Table.Thead.name}"
+                               class="form-control" required="required" maxlength="16" minlength="1"/>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-sm-3 col-md-offset-4">
+                        <label for="project_manager" th:text="#{createGroup.projectManager}"></label>
+                        <select  class="form-control" th:field="*{pm}" id="project_manager">
+                            <option th:each="user : ${userList}" th:if='${user.getRoles().get(0).getRole().equals("PROJECT_MANAGER")}'
+                                    th:text="${user.getUsername()}" th:value="${user.getUserId()}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12">
+                    <div class="form-group col-md-6">
+                        <label for="analyst" th:text="#{createUser.role.analyst}+'s'"></label><strong class="text-danger">*</strong>
+                        <select  class="form-control" th:field="*{stringUsers}" id="analyst" multiple="multiple">
+                            <option th:each="user : ${userList}" th:text="${user.getUsername()}" th:value="${user.getUsername()}"
+                                    th:if='${user.getRoles().get(0).getRole().equals("ANALYST") or
+                                     (user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("ANALYST"))}'>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 col-sm-offset-1">
+                        <label for="stakeholder" >Stakeholders</label><strong class="text-danger">*</strong>
+                        <select  class="form-control" th:field="*{stringUsers}" id="stakeholder" multiple="multiple">
+                            <option th:each="user : ${userList}" th:text="${user.getUsername()}" th:value="${user.getUsername()}"
+                                    th:if='${user.getRoles().get(0).getRole().equals("STAKEHOLDER") or
+                                     (user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("STAKEHOLDER"))}'>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-lg-12">
+                        <strong for="stakeholder" th:text="'*'+#{createGroup.holdCtrl}" class="text-danger"></strong>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-4 col-sm-3">
+                            <button type="submit" class="btn btn-primary btn-block" th:text="#{createGroup.button}"></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    jQuery(function ($) {
+        var select   = $("select[name=city]"),
+            defaults = select.children(".default"),
+            others   = select.children(":not(.default)");
+
+        others.remove();
+
+        select.on("change", function (event) {
+            var value = select.val();
+            if(value === "more") {
+                defaults.remove();
+                select.append(others);
+            } else if(value === "less") {
+                others.remove();
+                select.append(defaults);
+            }
+        });
+    });​
+</script>
+<label class="hidden" id="success" th:text="${success}"></label>
+<script>
+    $('document').ready(function(){
+        if(document.getElementById('success').textContent=="true"){
+            $("#successCreation").modal('show');
+        }
+        else if(document.getElementById('success').textContent=="false"){
+            $("#failCreation").modal('show');
+        }
+    });
+</script>
+</body>
+</html>

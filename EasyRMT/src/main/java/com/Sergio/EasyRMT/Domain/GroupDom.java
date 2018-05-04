@@ -27,6 +27,8 @@ public class GroupDom {
 
     private List<String> stringUsers;
 
+    private int pm;
+
     public GroupDom() {
     }
 

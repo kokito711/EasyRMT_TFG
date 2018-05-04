@@ -27,7 +27,7 @@ public class UserConverter {
     }
 
     public UserDom toDomain(User user) {
-        Set<RoleDom> roleDoms = new HashSet<>();
+        List<RoleDom> roleDoms = new ArrayList<>();
         if(user.getRoles() != null) {
            roleDoms = roleConverter.toDomain(user.getRoles());
         }

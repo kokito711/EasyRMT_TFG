@@ -9,14 +9,16 @@ import com.Sergio.EasyRMT.Domain.RoleDom;
 import com.Sergio.EasyRMT.Model.Role;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
 public class RoleConverter {
 
-    public Set<RoleDom> toDomain(Set<Role> roles){
-        Set<RoleDom> roleDoms = new HashSet<>();
+    public List<RoleDom> toDomain(List<Role> roles){
+        List<RoleDom> roleDoms = new ArrayList<>();
         for(Role role : roles){
             roleDoms.add(toDomain(role));
         }

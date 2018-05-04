@@ -53,7 +53,7 @@ public class UserDom {
     @Length(max = 15)
     private String phone;
 
-    private Set<RoleDom> roles;
+    private List<RoleDom> roles;
 
     private List<Group_user> groups;
 
@@ -69,7 +69,7 @@ public class UserDom {
         this.password = password;
     }
 
-    public UserDom(int userId, String username, String email, String password, String name, String lastName, String phone, Set<RoleDom> roles) {
+    public UserDom(int userId, String username, String email, String password, String name, String lastName, String phone, List<RoleDom> roles) {
         this.userId = userId;
         this.username = username;
         this.email = email;

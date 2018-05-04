@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS easyrmt.group_user (
   `group_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   `isPM` TINYINT NOT NULL DEFAULT 0,
+  `isStakeholder` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`group_id`, `user_id`),
   INDEX `fk_user_idx` (`user_id` ASC),
   CONSTRAINT `fk_group`

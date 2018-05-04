@@ -92,21 +92,45 @@
                     <div class="col-sm-9">
                         <label th:text="#{updateUser.FirstRole}" for="firstRole"></label>
                         <select class="form-control" id="firstRole" th:field="*{stringRoles}">
-                            <option th:text="#{createUser.role.admin}" value="ADMIN"></option>
-                            <option th:text="#{createUser.role.analyst}" value="ANALYST"></option>
-                            <option th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
-                            <option th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
+                            <option th:if='${user.getRoles().get(0).getRole().equals("ADMIN")}'
+                                    th:text="#{createUser.role.admin}" value="ADMIN" selected="selected"></option>
+                            <option th:unless='${user.getRoles().get(0).getRole().equals( "ADMIN")}'
+                                    th:text="#{createUser.role.admin}" value="ADMIN"></option>
+                            <option th:if='${user.getRoles().get(0).getRole().equals("ANALYST")}'
+                                    th:text="#{createUser.role.analyst}" value="ANALYST" selected="selected"></option>
+                            <option th:unless='${user.getRoles().get(0).getRole().equals("ANALYST")}'
+                                    th:text="#{createUser.role.analyst}" value="ANALYST"></option>
+                            <option th:if='${user.getRoles().get(0).getRole().equals("PROJECT_MANAGER")}'
+                                    th:text="#{createUser.role.pm}" value="PROJECT_MANAGER" selected="selected"></option>
+                            <option th:unless='${user.getRoles().get(0).getRole().equals("PROJECT_MANAGER")}'
+                                    th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
+                            <option th:if='${user.getRoles().get(0).getRole().equals("STAKEHOLDER")}'
+                                    th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER" selected="selected"></option>
+                            <option th:unless='${user.getRoles().get(0).getRole().equals("STAKEHOLDER")}'
+                                    th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-9" th:unless="${user.getRoles().toArray()[0].getRole() == 'ADMIN'}">
+                    <div class="col-sm-9" th:unless='${user.getRoles().get(0).getRole().equals("ADMIN")}'>
                         <label th:text="#{updateUser.SecondRole}" for="secondRole"></label>
                         <select class="form-control" id="secondRole" th:field="*{stringRoles}">
-                            <option th:text="#{createUser.role.none}" value="NONE"></option>
-                            <option th:text="#{createUser.role.analyst}" value="ANALYST"></option>
-                            <option th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
-                            <option th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
+                            <option th:if="${user.getRoles().size()==1}"
+                                    th:text="#{createUser.role.none}" value="NONE" selected="selected"></option>
+                            <option th:unless="${user.getRoles().size() >1}"
+                                    th:text="#{createUser.role.none}" value="NONE"></option>
+                            <option th:if='${user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("ANALYST")}'
+                                    th:text="#{createUser.role.analyst}" value="ANALYST" selected="selected"></option>
+                            <option th:unless='${ user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("ANALYST")}'
+                                    th:text="#{createUser.role.analyst}" value="ANALYST"></option>
+                            <option th:if='${user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("PROJECT_MANAGER")}'
+                                    th:text="#{createUser.role.pm}" value="PROJECT_MANAGER" selected="selected"></option>
+                            <option th:unless='${user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("PROJECT_MANAGER")}'
+                                    th:text="#{createUser.role.pm}" value="PROJECT_MANAGER"></option>
+                            <option th:if='${user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("STAKEHOLDER")}'
+                                    th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER" selected="selected"></option>
+                            <option th:unless='${user.getRoles().size()>1 and user.getRoles().getRole(1).getRole().equals("STAKEHOLDER")}'
+                                    th:text="#{createUser.role.stakeholder}" value="STAKEHOLDER"></option>
                         </select>
                     </div>
                 </div>

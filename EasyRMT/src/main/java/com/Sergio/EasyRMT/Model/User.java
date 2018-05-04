@@ -58,7 +58,7 @@ public class User implements Serializable {
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private List<Role> roles;
 
     @OneToMany(mappedBy = "primaryKey.user", cascade = CascadeType.ALL)
     List<Group_user> groups;

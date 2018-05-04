@@ -38,4 +38,8 @@ public class GroupService {
         List<GroupDom> groupDomList = groupConverter.toDomain(groups);
         return groupDomList;
     }
+
+    public void createGroup(GroupDom group) {
+
+    }
 }

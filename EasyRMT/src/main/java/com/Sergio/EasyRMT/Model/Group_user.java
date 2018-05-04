@@ -33,4 +33,7 @@ public class Group_user implements Serializable {
     @Column(name = "isPM")
     private boolean isPM = false;
 
+    @NotNull
+    @Column(name = "isStakeholder")
+    private boolean isStakeholder = false;
 }
