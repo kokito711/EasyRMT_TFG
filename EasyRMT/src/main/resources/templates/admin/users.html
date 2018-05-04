@@ -122,7 +122,7 @@
                             <td th:if="${user.getRoles().size()}>1" th:text="${user.getRoles().toArray()[1].getRole()}"></td>
                             <td th:unless="${user.getRoles().size()}>1" th:text="#{admin.users.Table.Tbody.unassigned}"></td>
                             <td>
-                                <a th:href="'/admin/users/'+${user.getUserId()}">
+                                <a th:href="@{'/admin/users/user/'+${user.getUserId()}}">
                                     <span class="fa fa-edit fa-2x" data-toggle="tooltip" data-placement="top"
                                           th:title="#{admin.users.Table.Tbody.userModification}">
                                     </span>

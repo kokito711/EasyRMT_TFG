@@ -7,15 +7,12 @@ package com.Sergio.EasyRMT.Service.Converter;
 
 import com.Sergio.EasyRMT.Domain.RoleDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
-import com.Sergio.EasyRMT.Model.Role;
 import com.Sergio.EasyRMT.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class UserConverter {

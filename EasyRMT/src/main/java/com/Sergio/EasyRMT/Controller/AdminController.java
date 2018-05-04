@@ -6,9 +6,7 @@
 package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.GroupDom;
-import com.Sergio.EasyRMT.Domain.RoleDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
-import com.Sergio.EasyRMT.Model.Group;
 import com.Sergio.EasyRMT.Service.GroupService;
 import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +133,18 @@ public class AdminController {
         return modelAndView;
     }
 
+    /**
+     * This method returns a profile from an user requested
+     * @param userId id of user requested
+     * @return View with user profile
+     */
+    @RequestMapping(value = USER_BASE_PATH+"/user/{userId}")
+    public ModelAndView getUser(@PathVariable int userId){
+        UserDom user = userService.findUserById(userId);
+        ModelAndView modelAndView = new ModelAndView("/admin/userProfile");
+        modelAndView.addObject("userProf", user);
+        return modelAndView;
+    }
     /**
      * This method is a request to delete a user
      * @param userId id of user

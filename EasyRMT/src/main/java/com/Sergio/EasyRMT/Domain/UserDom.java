@@ -9,7 +9,6 @@ import com.Sergio.EasyRMT.Model.Group_user;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -17,7 +16,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 
 @EqualsAndHashCode
 @Getter

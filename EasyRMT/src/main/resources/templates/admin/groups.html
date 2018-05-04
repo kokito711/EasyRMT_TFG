@@ -43,7 +43,8 @@
                         <td th:text="${group.getGroupId()}"></td>
                         <td th:text="${group.getName()}"></td>
                         <td th:each="user: ${group.getUsers()}" th:if="${user.isPM()}== true">
-                            <a th:href="@{'/u'}" target="_blank" th:text="${user.getPrimaryKey().getUser().getUsername()}" ></a>
+                            <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
+                               target="_blank" th:text="${user.getPrimaryKey().getUser().getUsername()}" ></a>
                         </td>
                         <td>
                             <a th:href="'/admin/groups/'+${group.getGroupId()}" class="tooltip-demo">
