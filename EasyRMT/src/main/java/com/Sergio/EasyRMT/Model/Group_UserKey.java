@@ -21,4 +21,12 @@ public class Group_UserKey implements Serializable {
     private User user;
     @ManyToOne(cascade =CascadeType.ALL)
     private Group group;
+
+    public Group_UserKey(User user, Group group) {
+        this.user = user;
+        this.group = group;
+    }
+
+    public Group_UserKey() {
+    }
 }

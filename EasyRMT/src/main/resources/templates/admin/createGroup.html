@@ -73,14 +73,14 @@
             <form autocomplete="off" action="#" th:action="@{/admin/groups/create}"
                   th:object="${group}" method="post" class="form-horizontal"
                   role="form">
-                <div class="form-group ">
+                <div class="form-group">
                     <div class="col-sm-3 col-md-offset-4">
                         <label for="group_name" th:text="#{admin.groups.Table.Thead.name}"></label>
                         <input type="text" id="group_name" th:field="*{name}" th:placeholder="#{admin.groups.Table.Thead.name}"
-                               class="form-control" required="required" maxlength="16" minlength="1"/>
+                               class="form-control" required="required" maxlength="45" minlength="1"/>
                     </div>
                 </div>
-                <div class="form-group ">
+                <div class="form-group">
                     <div class="col-sm-3 col-md-offset-4">
                         <label for="project_manager" th:text="#{createGroup.projectManager}"></label>
                         <select  class="form-control" th:field="*{pm}" id="project_manager">
@@ -90,8 +90,8 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group col-lg-12">
-                    <div class="form-group col-md-6">
+                <div class="form-group">
+                    <div class="col-sm-3 col-md-offset-4">
                         <label for="analyst" th:text="#{createUser.role.analyst}+'s'"></label><strong class="text-danger">*</strong>
                         <select  class="form-control" th:field="*{stringUsers}" id="analyst" multiple="multiple">
                             <option th:each="user : ${userList}" th:text="${user.getUsername()}" th:value="${user.getUsername()}"
@@ -100,48 +100,32 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-md-6 col-sm-offset-1">
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 col-md-offset-4">
                         <label for="stakeholder" >Stakeholders</label><strong class="text-danger">*</strong>
-                        <select  class="form-control" th:field="*{stringUsers}" id="stakeholder" multiple="multiple">
+                        <select  class="form-control" th:field="*{stakeholders}" id="stakeholder" multiple="multiple">
                             <option th:each="user : ${userList}" th:text="${user.getUsername()}" th:value="${user.getUsername()}"
                                     th:if='${user.getRoles().get(0).getRole().equals("STAKEHOLDER") or
                                      (user.getRoles().size()>1 and user.getRoles().get(1).getRole().equals("STAKEHOLDER"))}'>
                             </option>
                         </select>
                     </div>
-                    <div class="form-group col-lg-12">
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-sm-3">
                         <strong for="stakeholder" th:text="'*'+#{createGroup.holdCtrl}" class="text-danger"></strong>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-4 col-sm-3">
-                            <button type="submit" class="btn btn-primary btn-block" th:text="#{createGroup.button}"></button>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-sm-3">
+                        <button type="submit" class="btn btn-primary btn-block" th:text="#{createGroup.button}"></button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script>
-    jQuery(function ($) {
-        var select   = $("select[name=city]"),
-            defaults = select.children(".default"),
-            others   = select.children(":not(.default)");
-
-        others.remove();
-
-        select.on("change", function (event) {
-            var value = select.val();
-            if(value === "more") {
-                defaults.remove();
-                select.append(others);
-            } else if(value === "less") {
-                others.remove();
-                select.append(defaults);
-            }
-        });
-    });​
-</script>
 <label class="hidden" id="success" th:text="${success}"></label>
 <script>
     $('document').ready(function(){

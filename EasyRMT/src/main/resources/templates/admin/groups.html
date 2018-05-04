@@ -42,11 +42,11 @@
                     <tr th:each="group : ${groupList}">
                         <td th:text="${group.getGroupId()}"></td>
                         <td th:text="${group.getName()}"></td>
-                        <td th:each="group_user: ${group.getUsers()}" th:if="${group_user.getIsPM()}== true">
-                            <a href="#" th:text="${group_user.getUser().getName()}"></a>
+                        <td th:each="user: ${group.getUsers()}" th:if="${user.isPM()}== true">
+                            <a th:href="@{'/u'}" target="_blank" th:text="${user.getPrimaryKey().getUser().getUsername()}" ></a>
                         </td>
                         <td>
-                            <a th:href="'/admin/groups/'+${group.getGroupId()}">
+                            <a th:href="'/admin/groups/'+${group.getGroupId()}" class="tooltip-demo">
                                     <span class="fa fa-edit fa-2x" data-toggle="tooltip" data-placement="top"
                                           th:title="#{admin.groups.Table.Tbody.groupModification}">
                                     </span>
@@ -63,6 +63,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>

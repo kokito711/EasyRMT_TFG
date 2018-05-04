@@ -203,8 +203,43 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView("/admin/createGroup");
         List<UserDom> users = userService.getNoAdminUsers();
         modelAndView.addObject("userList", users);
-        for(String user: group.getStringUsers()){
-            if (userService.findUser(user).getUserId() == group.getPm()){
+        for(String userS: group.getStringUsers()){
+            UserDom userDom = new UserDom();
+            for(UserDom user : users){
+                if(user.getUsername().equals(userS)){
+                    userDom = user;
+                    break;
+                }
+            }
+            boolean wrongContext = false;
+            if (userDom.getUserId() == group.getPm()){
+                wrongContext = true;
+            }
+            else if(userDom.getUsername().equals(userS) && group.getStakeholders().contains(userS)){
+                wrongContext = true;
+            }
+            if(wrongContext){
+                modelAndView.addObject("group",group);
+                modelAndView.addObject("success",false);
+                return modelAndView;
+            }
+        }
+        for(String userS: group.getStakeholders()){
+            UserDom userDom = new UserDom();
+            for(UserDom user : users){
+                if(user.getUsername().equals(userS)){
+                    userDom = user;
+                    break;
+                }
+            }
+            boolean wrongContext = false;
+            if (userDom.getUserId() == group.getPm()){
+                wrongContext = true;
+            }
+            else if(userDom.getUsername().equals(userS) && group.getStringUsers().contains(userS)){
+                wrongContext = true;
+            }
+            if(wrongContext){
                 modelAndView.addObject("group",group);
                 modelAndView.addObject("success",false);
                 return modelAndView;

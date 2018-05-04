@@ -26,6 +26,11 @@ public class UserConverter {
         this.roleConverter = roleConverter;
     }
 
+    /**
+     * This method converts a {@link User} (Model) to a {@link UserDom} (Domain)
+     * @param user {@link User}
+     * @return {@link UserDom}
+     */
     public UserDom toDomain(User user) {
         List<RoleDom> roleDoms = new ArrayList<>();
         if(user.getRoles() != null) {
@@ -53,6 +58,11 @@ public class UserConverter {
         return userDom;
     }
 
+    /**
+     * This method converts a list of{@link User} (DB) to a List of {@link User} (Domain)
+     * @param users {@link List<User>}
+     * @return {@link List<UserDom>}
+     */
     public List<UserDom> toDomain(List<User> users){
         List<UserDom> userDoms = new ArrayList<>();
         for (User user :users){
@@ -61,6 +71,11 @@ public class UserConverter {
         return userDoms;
     }
 
+    /**
+     * This method converts a {@link UserDom} (Domain) to a {@link User} (DB)
+     * @param userDom {@link UserDom}
+     * @return {@link User}
+     */
     public User toModel(UserDom userDom){
         User user = new User();
         user.setUsername(userDom.getUsername());
@@ -78,6 +93,11 @@ public class UserConverter {
         return user;
     }
 
+    /**
+     * This method converts a list of {@link UserDom} (Domain) to a list of {@link User} (DB)
+     * @param userDoms {@link List<UserDom>}
+     * @return {@link List<User>}
+     */
     public List<User> toModel(List<UserDom> userDoms){
         List<User> users = new ArrayList<>();
         for (UserDom userDom :userDoms){

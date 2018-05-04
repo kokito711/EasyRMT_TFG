@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode
-@ToString
 @Getter
 @Setter
 public class UserDom {

@@ -14,7 +14,6 @@ import lombok.ToString;
 import java.util.List;
 
 @EqualsAndHashCode
-@ToString
 @Setter
 @Getter
 public class GroupDom {
@@ -26,6 +25,7 @@ public class GroupDom {
     private List<Group_user> users;
 
     private List<String> stringUsers;
+    private List<String> stakeholders;
 
     private int pm;
 

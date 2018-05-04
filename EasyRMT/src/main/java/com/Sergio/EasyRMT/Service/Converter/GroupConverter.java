@@ -19,6 +19,11 @@ public class GroupConverter {
     @Autowired
     public GroupConverter( ) {}
 
+    /**
+     * This method converts a list of {@link Group} (DB) into a list of {@link GroupDom} (Domain)
+     * @param groups {@link List<Group>}
+     * @return {@link List<GroupDom>}
+     */
     public List<GroupDom> toDomain(List<Group> groups) {
         List<GroupDom> groupDomList = new ArrayList<>();
         for (Group group : groups){
@@ -27,6 +32,11 @@ public class GroupConverter {
         return groupDomList;
     }
 
+    /**
+     * This method converts a {@link Group} (DB) into a {@link GroupDom} (Domain)
+     * @param group {@link Group}
+     * @return {@link GroupDom}
+     */
     public GroupDom toDomain(Group group){
         GroupDom groupDom = new GroupDom(
                 group.getGroup_id(),
@@ -34,5 +44,16 @@ public class GroupConverter {
                 group.getGroup()
         );
         return groupDom;
+    }
+
+    /**
+     * This method converts a {@link GroupDom} (Domain) into a {@link Group} (DB)
+     * @param groupDom {@link GroupDom}
+     * @return {@link Group}
+     */
+    public Group toModel(GroupDom groupDom) {
+        Group group = new Group();
+        group.setName(groupDom.getName());
+        return group;
     }
 }
