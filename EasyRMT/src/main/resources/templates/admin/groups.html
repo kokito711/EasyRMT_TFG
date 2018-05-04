@@ -47,9 +47,9 @@
                                target="_blank" th:text="${user.getPrimaryKey().getUser().getUsername()}" ></a>
                         </td>
                         <td>
-                            <a th:href="'/admin/groups/'+${group.getGroupId()}" class="tooltip-demo">
-                                    <span class="fa fa-edit fa-2x" data-toggle="tooltip" data-placement="top"
-                                          th:title="#{admin.groups.Table.Tbody.groupModification}">
+                            <a th:href="'/admin/groups/group/'+${group.getGroupId()}" class="tooltip-demo">
+                                    <span class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
+                                          th:title="#{admin.groups.Table.Tbody.viewGroup}" style="color: #204d74">
                                     </span>
                             </a>
                         </td>

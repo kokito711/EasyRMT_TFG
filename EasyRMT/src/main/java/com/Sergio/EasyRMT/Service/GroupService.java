@@ -49,6 +49,10 @@ public class GroupService {
         return groupDomList;
     }
 
+    /**
+     * This method receives a group from controller and persist the information
+     * @param groupDom information to be persisted
+     */
     @Transactional(rollbackFor = Exception.class)
     public void createGroup(GroupDom groupDom) {
         //Group creation
@@ -69,6 +73,17 @@ public class GroupService {
         groupUserRepository.save(group_users);
     }
 
+    /**
+     * This method receives a groupId and search it in database. Then return the found group.
+     * @param groupId
+     * @return found group
+     */
+    public GroupDom findGroup(int groupId) {
+        Group group = groupRepository.findOne(groupId);
+        GroupDom groupDom = groupConverter.toDomain(group);
+        return groupDom;
+    }
+
     private void addAnalyst(List<String> stringUsers, List<Group_user> group_users, Group group) {
         for (String userS : stringUsers){
             User user = userRepository.findByUsername(userS);
@@ -82,4 +97,6 @@ public class GroupService {
             Group_user group_user = new Group_user(user, group, false,true);
         }
     }
+
+
 }

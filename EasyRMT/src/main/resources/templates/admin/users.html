@@ -123,8 +123,8 @@
                             <td th:unless="${user.getRoles().size()}>1" th:text="#{admin.users.Table.Tbody.unassigned}"></td>
                             <td>
                                 <a th:href="@{'/admin/users/user/'+${user.getUserId()}}">
-                                    <span class="fa fa-edit fa-2x" data-toggle="tooltip" data-placement="top"
-                                          th:title="#{admin.users.Table.Tbody.userModification}">
+                                    <span class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
+                                          th:title="#{admin.users.Table.Tbody.userModification}" style="color: #204d74">
                                     </span>
                                 </a>
                                 <a href="" data-toggle="modal" data-target="#deleteUserModal"

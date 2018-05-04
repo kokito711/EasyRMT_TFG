@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+  ~                             All rights reserved
+  -->
+
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head :: head">
+
+</head>
+<body>
+<div id="wrapper"  >
+    <!--Navigation -->
+    <nav th:replace="fragments/adminMenu :: adminMenu">
+    </nav>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="breadcrumb">
+                <p>
+                    <a href="/admin/dashboard" th:text="#{adminBreadCrumb.dashboard}">
+                    </a>
+                    /
+                    <a href="/admin/groups/" th:text="#{adminBreadCrumb.groups}">
+                    </a>
+                    /
+                    <a th:href="'/admin/groups/group/'+${group.getGroupId()}" th:text="${group.getName()}"></a>
+                </p>
+            </div>
+            <h2 id="usersLabel" class="page-header" th:text="${group.getName()}">
+            </h2>
+        </div>
+        <div class="row">
+            <h3 th:each="user :${group.getUsers()}" th:if="${user.isPM()}">
+                <p th:text="#{createUser.role.pm}+': '+${user.getPrimaryKey().getUser().getUsername()}"></p>
+                <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
+                   class="tooltip-demo" th:if="${user.isPM()}">
+                                    <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+                                          th:title="#{admin.users.Table.Tbody.userView}" style="color: #204d74">
+                                    </span>
+                </a>
+            </h3>
+        </div>
+        <div class="row">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#analysts" data-toggle="tab" th:text="#{createUser.role.analyst}"></a>
+                </li>
+                <li><a href="#stakeholders" data-toggle="tab">Stakeholders</a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="analysts">
+                    <br/>
+                    <div class="table-responsive">
+                        <table width="100%" class="table table-striped table-bordered table-hover"
+                               th:unless="${#lists.isEmpty(group.getUsers())}" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th th:text="#{admin.users.Table.Thead.username}"></th>
+                                <th th:text="#{admin.users.Table.Thead.email}"></th>
+                                <th th:text="#{admin.users.Table.Thead.name}"></th>
+                                <th th:text="#{admin.users.Table.Thead.lastName}"></th>
+                                <th th:text="#{admin.users.Table.Thead.phone}"></th>
+                                <th th:text="#{admin.users.Table.Thead.mainRole}"></th>
+                                <th th:text="#{admin.users.Table.Thead.secondaryRole}"></th>
+                                <th th:text="#{admin.users.Table.Thead.options}"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${group.getUsers()}" th:if="${not user.isPM() and not user.isStakeholder()}">
+                                <td th:text="${user.getPrimaryKey().getUser().getUsername()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getEmail()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getName()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getLastName()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getPhone()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getRoles().toArray()[0].getRole()}"></td>
+                                <td th:if="${user.getPrimaryKey().getUser().getRoles().size()}>1"
+                                    th:text="${user.getPrimaryKey().getUser().getRoles().toArray()[1].getRole()}"></td>
+                                <td th:unless="${user.getPrimaryKey().getUser().getRoles().size()}>1"
+                                    th:text="#{admin.users.Table.Tbody.unassigned}"></td>
+                                <td>
+                                    <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
+                                       class="tooltip-demo">
+                                    <span class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
+                                          th:title="#{admin.users.Table.Tbody.userView}" style="color: #204d74">
+                                    </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="stakeholders">
+                    <br/>
+                    <div class="table-responsive">
+                        <table width="100%" class="table table-striped table-bordered table-hover"
+                               th:unless="${#lists.isEmpty(group.getUsers())}" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th th:text="#{admin.users.Table.Thead.username}"></th>
+                                <th th:text="#{admin.users.Table.Thead.email}"></th>
+                                <th th:text="#{admin.users.Table.Thead.name}"></th>
+                                <th th:text="#{admin.users.Table.Thead.lastName}"></th>
+                                <th th:text="#{admin.users.Table.Thead.phone}"></th>
+                                <th th:text="#{admin.users.Table.Thead.mainRole}"></th>
+                                <th th:text="#{admin.users.Table.Thead.secondaryRole}"></th>
+                                <th th:text="#{admin.users.Table.Thead.options}"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${group.getUsers()}" th:if="${user.isStakeholder()}">
+                                <td th:text="${user.getPrimaryKey().getUser().getUsername()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getEmail()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getName()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getLastName()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getPhone()}"></td>
+                                <td th:text="${user.getPrimaryKey().getUser().getRoles().toArray()[0].getRole()}"></td>
+                                <td th:if="${user.getPrimaryKey().getUser().getRoles().size()}>1"
+                                    th:text="${user.getPrimaryKey().getUser().getRoles().toArray()[1].getRole()}"></td>
+                                <td th:unless="${user.getPrimaryKey().getUser().getRoles().size()}>1"
+                                    th:text="#{admin.users.Table.Tbody.unassigned}"></td>
+                                <td>
+                                    <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
+                                       class="tooltip-demo">
+                                    <span class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
+                                          th:title="#{admin.users.Table.Tbody.userView}" style="color: #204d74">
+                                    </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(
+        $('table').DataTable()
+    );
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    });
+</script>
+</body>
+</html>

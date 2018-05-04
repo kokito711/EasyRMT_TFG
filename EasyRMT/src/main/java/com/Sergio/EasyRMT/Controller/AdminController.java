@@ -204,6 +204,19 @@ public class AdminController {
     }
 
     /**
+     * This method receives a request to send the view with the form to create groups and provides it
+     * @return view with create group page
+     */
+    @RequestMapping(value = GROUP_BASE_PATH+"/create", method = RequestMethod.GET)
+    public ModelAndView getCreateGroup(){
+        ModelAndView modelAndView = new ModelAndView("/admin/createGroup");
+        List<UserDom> users = userService.getNoAdminUsers();
+        modelAndView.addObject("userList", users);
+        modelAndView.addObject("group", new GroupDom());
+        return modelAndView;
+    }
+
+    /**
      * This method receives a request to create a group. Method checks if PM is in group list. If it is method will
      * return error. If not, method will try to create a group
      * @return view with error if PM is in user list or view with success and new group if group has been created
@@ -262,12 +275,27 @@ public class AdminController {
     }
 
     /**
+     * This method receives a request to send the view with the group information and provides it
+     * @param groupId id of group to be found in db
+     * @return view with group page
+     */
+    @RequestMapping(value = GROUP_BASE_PATH+"/group/{groupId}", method = RequestMethod.GET)
+    public ModelAndView getGroup(@PathVariable int groupId){
+        ModelAndView modelAndView = new ModelAndView("/admin/group");
+        GroupDom groupDom = groupService.findGroup(groupId);
+        List<UserDom> users = userService.getNoAdminUsers();
+        modelAndView.addObject("userList", users);
+        modelAndView.addObject("group", groupDom);
+        return modelAndView;
+    }
+
+    /**
      * This method receives a request to send the view with the form to create groups and provides it
      * @return view with create group page
      */
-    @RequestMapping(value = GROUP_BASE_PATH+"/create", method = RequestMethod.GET)
-    public ModelAndView getCreateGroup(){
-        ModelAndView modelAndView = new ModelAndView("/admin/createGroup");
+    @RequestMapping(value = GROUP_BASE_PATH+"/modify", method = RequestMethod.GET)
+    public ModelAndView getModifyGroup(){
+        ModelAndView modelAndView = new ModelAndView("/admin/modifyGroup");
         List<UserDom> users = userService.getNoAdminUsers();
         modelAndView.addObject("userList", users);
         modelAndView.addObject("group", new GroupDom());
