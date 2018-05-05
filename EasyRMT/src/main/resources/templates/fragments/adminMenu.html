@@ -19,12 +19,32 @@
         <!-- /.navbar-header -->
 
         <ul class="nav navbar-top-links navbar-right">
-            <li>
-                <a href="/logout">
-                    <i class="fa fa-sign-out fa-fw"></i>
-                    <p th:text="#{userMenu.logout}"></p>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
+                <ul class="dropdown-menu dropdown-user">
+<!--                    <li><a th:href="'/admin/chan/'+${user}"><i class="fa fa-user fa-fw" ></i><p th:text="#{userMenu.profile}"></p></a>
+                    </li>-->
+                    <li th:if="${#locale.language.equalsIgnoreCase('es_ES')} or ${#locale.language.equalsIgnoreCase('es')}">
+                        <a href="/dashboard?lang=en_GB">
+                            <i><img src="/images/ukflag.png" width="20" height="20"/></i><p>Cambiar idioma</p>
+                        </a>
+                    </li>
+                    <li th:if="${#locale.language.equalsIgnoreCase('en')} or ${#locale.language.equalsIgnoreCase('en_GB')}">
+                        <a href="/dashboard?lang=es_ES">
+                            <i><img src="/images/espana.png" width="20" height="20"/></i><p>  Change language</p>
+                        </a>
+                    </li>
+                    <!--<li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    </li>-->
+                    <li class="divider"></li>
+                    <li><a href="/logout"><i class="fa fa-sign-out fa-fw" ></i><p th:text="#{userMenu.logout}"></p></a>
+                    </li>
+                </ul>
+                <!-- /.dropdown-user -->
             </li>
+            <!-- /.dropdown -->
         </ul>
         <!-- /.navbar-top-links -->
         <div class="navbar-default sidebar" role="navigation">
