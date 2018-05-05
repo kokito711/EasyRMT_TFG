@@ -59,6 +59,6 @@ public class User implements Serializable {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
-    @OneToMany(mappedBy = "primaryKey.user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryKey.user", cascade = CascadeType.MERGE)
     List<Group_user> groups;
 }

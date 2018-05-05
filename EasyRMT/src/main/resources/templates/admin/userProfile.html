@@ -163,8 +163,13 @@
         <div class="row col-lg-12">
             <div class="breadcrumb">
                 <p>
-                    <a th:href="'/user/'+${userProf.getUsername()}" th:text="#{userProfile.label}">
+                    <a href="/admin/dashboard" th:text="#{adminBreadCrumb.dashboard}">
                     </a>
+                    /
+                    <a href="/admin/users/" th:text="#{adminBreadCrumb.users}">
+                    </a>
+                    /
+                    <a th:href="@{'/admin/users/user/'+${userProf.getUserId()}}" th:text="${userProf.getUsername()}"></a>
                 </p>
             </div>
             <h2 id="usersLabel" class="page-header" th:text="#{userProfile.label}">

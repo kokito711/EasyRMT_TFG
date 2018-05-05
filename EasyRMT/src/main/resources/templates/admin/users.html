@@ -122,13 +122,13 @@
                             <td th:if="${user.getRoles().size()}>1" th:text="${user.getRoles().toArray()[1].getRole()}"></td>
                             <td th:unless="${user.getRoles().size()}>1" th:text="#{admin.users.Table.Tbody.unassigned}"></td>
                             <td>
-                                <a th:href="@{'/admin/users/user/'+${user.getUserId()}}">
+                                <a th:href="@{'/admin/users/user/'+${user.getUserId()}}" class="tooltip-demo">
                                     <span class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
                                           th:title="#{admin.users.Table.Tbody.userModification}" style="color: #204d74">
                                     </span>
                                 </a>
                                 <a href="" data-toggle="modal" data-target="#deleteUserModal"
-                                   th:onclick="'modalValue('+${user.getUserId()}+')'">
+                                   th:onclick="'modalValue('+${user.getUserId()}+')'" class="tooltip-demo">
                                     <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                           data-toggle="tooltip" data-placement="top"
                                           th:title="#{admin.users.deleteModal.label}">
@@ -146,6 +146,10 @@
         $(document).ready(
             startTable()
         );
+        $('.tooltip-demo').tooltip({
+            selector: "[data-toggle=tooltip]",
+            container: "body"
+        })
     </script>
 </body>
 </html>

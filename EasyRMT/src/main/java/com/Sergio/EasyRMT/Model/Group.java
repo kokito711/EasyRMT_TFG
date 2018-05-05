@@ -33,6 +33,6 @@ public class Group implements Serializable{
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "primaryKey.group", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryKey.group", cascade = CascadeType.MERGE)
     List<Group_user> group;
 }

@@ -116,6 +116,40 @@ function deleteUser(user) {
         }
     });
 }
+
+function deleteFromGroup(user, groupId) {
+    $.ajax({
+        url: '/admin/groups/group/'+groupId+'/user/'+user,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteFromGroupModal").modal('hide');
+            $("#deleteFromGroupModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteFromGroupModal").modal('hide');
+            $("#deleteFromGroupModalFail").modal('show');
+        }
+    });
+}
+
+function sendForm(groupId) {
+    $.ajax({
+        type: "POST",
+        url: "/admin/groups/group/"+groupId+"/1",
+        data: $("#updateGroup1Form").serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            $("#updateGroup1").modal('hide');
+            $("#successUpdate").modal('show');
+        },
+        error: function () {
+            $("#updateGroup1").modal('hide');
+            $("#failUpdate").modal('show');
+        }
+    });
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+}
+
 function modalValue(id){
     var button = document.getElementById("delete_button");
     var att = document.createAttribute("value");

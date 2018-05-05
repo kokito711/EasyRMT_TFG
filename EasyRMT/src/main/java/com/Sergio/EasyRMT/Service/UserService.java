@@ -188,4 +188,8 @@ public class UserService {
         List<UserDom> userDomList = userConverter.toDomain(users);
         return userDomList;
     }
+
+    public UserConverter getUserConverter(){
+        return userConverter;
+    }
 }

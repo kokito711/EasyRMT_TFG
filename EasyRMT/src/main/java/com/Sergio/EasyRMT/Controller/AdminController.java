@@ -6,7 +6,11 @@
 package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.GroupDom;
+import com.Sergio.EasyRMT.Domain.RoleDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Model.Group;
+import com.Sergio.EasyRMT.Model.Group_user;
+import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import com.Sergio.EasyRMT.Service.GroupService;
 import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +24,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Nullable;
 import javax.validation.Valid;
+import javax.ws.rs.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @RestController
 public class AdminController {
@@ -161,19 +169,19 @@ public class AdminController {
         }
     }
 
-    /**
+/*    *//**
      * This method request a view of an specific user. Controller will call service to get user information and then
      * it will return this info.
      * @param userId user to get the info
      * @return Model And View with user information
-     */
+     *//*
     @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.GET)
     public ModelAndView getEditUser(@PathVariable int userId){
         UserDom user = userService.findUserById(userId);
-        ModelAndView modelAndView = new ModelAndView("/admin/modifyUser");
+        ModelAndView modelAndView = new ModelAndView("/admin/userProfile");
         modelAndView.addObject("user",user);
         return modelAndView;
-    }
+    }*/
 
     /**
      * This method calls user service to update user, and returns a view with user updated
@@ -184,10 +192,10 @@ public class AdminController {
     @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.POST)
     public ModelAndView editUser(@PathVariable int userId, @Valid UserDom user, BindingResult result){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/admin/modifyUser");
+        modelAndView.setViewName("/admin/userProfile");
         UserDom userDom = userService.modifyUser(userId,null,user);
         modelAndView.addObject("success", true);
-        modelAndView.addObject("user", userDom);
+        modelAndView.addObject("userProf", userDom);
         return modelAndView;
     }
 
@@ -279,26 +287,96 @@ public class AdminController {
      * @param groupId id of group to be found in db
      * @return view with group page
      */
-    @RequestMapping(value = GROUP_BASE_PATH+"/group/{groupId}", method = RequestMethod.GET)
+    @RequestMapping(value = {GROUP_BASE_PATH+"/group/{groupId}" }, method = RequestMethod.GET)
     public ModelAndView getGroup(@PathVariable int groupId){
         ModelAndView modelAndView = new ModelAndView("/admin/group");
         GroupDom groupDom = groupService.findGroup(groupId);
         List<UserDom> users = userService.getNoAdminUsers();
+        List<UserDom> analysts = generateList("ANALYST", users, groupDom);
+        List<UserDom> stakeholders = generateList("STAKEHOLDER", users, groupDom);
+        modelAndView.addObject("analystList", analysts);
+        modelAndView.addObject("stakeholderList", stakeholders);
         modelAndView.addObject("userList", users);
         modelAndView.addObject("group", groupDom);
         return modelAndView;
     }
 
     /**
-     * This method receives a request to send the view with the form to create groups and provides it
-     * @return view with create group page
+     * This method receives a request to update the analysts or stakeholders of one group then calls the groupService
+     * to do it and returns the result
+     * @param modificationType part of group to be modified
+     * @param groupId id to be modified
+     * @return view with modified group
      */
-    @RequestMapping(value = GROUP_BASE_PATH+"/modify", method = RequestMethod.GET)
-    public ModelAndView getModifyGroup(){
-        ModelAndView modelAndView = new ModelAndView("/admin/modifyGroup");
+    @RequestMapping(value = GROUP_BASE_PATH+"/group/{groupId}/{modificationType}", method = RequestMethod.POST)
+    public ResponseEntity modifyGroup(@PathVariable int groupId, @PathVariable int modificationType,
+                                         @Valid GroupDom groupDom, BindingResult bindingResult){
+        boolean wrongRequest = false;
+        ModelAndView modelAndView = new ModelAndView("/admin/group");
+        GroupDom groupUpdated;
+        switch (modificationType){
+            case 1:
+                groupService.update(groupId, groupDom, 1);
+                break;
+            case 2:
+                 groupService.update(groupId, groupDom,2);
+                break;
+            case 3:
+                groupService.update(groupId, groupDom,3);
+                break;
+            default:
+                groupUpdated = groupService.findGroup(groupId);
+                wrongRequest = true;
+                break;
+        }
+        /*groupUpdated = groupService.findGroup(groupId);
         List<UserDom> users = userService.getNoAdminUsers();
+        List<UserDom> analysts = generateList("ANALYST", users, groupUpdated);
+        List<UserDom> stakeholders = generateList("STAKEHOLDER", users, groupUpdated);
+        modelAndView.addObject("analystList", analysts);
+        modelAndView.addObject("stakeholderList", stakeholders);
         modelAndView.addObject("userList", users);
-        modelAndView.addObject("group", new GroupDom());
-        return modelAndView;
+        modelAndView.addObject("group", groupUpdated);*/
+
+        if(wrongRequest){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+            /*modelAndView.addObject("success",false);
+            return modelAndView;*/
+        }
+        else {
+            /*modelAndView.addObject("success",true);
+            return modelAndView;*/
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        }
+    }
+
+    @RequestMapping(value = GROUP_BASE_PATH+"/group/{groupId}/user/{userId}", method = RequestMethod.DELETE)
+    public ResponseEntity removeUser(@PathVariable int groupId, @PathVariable int userId){
+        boolean deleted = groupService.removeUser(groupId, userId);
+        if(deleted){
+            return ResponseEntity.status(HttpStatus.OK).body("");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+        }
+    }
+
+    private List<UserDom> generateList(String type, List<UserDom> users, GroupDom groupDom) {
+        UserConverter userConverter = userService.getUserConverter();
+        List<UserDom> userDomList = new ArrayList<>();
+        List<UserDom> userInGroup = new ArrayList<>();
+        for (Group_user user : groupDom.getUsers()){
+            UserDom userDom = userConverter.toDomain(user.getPrimaryKey().getUser());
+            userInGroup.add(userDom);
+        }
+        for (UserDom user : users){
+            for(RoleDom role : user.getRoles()){
+                if((role.getRole().equals(type)) && !userInGroup.contains(user)){
+                    userDomList.add(user);
+                    break;
+                }
+            }
+        }
+        return userDomList;
     }
 }

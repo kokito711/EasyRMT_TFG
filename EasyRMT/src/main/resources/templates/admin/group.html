@@ -14,6 +14,230 @@
     <nav th:replace="fragments/adminMenu :: adminMenu">
     </nav>
     <div id="page-wrapper">
+        <!-- Update modal 1-->
+        <div class="modal fade" id="updateGroup1" tabindex="-1" role="dialog"
+             aria-labelledby="updateGroup1Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="updateGroup1Label" th:text="#{modifyGroup.modifyLabel}" align="center"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form autocomplete="off" action="#" id="updateGroup1Form"
+                              th:object="${group}" method="post" class="form-horizontal"
+                              role="form">
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <input type="text" th:field="*{name}" minlength="1" maxlength="45" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <label for="project_manager" th:text="#{createGroup.projectManager}"></label>
+                                    <select  class="form-control" th:field="*{pm}" id="project_manager">
+                                        <option th:each="user : ${userList}" th:text="${user.getUsername()}" th:value="${user.getUserId()}"
+                                                th:if='${user.getRoles().get(0).getRole().equals("PROJECT_MANAGER")}'
+                                                th:selected="${user.getUserId()}==*{pm}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button type="button" th:onclick="'sendForm('+${group.getGroupId()}+')'"
+                                            class="btn btn-primary btn-block" th:text="#{modifyGroup.modifyLabel}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- End update modal -->
+        <!-- Update modal analyst-->
+        <div class="modal fade" id="updateGroupAnalysts" tabindex="-1" role="dialog"
+             aria-labelledby="updateGroupAnalystsLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="updateGroupAnalystsLabel" th:text="#{modifyGroup.modifyAnalyst}" align="center"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form autocomplete="off" action="#" th:action="@{'/admin/groups/group/'+${group.getGroupId()}+'/2'}"
+                              th:object="${group}" method="post" class="form-horizontal"
+                              role="form">
+                            <div class="form-group">
+                                <div class="col-sm-4 col-md-offset-4">
+                                    <label for="analyst" th:text="#{createUser.role.analyst}+'s'"></label>
+                                    <select  class="form-control" th:field="*{stringUsers}" id="analyst" multiple="multiple">
+                                        <option th:each="analyst : ${analystList}" th:text="${analyst.getUsername()}"
+                                                th:value="${analyst.getUsername()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-4">
+                                    <button type="submit" class="btn btn-primary btn-block" th:text="#{modifyGroup.modifyAnalyst}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- End update modal -->
+        <!-- Update modal stakeholder-->
+        <div class="modal fade" id="updateGroupStakeholder" tabindex="-1" role="dialog"
+             aria-labelledby="updateGroupStakeholderLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="updateGroupStakeholderLabel" th:text="#{modifyGroup.modifyStakeholder}" align="center"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form autocomplete="off" action="#" th:action="@{'/admin/groups/group/'+${group.getGroupId()}+'/3'}"
+                              th:object="${group}" method="post" class="form-horizontal"
+                              role="form">
+                            <div class="form-group">
+                                <div class="col-sm-4 col-md-offset-4">
+                                    <label for="analyst">Stakeholders</label>
+                                    <select  class="form-control" th:field="*{stakeholders}" id="analyst" multiple="multiple">
+                                        <option th:each="stakeholder : ${stakeholderList}" th:text="${stakeholder.getUsername()}"
+                                                th:value="${stakeholder.getUsername()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-4">
+                                    <button type="submit" class="btn btn-primary btn-block" th:text="#{modifyGroup.modifyStakeholder}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- End update modal -->
+        <!-- Deletion Modal -->
+        <div class="modal fade" id="deleteFromGroupModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteFromGroupModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteFromGroupModalLabel" th:text="#{modifyGroup.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{modifyGroup.deleteModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{epicsDashboard.deleteModal.cancelButton}"></button>
+                        <button type="button" class="btn btn-danger"
+                                th:onclick="'deleteFromGroup(this.value,'+${group.getGroupId()}+')'"
+                                th:text="#{epicsDashboard.deleteModal.deleteButton}" id="delete_button"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion modal -->
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="deleteFromGroupModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="deleteFromGroupModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteFromGroupModalLabelOk" th:text="#{modifyGroup.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{modifyGroup.deleteModal.Oktext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                                onclick="location.reload()"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="deleteFromGroupModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteFromGroupModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteFromGroupModalLabelFail" th:text="#{modifyGroup.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{modifyGroup.deleteModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
+        <!-- modal with success-->
+        <div class="modal fade" id="successUpdate" tabindex="-1" role="dialog"
+             aria-labelledby="successUpdateLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="successUpdateLabel" th:text="#{modifyGroup.success}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{modifyGroup.success}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{createUser.modalButton}" onclick="location.reload()"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal with success -->
+        </div>
+        <!-- modal with fail-->
+        <div class="modal fade" id="failUpdate" tabindex="-1" role="dialog"
+             aria-labelledby="failUpdateLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="failUpdateLabel" th:text="#{updateUser.fail}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{updateUser.fail}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{createUser.modalButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- modal end-->
         <div class="row">
             <div class="breadcrumb">
                 <p>
@@ -29,16 +253,24 @@
             <h2 id="usersLabel" class="page-header" th:text="${group.getName()}">
             </h2>
         </div>
-        <div class="row">
-            <h3 th:each="user :${group.getUsers()}" th:if="${user.isPM()}">
-                <p th:text="#{createUser.role.pm}+': '+${user.getPrimaryKey().getUser().getUsername()}"></p>
-                <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
-                   class="tooltip-demo" th:if="${user.isPM()}">
-                                    <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
-                                          th:title="#{admin.users.Table.Tbody.userView}" style="color: #204d74">
-                                    </span>
+        <div class="row col-lg-12">
+            <div class="col-lg-6">
+                <h3 th:each="user :${group.getUsers()}" th:if="${user.isPM()}">
+                    <p th:text="#{createUser.role.pm}+': '+${user.getPrimaryKey().getUser().getUsername()}"></p>
+                    <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
+                       class="tooltip-demo" th:if="${user.isPM()}" target="_blank">
+                        <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="top"
+                              th:title="#{admin.users.Table.Tbody.userView}" style="color: #204d74">
+                        </span>
+                    </a>
+                </h3>
+            </div>
+            <div class="col-lg-offset-6">
+                <a href="" data-toggle="modal" data-target="#updateGroup1" class="tooltip-demo">
+                    <span class="fa fa-edit pull-right fa-2x"
+                      data-toggle="tooltip" data-placement="top" th:title="#{modifyGroup.modifyLabel}"></span>
                 </a>
-            </h3>
+            </div>
         </div>
         <div class="row">
             <ul class="nav nav-tabs">
@@ -55,6 +287,13 @@
                         <table width="100%" class="table table-striped table-bordered table-hover"
                                th:unless="${#lists.isEmpty(group.getUsers())}" id="dataTable">
                             <thead>
+                            <tr colspan="8">
+                                <a href="" data-toggle="modal" data-target="#updateGroupAnalysts" class="tooltip-demo">
+                                    <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
+                                          data-toggle="tooltip" data-placement="left" th:title="#{modifyGroup.modifyAnalyst}">
+                                    </span>
+                                </a>
+                            </tr>
                             <tr>
                                 <th th:text="#{admin.users.Table.Thead.username}"></th>
                                 <th th:text="#{admin.users.Table.Thead.email}"></th>
@@ -80,10 +319,17 @@
                                     th:text="#{admin.users.Table.Tbody.unassigned}"></td>
                                 <td>
                                     <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
-                                       class="tooltip-demo">
+                                       class="tooltip-demo" target="_blank">
                                     <span class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
                                           th:title="#{admin.users.Table.Tbody.userView}" style="color: #204d74">
                                     </span>
+                                    </a>
+                                    <a href="" data-toggle="modal" data-target="#deleteFromGroupModal" class="tooltip-demo"
+                                       th:onclick="'modalValue('+${user.getPrimaryKey().getUser().getUserId()}+')'">
+                                        <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
+                                              data-toggle="tooltip" data-placement="top"
+                                              th:title="#{admin.users.Table.Tbody.deleteUserFromGroup}">
+                                        </span>
                                     </a>
                                 </td>
                             </tr>
@@ -97,6 +343,13 @@
                         <table width="100%" class="table table-striped table-bordered table-hover"
                                th:unless="${#lists.isEmpty(group.getUsers())}" id="dataTable">
                             <thead>
+                            <tr colspan="8">
+                                <a href="" data-toggle="modal" data-target="#updateGroupStakeholder" class="tooltip-demo">
+                                    <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
+                                        data-toggle="tooltip" data-placement="left" th:title="#{modifyGroup.modifyStakeholder}">
+                                    </span>
+                                </a>
+                            </tr>
                             <tr>
                                 <th th:text="#{admin.users.Table.Thead.username}"></th>
                                 <th th:text="#{admin.users.Table.Thead.email}"></th>
@@ -122,10 +375,17 @@
                                     th:text="#{admin.users.Table.Tbody.unassigned}"></td>
                                 <td>
                                     <a th:href="@{'/admin/users/user/'+${user.getPrimaryKey().getUser().getUserId()}}"
-                                       class="tooltip-demo">
+                                       class="tooltip-demo" target="_blank">
                                     <span class="fa fa-info-circle fa-2x" data-toggle="tooltip" data-placement="top"
                                           th:title="#{admin.users.Table.Tbody.userView}" style="color: #204d74">
                                     </span>
+                                    </a>
+                                    <a href="" data-toggle="modal" data-target="#deleteFromGroupModal" class="tooltip-demo"
+                                       th:onclick="'modalValue('+${user.getPrimaryKey().getUser().getUserId()}+')'">
+                                        <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
+                                              data-toggle="tooltip" data-placement="top"
+                                              th:title="#{admin.users.Table.Tbody.deleteUserFromGroup}">
+                                        </span>
                                     </a>
                                 </td>
                             </tr>
@@ -137,6 +397,17 @@
         </div>
     </div>
 </div>
+<label class="hidden" id="success" th:text="${success}"></label>
+<script>
+    $('document').ready(function(){
+        if(document.getElementById('success').textContent=="true"){
+            $("#successUpdate").modal('show');
+        }
+        else if(document.getElementById('success').textContent=="false"){
+            $("#failUpdate").modal('show');
+        }
+    });
+</script>
 <script>
     $(document).ready(
         $('table').DataTable()

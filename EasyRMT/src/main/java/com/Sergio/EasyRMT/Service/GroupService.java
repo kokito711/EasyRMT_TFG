@@ -7,6 +7,7 @@ package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.GroupDom;
 import com.Sergio.EasyRMT.Model.Group;
+import com.Sergio.EasyRMT.Model.Group_UserKey;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.User;
 import com.Sergio.EasyRMT.Repository.GroupRepository;
@@ -15,6 +16,7 @@ import com.Sergio.EasyRMT.Repository.UserRepository;
 import com.Sergio.EasyRMT.Service.Converter.GroupConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -50,6 +52,17 @@ public class GroupService {
     }
 
     /**
+     * This method receives a groupId and search it in database. Then return the found group.
+     * @param groupId
+     * @return found group
+     */
+    public GroupDom findGroup(int groupId) {
+        Group group = groupRepository.findOne(groupId);
+        GroupDom groupDom = groupConverter.toDomain(group);
+        return groupDom;
+    }
+
+    /**
      * This method receives a group from controller and persist the information
      * @param groupDom information to be persisted
      */
@@ -74,14 +87,73 @@ public class GroupService {
     }
 
     /**
-     * This method receives a groupId and search it in database. Then return the found group.
-     * @param groupId
-     * @return found group
+     * This method obtains information about one group and tries to update it
+     * @param groupId id of group to be updated
+     * @param groupDom info to update
+     * @param groupPart part of group to be updated (1: name and PM, 2 Analysts, 3 Stakeholders)
+     * @return GroupDom with updated group
      */
-    public GroupDom findGroup(int groupId) {
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+    public void update(int groupId, GroupDom groupDom, int groupPart) {
         Group group = groupRepository.findOne(groupId);
-        GroupDom groupDom = groupConverter.toDomain(group);
-        return groupDom;
+        Group persisted = group;
+        switch (groupPart){
+            case 1:{
+                if(!group.getName().equals(groupDom.getName())){
+                    group.setName(groupDom.getName());
+                }
+                for(Group_user user: group.getGroup()){
+                    if(user.isPM()){
+                        if(!(user.getPrimaryKey().getUser().getUserId() == groupDom.getPm())){
+                            groupUserRepository.delete(user.getPrimaryKey());
+                            Group_user group_user = new Group_user(
+                                    userRepository.findOne(groupDom.getPm()),
+                                    user.getPrimaryKey().getGroup(),
+                                    true,
+                                    false
+                            );
+                            groupUserRepository.save(group_user);
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+            case 2:{
+                List<Group_user> users = new ArrayList<>();
+                for (String userS : groupDom.getStringUsers()){
+                    User user = userRepository.findByUsername(userS);
+                    Group_user group_user = new Group_user(user, group, false,false);
+                    users.add(group_user);
+                }
+                groupUserRepository.save(users);
+                break;
+            }
+            case 3:{
+                List<Group_user> users = new ArrayList<>();
+                for (String userS : groupDom.getStakeholders()){
+                    User user = userRepository.findByUsername(userS);
+                    Group_user group_user = new Group_user(user, group, false,true);
+                    users.add(group_user);
+                }
+                groupUserRepository.save(users);
+                break;
+            }
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean removeUser(int groupId, int userId) {
+        Group group = groupRepository.findOne(groupId);
+        User user = userRepository.findOne(userId);
+        Group_UserKey key = new Group_UserKey();
+        key.setGroup(group);
+        key.setUser(user);
+        groupUserRepository.delete(key);
+        if(groupUserRepository.exists(key)){
+            return false;
+        }
+        return true;
     }
 
     private void addAnalyst(List<String> stringUsers, List<Group_user> group_users, Group group) {
@@ -97,6 +169,4 @@ public class GroupService {
             Group_user group_user = new Group_user(user, group, false,true);
         }
     }
-
-
 }
