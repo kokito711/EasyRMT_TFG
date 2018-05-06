@@ -257,8 +257,16 @@
                                 <td th:text="${userStory.getIdentifier()}"></td>
                                 <td th:text="${userStory.getName()}"></td>
                                 <td>0</td><!-- Change this when traceability being created-->
-                                <td th:text="${epic.getAuthor()}"></td>
-                                <td th:text="${epic.getAssignedTo()}"></td>
+                                <td>
+                                    <a th:href="'mailto:'+${userStory.getAuthor().getEmail()}"
+                                       th:text="${userStory.getAuthor().getUsername()}">
+                                    </a>
+                                </td>
+                                <td >
+                                    <a th:href="'mailto:'+${userStory.getAssignedTo().getEmail()}"
+                                       th:text="${userStory.getAssignedTo().getUsername()}">
+                                    </a>
+                                </td>
                                 <td>
                                     <a href="#">
                                         <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>

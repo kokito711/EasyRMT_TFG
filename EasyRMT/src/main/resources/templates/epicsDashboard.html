@@ -107,7 +107,7 @@
                         <a href="#">
                         <span class="fa fa-print pull-right fa-2x"></span>
                         </a>
-                        <a th:href="'/project/'+${project.getIdProject()}+'/epics/create'">
+                        <a th:href="'/project/'+${project.getIdProject()}+'/epics/create'" class="tooltip-demo">
                         <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                               data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}"></span>
                         </a>
@@ -138,18 +138,18 @@
                             </a>
                         </td>
                         <td>
-                            <a th:href="'/project/'+${epic.getProjectId()}+'/epic/'+${epic.getIdEpic()}">
+                            <a th:href="'/project/'+${epic.getProjectId()}+'/epic/'+${epic.getIdEpic()}" class="tooltip-demo">
                                 <span class="fa fa-info-circle fa-2x" style="color: #204d74"
                                               data-toggle="tooltip" data-placement="top"
                                               th:title="#{epicsDashboard.Table.Tbody.epicInformation}">
                                 </span>
                             </a>
-                            <a th:href="'/project/'+${epic.getProjectId()}+'/epic/'+${epic.getIdEpic()}+'/userstories'">
+                            <a th:href="'/project/'+${epic.getProjectId()}+'/epic/'+${epic.getIdEpic()}+'/userstories'" class="tooltip-demo">
                                 <span class="fa fa-folder-open fa-2x" style="color: #f7e1b5;"
                                   data-toggle="tooltip" data-placement="top"
                                   th:title="#{epicsDashboard.Table.Tbody.goUserStories}"></span>
                             </a>
-                            <a href="" data-toggle="modal" data-target="#deleteEpicModal"
+                            <a href="" data-toggle="modal" data-target="#deleteEpicModal" class="tooltip-demo"
                                 th:onclick="'modalValue('+${epic.getIdEpic()}+')'">
                                 <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                       data-toggle="tooltip" data-placement="top"
@@ -162,7 +162,7 @@
             </table>
             <div class="alert alert-info" th:if="${#lists.isEmpty(epicList)}">
                 <p th:text="#{epicsDashboard.Table.Tbody.emptyList}"></p>
-                <a th:href="'/project/'+${project.getIdProject()}+'/epics/create'">
+                <a th:href="'/project/'+${project.getIdProject()}+'/epics/create'" class="tooltip-demo">
                         <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                               data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}"></span>
                 </a>
@@ -175,6 +175,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>

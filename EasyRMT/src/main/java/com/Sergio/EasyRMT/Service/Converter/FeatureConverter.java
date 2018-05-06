@@ -69,6 +69,9 @@ public class FeatureConverter {
         if (feature.getStoryPoints()==null){
             feature.setStoryPoints(0);
         }
+        if(feature.getCost()==null){
+            feature.setCost(0.0);
+        }
         FeatureDom featureDom = new FeatureDom(
                 feature.getIdFeature(),
                 feature.getName(),

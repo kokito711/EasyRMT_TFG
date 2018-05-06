@@ -116,7 +116,7 @@
                                 <span class="fa fa-print pull-right fa-2x"></span>
                             </a>
                             <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${featureId}+
-                                    '/usecases/create'">
+                                    '/usecases/create'" class="tooltip-demo">
                             <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                                   data-toggle="tooltip" data-placement="top" th:title="#{feature.tab.useCasesTab.Table.Thead.createButton}"></span>
                             </a>
@@ -136,17 +136,26 @@
                         <td th:text="${useCase.getIdentifier()}"></td>
                         <td th:text="${useCase.getName()}"></td>
                         <td th:text="0"></td>
-                        <td th:text="${useCase.getAuthor()}"></td>
-                        <td th:text="${useCase.getAssignedTo()}"></td>
                         <td>
-                            <a th:href="'/project/'+${useCase.getProjectId()}+'/feature/'+${featureId}+'/usecase/'+${useCase.getIdUseCase()}">
+                            <a th:href="'mailto:'+${useCase.getAuthor().getEmail()}"
+                               th:text="${useCase.getAuthor().getUsername()}">
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="'mailto:'+${useCase.getAssignedTo().getEmail()}"
+                               th:text="${useCase.getAssignedTo().getUsername()}">
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="'/project/'+${useCase.getProjectId()}+'/feature/'+
+                            ${featureId}+'/usecase/'+${useCase.getIdUseCase()}" class="tooltip-demo">
                                     <span class="fa fa-info-circle fa-2x" style="color: #204d74"
                                           data-toggle="tooltip" data-placement="top"
                                           th:title="#{csDash.Table.Tbody.ucInformation}">
                                     </span>
                             </a>
                             <a href="" data-toggle="modal" data-target="#deleteUcModal"
-                               th:onclick="'modalValue('+${useCase.getIdUseCase()}+')'">
+                               th:onclick="'modalValue('+${useCase.getIdUseCase()}+')'" class="tooltip-demo">
                                     <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                           data-toggle="tooltip" data-placement="top"
                                           th:title="#{ucDash.Table.Tbody.deleteUseCase}">
@@ -159,7 +168,7 @@
                 <div class="alert alert-info" th:if="${#lists.isEmpty(useCasesList)}">
                     <p th:text="#{usDash.Table.Tbody.emptyList}"></p>
                     <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${featureId}+
-                    '/usecases/create'">
+                    '/usecases/create'" class="tooltip-demo">
                             <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                                   data-toggle="tooltip" data-placement="top" th:title="#{useCase.createButton}"></span>
                     </a>
@@ -172,6 +181,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>

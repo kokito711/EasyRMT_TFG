@@ -15,120 +15,69 @@ import java.util.Date;
 
 @ToString
 @EqualsAndHashCode
+@Getter
+@Setter
 public class UseCaseDom {
 
-    @Getter
-    @Setter
     private int idUseCase;
 
-    @Getter
-    @Setter
     private String name;
 
-    @Getter
-    @Setter
     private String identifier;
 
-    @Getter
-    @Setter
     private String description;
 
-    @Getter
-    @Setter
     private Priority priority;
 
-    @Getter
-    @Setter
     private Complexity complexity;
 
-    @Getter
-    @Setter
     private State state;
 
-    @Getter
-    @Setter
     private Double cost;
 
-    @Getter
-    @Setter
     private Double estimatedHours;
 
-    @Getter
-    @Setter
     private Integer storyPoints;
 
-    @Getter
-    @Setter
     private String source;
 
-    @Getter
-    @Setter
     private Scope scope;
 
-    @Getter
-    @Setter
     private Risk risk;
 
-    @Getter
-    @Setter
     private Date created;
 
-    @Getter
-    @Setter
     private Date lastUpdated;
 
-    @Getter
-    @Setter
     private String version;
 
-    @Getter
-    @Setter
     private String validationMethod;
 
-    @Getter
-    @Setter
-    private Integer author;
+    private UserDom author;
 
-    @Getter
-    @Setter
-    private Integer assignedTo;
+    private UserDom assignedTo;
 
-    @Getter
-    @Setter
     private String justification;
 
-    @Getter
-    @Setter
     private String testCases;
 
-    @Getter
-    @Setter
     private String actors;
 
-    @Getter
-    @Setter
     private String preconditions;
 
-    @Getter
-    @Setter
     private String postconditions;
 
-    @Getter
-    @Setter
     private String steps;
 
-    @Getter
-    @Setter
     private int projectId;
-
-    @Getter
-    @Setter
     private int featureId;
+    private int authorId;
+    private int assignedId;
 
     public UseCaseDom() {
     }
 
-    public UseCaseDom(int idUseCase, String name, String identifier, Integer author, Integer assignedTo,
+    public UseCaseDom(int idUseCase, String name, String identifier, UserDom author, UserDom assignedTo,
                       int projectId, int featureId) {
         this.idUseCase = idUseCase;
         this.name = name;
@@ -142,7 +91,7 @@ public class UseCaseDom {
     public UseCaseDom(int idUseCase, String name, String identifier, String description, Priority priority,
                       Complexity complexity, State state, Double cost, Double estimatedHours, Integer storyPoints,
                       String source, Scope scope, Risk risk, Date created, Date lastUpdated, String version,
-                      String validationMethod, Integer author, Integer assignedTo, String justification,
+                      String validationMethod, UserDom author, UserDom assignedTo, String justification,
                       String testCases, String actors, String preconditions, String postconditions,
                       String steps, int projectId, int featureId) {
         this.idUseCase = idUseCase;

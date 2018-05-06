@@ -6,14 +6,8 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.UseCaseDom;
-import com.Sergio.EasyRMT.Model.Feature;
-import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.Project;
-import com.Sergio.EasyRMT.Model.UseCase;
-import com.Sergio.EasyRMT.Repository.FeatureRepository;
-import com.Sergio.EasyRMT.Repository.ObjectRepository;
-import com.Sergio.EasyRMT.Repository.ProjectRepository;
-import com.Sergio.EasyRMT.Repository.UseCaseRepository;
+import com.Sergio.EasyRMT.Model.*;
+import com.Sergio.EasyRMT.Repository.*;
 import com.Sergio.EasyRMT.Service.Converter.UseCaseConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,17 +25,19 @@ public class UseCaseService {
     UseCaseRepository useCaseRepository;
     UseCaseConverter useCaseConverter;
     DocumentService documentService;
+    UserRepository userRepository;
 
     @Autowired
     public UseCaseService(ObjectRepository objectRepository, FeatureRepository featureRepository,
                           ProjectRepository projectRepository, UseCaseRepository useCaseRepository,
-                          UseCaseConverter useCaseConverter,  DocumentService documentService) {
+                          UseCaseConverter useCaseConverter, DocumentService documentService, UserRepository userRepository) {
         this.objectRepository = objectRepository;
         this.featureRepository = featureRepository;
         this.projectRepository = projectRepository;
         this.useCaseRepository = useCaseRepository;
         this.useCaseConverter = useCaseConverter;
         this.documentService = documentService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -93,11 +89,14 @@ public class UseCaseService {
             objectEntity.setProject(project.get());
             objectEntity = objectRepository.save(objectEntity);
         }
+        User author = userRepository.findOne(useCaseDom.getAuthorId());
+        User assignedTo = userRepository.findOne(useCaseDom.getAssignedId());
         Date timestamp = new Date();
         useCaseDom.setCreated(timestamp);
         useCaseDom.setLastUpdated(timestamp);
-        useCaseDom.setAuthor(0); //TODO change this on second iteration
         useCase = useCaseConverter.toModel(useCaseDom);
+        useCase.setAuthor(author);
+        useCase.setAssignedTo(assignedTo);
         useCase.setIdUseCase(objectEntity.getIdobject());
         useCase.setFeature(featureModel);
         useCase.setObject(objectEntity);
@@ -136,7 +135,8 @@ public class UseCaseService {
         }
         if(!useCaseModel.getAssignedTo().equals(useCaseDom.getAssignedTo())){
             changed = true;
-            useCaseModel.setAssignedTo(useCaseDom.getAssignedTo());
+            User user = userRepository.findOne(useCaseDom.getAssignedId());
+            useCaseModel.setAssignedTo(user);
         }
         if(!useCaseModel.getVersion().equals(useCaseDom.getVersion())){
             changed = true;
@@ -215,14 +215,9 @@ public class UseCaseService {
             if(objectRepository.exists(useCaseId) ||useCaseRepository.exists(useCaseId)){
                 return false;
             }
-            else{
-                return true;
-            }
+            return true;
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     /**

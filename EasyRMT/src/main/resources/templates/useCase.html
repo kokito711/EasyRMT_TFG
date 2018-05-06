@@ -50,7 +50,7 @@
                 <span class="fa fa-print pull-right fa-2x"></span>
             </a>
             <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${featureId}+'/usecase/update/'
-            +${useCase.getIdUseCase()}">
+            +${useCase.getIdUseCase()}" class="tooltip-demo">
             <span class="fa fa-edit pull-right fa-2x"
                   data-toggle="tooltip" data-placement="top" th:title="#{useCase.modifyButton}"></span>
             </a>
@@ -148,7 +148,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${useCase.getAuthor()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${useCase.getAuthor().getEmail()}"
+                                       th:text="${useCase.getAuthor().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>
@@ -157,7 +161,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${useCase.getAssignedTo()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${useCase.getAssignedTo().getEmail()}"
+                                       th:text="${useCase.getAssignedTo().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>
@@ -272,6 +280,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>

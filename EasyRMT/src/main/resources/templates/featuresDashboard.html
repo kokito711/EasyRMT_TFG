@@ -108,7 +108,7 @@
                             <a href="#">
                             <span class="fa fa-print pull-right fa-2x"></span>
                             </a>
-                            <a th:href="'/project/'+${project.getIdProject()}+'/features/create'">
+                            <a th:href="'/project/'+${project.getIdProject()}+'/features/create'" class="tooltip-demo">
                             <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                                   data-toggle="tooltip" data-placement="top" th:title="#{featuresDashboard.createButton}"></span>
                             </a>
@@ -139,19 +139,19 @@
                                 </a>
                             </td>
                             <td>
-                                <a th:href="'/project/'+${feature.getProjectId()}+'/feature/'+${feature.getIdFeature()}">
+                                <a th:href="'/project/'+${feature.getProjectId()}+'/feature/'+${feature.getIdFeature()}" class="tooltip-demo">
                                     <span class="fa fa-info-circle fa-2x" style="color: #204d74"
                                                   data-toggle="tooltip" data-placement="top"
                                                   th:title="#{featuresDashboard.Table.Tbody.featureInformation}">
                                     </span>
                                 </a>
-                                <a th:href="'/project/'+${feature.getProjectId()}+'/feature/'+${feature.getIdFeature()}+'/usecases'">
+                                <a th:href="'/project/'+${feature.getProjectId()}+'/feature/'+${feature.getIdFeature()}+'/usecases'" class="tooltip-demo">
                                     <span class="fa fa-folder-open fa-2x" style="color: #f7e1b5;"
                                       data-toggle="tooltip" data-placement="top"
                                       th:title="#{featuresDashboard.Table.Tbody.goUseCases}"></span>
                                 </a>
                                 <a href="" data-toggle="modal" data-target="#deleteFeatureModal"
-                                    th:onclick="'modalValue('+${feature.getIdFeature()}+')'">
+                                    th:onclick="'modalValue('+${feature.getIdFeature()}+')'" class="tooltip-demo">
                                     <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                           data-toggle="tooltip" data-placement="top"
                                           th:title="#{featuresDashboard.Table.Tbody.deleteFeature}">
@@ -163,7 +163,7 @@
                 </table>
                 <div class="alert alert-info" th:if="${#lists.isEmpty(featureList)}">
                     <p th:text="#{featuresDashboard.Table.Tbody.emptyList}"></p>
-                    <a th:href="'/project/'+${project.getIdProject()}+'/features/create'">
+                    <a th:href="'/project/'+${project.getIdProject()}+'/features/create'" class="tooltip-demo">
                             <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                                   data-toggle="tooltip" data-placement="top" th:title="#{featuresDashboard.createButton}"></span>
                     </a>
@@ -176,6 +176,10 @@
     $(document).ready(
         startTable()
     );
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>
