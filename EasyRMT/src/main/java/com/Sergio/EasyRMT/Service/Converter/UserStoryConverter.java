@@ -5,6 +5,7 @@
 
 package com.Sergio.EasyRMT.Service.Converter;
 
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.UserStory;
@@ -16,9 +17,10 @@ import java.util.List;
 
 @Component
 public class UserStoryConverter {
-
+    UserConverter userConverter;
     @Autowired
-    public UserStoryConverter() {
+    public UserStoryConverter(UserConverter userConverter) {
+        this.userConverter = userConverter;
     }
 
     /**
@@ -29,12 +31,14 @@ public class UserStoryConverter {
     public List<UserStoryDom> toDomain(List<UserStory> userStoryList){
         List<UserStoryDom> userStoryDomList = new ArrayList<>();
         for(UserStory userStory:userStoryList){
+            UserDom author = userConverter.toDomain(userStory.getAuthor());
+            UserDom assignedTo = userConverter.toDomain(userStory.getAssignedTo());
             UserStoryDom userStoryDom = new UserStoryDom(
               userStory.getIdUserStory(),
               userStory.getName(),
               userStory.getIdentifier(),
-              userStory.getAuthor(),
-              userStory.getAssignedTo(),
+              author,
+              assignedTo,
               userStory.getObject().getProject().getIdProject(),
               userStory.getEpic().getIdEpic()
             );
@@ -49,6 +53,17 @@ public class UserStoryConverter {
      * @return {@link UserStoryDom}
      */
     public UserStoryDom toDomain(UserStory userStory) {
+        UserDom author = userConverter.toDomain(userStory.getAuthor());
+        UserDom assignedTo = userConverter.toDomain(userStory.getAssignedTo());
+        if(userStory.getEstimatedHours() == null){
+            userStory.setEstimatedHours(0.00);
+        }
+        if (userStory.getStoryPoints()==null){
+            userStory.setStoryPoints(0);
+        }
+        if(userStory.getCost()==null){
+            userStory.setCost(0.0);
+        }
         UserStoryDom userStoryDom = new UserStoryDom(
                 userStory.getIdUserStory(),
                 userStory.getName(),
@@ -68,8 +83,8 @@ public class UserStoryConverter {
                 userStory.getLastUpdated(),
                 userStory.getVersion(),
                 userStory.getValidationMethod(),
-                userStory.getAuthor(),
-                userStory.getAssignedTo(),
+                author,
+                assignedTo,
                 userStory.getJustification(),
                 userStory.getTestCases(),
                 userStory.getObject().getProject().getIdProject(),
@@ -86,7 +101,9 @@ public class UserStoryConverter {
     public UserStory toModel(UserStoryDom userStoryDom) {
         ObjectEntity objectEntity = new ObjectEntity();
         objectEntity.setIdobject(userStoryDom.getIdUserStory());
-
+        if(userStoryDom.getCost()==null){
+            userStoryDom.setCost(0.0);
+        }
         UserStory userStory = new UserStory();
         userStory.setIdUserStory(userStoryDom.getIdUserStory());
         userStory.setName(userStoryDom.getName());
@@ -106,55 +123,9 @@ public class UserStoryConverter {
         userStory.setLastUpdated(userStoryDom.getLastUpdated());
         userStory.setVersion(userStoryDom.getVersion());
         userStory.setValidationMethod(userStoryDom.getValidationMethod());
-        userStory.setAuthor(userStoryDom.getAuthor());
-        userStory.setAssignedTo(userStoryDom.getAssignedTo());
         userStory.setJustification(userStoryDom.getJustification());
         userStory.setTestCases(userStoryDom.getTestCases());
         userStory.setObject(objectEntity);
         return userStory;
-    }
-
-    /**
-     * this method converts an UserStoryList (Domain) to an USerStory(Model)
-     * @param userStoryDomList List of {@link UserStoryDom} obtained from DB
-     * @return List of {@link UserStory}
-     */
-    public List<UserStory> toModel(List<UserStoryDom> userStoryDomList){
-        if(userStoryDomList!=null) {
-            List<UserStory> userStoryList = new ArrayList<>();
-            for (UserStoryDom userStoryDom : userStoryDomList) {
-                ObjectEntity objectEntity = new ObjectEntity();
-                objectEntity.setIdobject(userStoryDom.getIdUserStory());
-
-                UserStory userStory = new UserStory();
-                userStory.setIdUserStory(userStoryDom.getIdUserStory());
-                userStory.setName(userStoryDom.getName());
-                userStory.setIdentifier(userStoryDom.getIdentifier());
-                userStory.setDescription(userStoryDom.getDescription());
-                userStory.setDefinitionOfDone(userStoryDom.getDefinitionOfDone());
-                userStory.setPriority(userStoryDom.getPriority());
-                userStory.setComplexity(userStoryDom.getComplexity());
-                userStory.setState(userStoryDom.getState());
-                userStory.setCost(userStoryDom.getCost());
-                userStory.setEstimatedHours(userStoryDom.getEstimatedHours());
-                userStory.setStoryPoints(userStoryDom.getStoryPoints());
-                userStory.setSource(userStoryDom.getSource());
-                userStory.setScope(userStoryDom.getScope());
-                userStory.setRisk(userStoryDom.getRisk());
-                userStory.setCreated(userStoryDom.getCreated());
-                userStory.setLastUpdated(userStoryDom.getLastUpdated());
-                userStory.setVersion(userStoryDom.getVersion());
-                userStory.setValidationMethod(userStoryDom.getValidationMethod());
-                userStory.setAuthor(userStoryDom.getAuthor());
-                userStory.setAssignedTo(userStoryDom.getAssignedTo());
-                userStory.setJustification(userStoryDom.getJustification());
-                userStory.setTestCases(userStoryDom.getTestCases());
-                userStory.setObject(objectEntity);
-                userStoryList.add(userStory);
-            }
-            return userStoryList;
-        }
-        else
-            return new ArrayList<>();
     }
 }

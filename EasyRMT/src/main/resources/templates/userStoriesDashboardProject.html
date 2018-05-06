@@ -134,11 +134,19 @@
                         <td th:text="${userStory.getIdentifier()}"></td>
                         <td th:text="${userStory.getName()}"></td>
                         <td th:text="0"></td>
-                        <td th:text="${userStory.getAuthor()}"></td>
-                        <td th:text="${userStory.getAssignedTo()}"></td>
+                        <td>
+                            <a th:href="'mailto:'+${userStory.getAuthor().getEmail()}"
+                               th:text="${userStory.getAuthor().getUsername()}">
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="'mailto:'+${userStory.getAssignedTo().getEmail()}"
+                               th:text="${userStory.getAssignedTo().getUsername()}">
+                            </a>
+                        </td>
                         <td>
                             <a th:href="'/project/'+${userStory.getProjectId()}+'/epic/'+${userStory.getEpicId()}+
-                            '/userstory/'+${userStory.getIdUserStory()}">
+                            '/userstory/'+${userStory.getIdUserStory()}" class="tooltip-demo">
                                     <span class="fa fa-info-circle fa-2x" style="color: #204d74"
                                           data-toggle="tooltip" data-placement="top"
                                           th:title="#{usDash.Table.Tbody.usInformation}">
@@ -170,6 +178,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>

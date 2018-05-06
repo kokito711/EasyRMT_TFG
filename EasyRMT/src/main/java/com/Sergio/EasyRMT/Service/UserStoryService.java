@@ -6,14 +6,8 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
-import com.Sergio.EasyRMT.Model.Epic;
-import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.Project;
-import com.Sergio.EasyRMT.Model.UserStory;
-import com.Sergio.EasyRMT.Repository.EpicRepository;
-import com.Sergio.EasyRMT.Repository.ObjectRepository;
-import com.Sergio.EasyRMT.Repository.ProjectRepository;
-import com.Sergio.EasyRMT.Repository.UserStoryRepository;
+import com.Sergio.EasyRMT.Model.*;
+import com.Sergio.EasyRMT.Repository.*;
 import com.Sergio.EasyRMT.Service.Converter.UserStoryConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,17 +25,19 @@ public class UserStoryService {
     UserStoryRepository userStoryRepository;
     UserStoryConverter userStoryConverter;
     DocumentService documentService;
+    UserRepository userRepository;
 
     @Autowired
     public UserStoryService(ObjectRepository objectRepository, EpicRepository epicRepository,
                             ProjectRepository projectRepository, UserStoryRepository userStoryRepository,
-                            UserStoryConverter userStoryConverter,  DocumentService documentService) {
+                            UserStoryConverter userStoryConverter, DocumentService documentService, UserRepository userRepository) {
         this.objectRepository = objectRepository;
         this.epicRepository = epicRepository;
         this.projectRepository = projectRepository;
         this.userStoryRepository = userStoryRepository;
         this.userStoryConverter = userStoryConverter;
         this.documentService = documentService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -93,11 +89,14 @@ public class UserStoryService {
             objectEntity.setProject(project.get());
             objectEntity = objectRepository.save(objectEntity);
         }
+        User author = userRepository.findOne(userStoryDom.getAuthorId());
+        User assignedTo = userRepository.findOne(userStoryDom.getAssignedId());
         Date timestamp = new Date();
         userStoryDom.setCreated(timestamp);
         userStoryDom.setLastUpdated(timestamp);
-        userStoryDom.setAuthor(0); //TODO change this on second iteration
         userStoryModel = userStoryConverter.toModel(userStoryDom);
+        userStoryModel.setAuthor(author);
+        userStoryModel.setAssignedTo(assignedTo);
         userStoryModel.setIdUserStory(objectEntity.getIdobject());
         userStoryModel.setEpic(epicModel);
         userStoryModel.setObject(objectEntity);
@@ -140,7 +139,8 @@ public class UserStoryService {
         }
         if(!userStoryModel.getAssignedTo().equals(userStoryDom.getAssignedTo())){
             changed = true;
-            userStoryModel.setAssignedTo(userStoryDom.getAssignedTo());
+            User user = userRepository.findOne(userStoryDom.getAssignedId());
+            userStoryModel.setAssignedTo(user);
         }
         if(!userStoryModel.getVersion().equals(userStoryDom.getVersion())){
             changed = true;

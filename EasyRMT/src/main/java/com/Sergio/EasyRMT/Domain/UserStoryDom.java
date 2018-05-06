@@ -15,109 +15,63 @@ import java.util.Date;
 
 @ToString
 @EqualsAndHashCode
+@Getter
+@Setter
 public class UserStoryDom {
 
-    @Getter
-    @Setter
     private int idUserStory;
 
-    @Setter
-    @Getter
     private String name;
 
-    @Setter
-    @Getter
     private String identifier;
 
-    @Getter
-    @Setter
     private String description;
 
-    @Getter
-    @Setter
     private String definitionOfDone;
 
-    @Getter
-    @Setter
     private Priority priority;
 
-    @Getter
-    @Setter
     private Complexity complexity;
 
-    @Getter
-    @Setter
     private State state;
 
-    @Getter
-    @Setter
-    private double cost;
+    private Double cost;
 
-    @Getter
-    @Setter
-    private double estimatedHours;
+    private Double estimatedHours;
 
-    @Getter
-    @Setter
-    private int storyPoints;
+    private Integer storyPoints;
 
-    @Setter
-    @Getter
     private String source;
 
-    @Getter
-    @Setter
     private Scope scope;
 
-    @Getter
-    @Setter
     private Risk risk;
 
-    @Getter
-    @Setter
     private Date created;
 
-    @Getter
-    @Setter
     private Date lastUpdated;
 
-    @Setter
-    @Getter
     private String version;
 
-    @Getter
-    @Setter
     private String validationMethod;
 
-    @Getter
-    @Setter
-    private int author;
+    private UserDom author;
 
-    @Getter
-    @Setter
-    private int assignedTo;
+    private UserDom assignedTo;
 
-    @Getter
-    @Setter
     private String justification;
 
-    @Getter
-    @Setter
     private String testCases;
 
-
-    @Getter
-    @Setter
     private int projectId;
-
-    @Getter
-    @Setter
     private int epicId;
+    private int authorId;
+    private int assignedId;
 
     public UserStoryDom() {
     }
 
-    public UserStoryDom(int idUserStory, String name, String identifier, int author, int assignedTo,  int projectId,
+    public UserStoryDom(int idUserStory, String name, String identifier, UserDom author, UserDom assignedTo,  int projectId,
                         int epicId) {
         this.idUserStory = idUserStory;
         this.name = name;
@@ -131,7 +85,7 @@ public class UserStoryDom {
     public UserStoryDom(int idUserStory, String name, String identifier, String description, String definitionOfDone,
                         Priority priority, Complexity complexity, State state, double cost, double estimatedHours,
                         int storyPoints, String source, Scope scope, Risk risk, Date created, Date lastUpdated,
-                        String version, String validationMethod, int author, int assignedTo, String justification,
+                        String version, String validationMethod, UserDom author, UserDom assignedTo, String justification,
                         String testCases, int projectId, int epicId) {
         this.idUserStory = idUserStory;
         this.name = name;

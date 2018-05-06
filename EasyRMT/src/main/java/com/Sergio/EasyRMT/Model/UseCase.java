@@ -108,7 +108,6 @@ public class UseCase implements Serializable {
     @JoinColumn(name = "author", referencedColumnName = "user_id")
     private User author;
 
-
     @ManyToOne
     @JoinColumn(name = "assignedto", referencedColumnName = "user_id")
     private User assignedTo;

@@ -22,7 +22,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "user_story")
-//@ToString
+@Getter
+@Setter
 @EqualsAndHashCode
 @EntityListeners(AuditingEntityListener.class)
 public class UserStory implements Serializable {
@@ -31,139 +32,96 @@ public class UserStory implements Serializable {
     @Id
     @Column(name = "idobject")
     @Basic(optional = false)
-    @Getter
-    @Setter
     private int idUserStory;
 
     @NotNull
     @Length(min=1, max = 64)
-    @Setter
-    @Getter
     @Column(name = "name")
     private String name;
 
-    @Length( max = 10)
-    @Setter
-    @Getter
+    @Length(min=1, max = 10)
     @Column(name = "identifier")
     private String identifier;
 
-    @Getter
-    @Setter
     @Lob
     @Column(name = "description")
     private String description;
 
-    @Getter
-    @Setter
     @Lob
     @Column(name = "definitionofdone")
     private String definitionOfDone;
 
-    @Getter
-    @Setter
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
     private Priority priority;
 
-    @Getter
-    @Setter
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "complexity")
     private Complexity complexity;
 
-    @Getter
-    @Setter
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     private State state;
 
-    @Getter
-    @Setter
     @NotNull
     @Column(name = "cost", columnDefinition="Decimal(10,2) default '0.00'")
     private Double cost = 0.00;
 
-    @Getter
-    @Setter
     @NotNull
     @Column(name = "estimatedhours", columnDefinition="Decimal(4,2) default '0.00'")
     private Double estimatedHours = 0.00;
 
-    @Getter
-    @Setter
     @Column(name="storypoints")
     private Integer storyPoints;
 
-    @Length(min=1, max = 64)
-    @Setter
-    @Getter
+    @Length(max = 64)
     @Column(name = "source")
     private String source;
 
-    @Getter
-    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "scope")
     private Scope scope;
 
-    @Getter
-    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "risk")
     private Risk risk;
 
-    @Getter
-    @Setter
     @NotNull
     @Column(name = "created")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date created;
 
-    @Getter
-    @Setter
     @NotNull
     @Column(name = "lastupdated")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date lastUpdated;
 
-    @Length(min=1, max = 45)
-    @Setter
-    @Getter
+    @Length(max = 45)
     @Column(name = "version")
     private String version;
 
-    @Getter
-    @Setter
     @Lob
     @Column(name = "validationmethod")
     private String validationMethod;
 
-    @Getter
-    @Setter
-    @NotNull
-    @Column(name="author")
-    private Integer author;
+    @ManyToOne
+    @JoinColumn(name = "author", referencedColumnName = "user_id")
+    private User author;
 
-    @Getter
-    @Setter
-    @Column(name="assignedto")
-    private Integer assignedTo;
+    @ManyToOne
+    @JoinColumn(name = "assignedto", referencedColumnName = "user_id")
+    private User assignedTo;
 
-    @Getter
-    @Setter
     @Lob
-    @Size(min = 1, max = 16777215)
+    @Size(max = 16777215)
     @Column(name = "justification")
     private String justification;
 
-    @Getter
-    @Setter
     @Lob
     @Column(name = "testcases")
     private String testCases;
@@ -172,15 +130,11 @@ public class UserStory implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "object_idobject")
     @NotNull
-    @Getter
-    @Setter
     private ObjectEntity object;
 
     @JsonManagedReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "epic", referencedColumnName = "idobject")
     @NotNull
-    @Getter
-    @Setter
     private Epic epic;
 }

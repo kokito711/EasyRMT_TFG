@@ -50,7 +50,7 @@
                 <span class="fa fa-print pull-right fa-2x"></span>
             </a>
             <a th:href="'/project/'+${project.getIdProject()}+'/epic/'+${epicId}+'/userstory/update/'
-            +${userStory.getIdUserStory()}">
+            +${userStory.getIdUserStory()}" class="tooltip-demo">
             <span class="fa fa-edit pull-right fa-2x"
                   data-toggle="tooltip" data-placement="top" th:title="#{userStory.modifyButton}"></span>
             </a>
@@ -121,7 +121,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${userStory.getAuthor()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${userStory.getAuthor().getEmail()}"
+                                       th:text="${userStory.getAuthor().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>
@@ -130,7 +134,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${userStory.getAssignedTo()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${userStory.getAssignedTo().getEmail()}"
+                                       th:text="${userStory.getAssignedTo().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>
@@ -245,6 +253,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>
