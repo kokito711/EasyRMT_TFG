@@ -6,13 +6,11 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.FeatureDom;
-import com.Sergio.EasyRMT.Model.Feature;
-import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.Project;
-import com.Sergio.EasyRMT.Model.UseCase;
+import com.Sergio.EasyRMT.Model.*;
 import com.Sergio.EasyRMT.Repository.FeatureRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
+import com.Sergio.EasyRMT.Repository.UserRepository;
 import com.Sergio.EasyRMT.Service.Converter.FeatureConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,16 +28,18 @@ public class FeatureService {
     ProjectRepository projectRepository;
     FeatureConverter featureConverter;
     DocumentService documentService;
+    UserRepository userRepository;
 
     @Autowired
     public FeatureService(ObjectRepository objectRepository, FeatureRepository featureRepository,
                           ProjectRepository projectRepository, FeatureConverter featureConverter,
-                          DocumentService documentService) {
+                          DocumentService documentService, UserRepository userRepository) {
         this.objectRepository = objectRepository;
         this.featureRepository = featureRepository;
         this.projectRepository = projectRepository;
         this.featureConverter = featureConverter;
         this.documentService = documentService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -88,12 +88,14 @@ public class FeatureService {
             objectEntity.setProject(project.get());
             objectEntity = objectRepository.save(objectEntity);
         }
-
+        User author = userRepository.findOne(featureDom.getAuthorId());
+        User assignedTo = userRepository.findOne(featureDom.getAssignedId());
         Date timestamp = new Date();
         featureDom.setCreated(timestamp);
         featureDom.setLastUpdated(timestamp);
-        featureDom.setAuthor(0); //TODO change this on second iteration
         feature = featureConverter.toModel(featureDom);
+        feature.setAuthor(author);
+        feature.setAssignedTo(assignedTo);
         feature.setIdFeature(objectEntity.getIdobject());
         feature.setUseCases(new ArrayList<>());
         feature.setObject(objectEntity);
@@ -142,7 +144,8 @@ public class FeatureService {
         }
         if(!feature.getAssignedTo().equals(featureDom.getAssignedTo())){
             changed = true;
-            feature.setAssignedTo(featureDom.getAssignedTo());
+            User user = userRepository.findOne(featureDom.getAssignedId());
+            feature.setAssignedTo(user);
         }
         if(!feature.getVersion().equals(featureDom.getVersion())){
             changed = true;

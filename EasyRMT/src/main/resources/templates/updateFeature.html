@@ -49,7 +49,7 @@
                         <div class="form-group col-lg-12">
                             <label th:text="#{createEpic.form.description}"></label>
                             <textarea id="feature-description" class="form-control" rows="5" name="description"
-                                      th:field="*{description}"/>
+                                      th:field="*{description}"></textarea>
                         </div>
                         <div class="form-group col-lg-4">
                             <label th:text="#{createEpic.form.priority}"></label>
@@ -107,8 +107,11 @@
                         </div>
                         <div class="form-group col-lg-4">
                             <label class="text-center" th:text="#{createEpic.form.assigned}"></label>
-                            <select class="form-control center-block" th:field="*{assignedTo}">
-                                <option th:value="0">0
+                            <select class="form-control center-block" name="assignedId" id="assignedId">
+                                <option th:each="user_group : ${group}" th:if="not ${user_group.isStakeholder()}"
+                                        th:value="${user_group.getPrimaryKey().getUser().getUserId()}"
+                                        th:text="${user_group.getPrimaryKey().getUser().getUsername()}"
+                                        th:selected="${feature.getAssignedTo().getUserId() == user_group.getPrimaryKey().getUser().getUserId()}">
                                 </option>
                             </select>
                             <br/>
@@ -116,17 +119,17 @@
                         <div class="form-group col-lg-12">
                             <label th:text="#{createEpic.form.validationMethod}"></label>
                             <textarea id="validationMethod" class="form-control" rows="5" name="validationMethod"
-                                      th:field="*{validationMethod}"/>
+                                      th:field="*{validationMethod}"></textarea>
                         </div>
                         <div class="form-group col-lg-12">
                             <label th:text="#{createEpic.form.testCases}"></label>
                             <textarea  class="form-control" rows="5"
-                                      th:field="*{testCases}"/>
+                                       th:field="*{testCases}"></textarea>
                         </div>
                         <div class="form-group col-lg-12">
                             <label th:text="#{createEpic.form.justification}"></label>
                             <textarea  class="form-control" rows="5"
-                                       th:field="*{justification}"/>
+                                       th:field="*{justification}"></textarea>
                         </div>
                         <div class="col-lg-1 col-lg-offset-5 submit-button" >
                             <button class="btn btn-primary" type="submit" th:text="#{updateFeature.form.submitButton}"></button>

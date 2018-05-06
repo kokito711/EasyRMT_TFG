@@ -16,104 +16,62 @@ import java.util.List;
 
 @ToString
 @EqualsAndHashCode
+@Getter
+@Setter
 public class FeatureDom {
 
-    @Getter
-    @Setter
     private int idFeature;
 
-    @Getter
-    @Setter
     private String name;
 
-    @Getter
-    @Setter
     private String identifier;
 
-    @Getter
-    @Setter
     private String description;
 
-    @Getter
-    @Setter
     private Priority priority;
 
-    @Getter
-    @Setter
     private Complexity complexity;
 
-    @Getter
-    @Setter
     private State state;
 
-    @Getter
-    @Setter
     private Double cost;
 
-    @Getter
-    @Setter
     private Double estimatedHours;
 
-    @Getter
-    @Setter
     private Integer storyPoints;
 
-    @Getter
-    @Setter
     private String source;
 
-    @Getter
-    @Setter
     private Scope scope;
 
-    @Getter
-    @Setter
     private Risk risk;
 
-    @Getter
-    @Setter
     private Date created;
 
-    @Getter
-    @Setter
     private Date lastUpdated;
 
-    @Getter
-    @Setter
     private String version;
 
-    @Getter
-    @Setter
     private String validationMethod;
 
-    @Getter
-    @Setter
-    private Integer author;
+    private UserDom author;
 
-    @Getter
-    @Setter
-    private Integer assignedTo;
+    private UserDom assignedTo;
 
-    @Getter
-    @Setter
     private String justification;
 
-    @Getter
-    @Setter
     private String testCases;
 
-    @Getter
-    @Setter
     private int projectId;
+    private int authorId;
+    private int assignedId;
 
-    @Getter
-    @Setter
     private List<UseCaseDom> useCases;
 
     public FeatureDom() {
     }
 
-    public FeatureDom(int idFeature, String name, String identifier, Integer author, Integer assignedTo,
+    public FeatureDom(int idFeature, String name, String identifier, UserDom author, UserDom assignedTo,
                       int projectId, List<UseCaseDom> useCases) {
         this.idFeature = idFeature;
         this.name = name;
@@ -127,7 +85,7 @@ public class FeatureDom {
     public FeatureDom(int idFeature, String name, String identifier, String description, Priority priority,
                       Complexity complexity, State state, Double cost, Double estimatedHours, Integer storyPoints,
                       String source, Scope scope, Risk risk, Date created, Date lastUpdated, String version,
-                      String validationMethod, Integer author, Integer assignedTo, String justification,
+                      String validationMethod, UserDom author, UserDom assignedTo, String justification,
                       String testCases, int projectId, List<UseCaseDom> useCases) {
         this.idFeature = idFeature;
         this.name = name;

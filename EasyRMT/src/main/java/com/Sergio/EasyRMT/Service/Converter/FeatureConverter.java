@@ -7,6 +7,7 @@ package com.Sergio.EasyRMT.Service.Converter;
 
 import com.Sergio.EasyRMT.Domain.FeatureDom;
 import com.Sergio.EasyRMT.Domain.UseCaseDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.UseCase;
@@ -20,10 +21,12 @@ import java.util.List;
 public class FeatureConverter {
 
     UseCaseConverter useCaseConverter;
+    UserConverter userConverter;
 
     @Autowired
-    public FeatureConverter(UseCaseConverter useCaseConverter) {
+    public FeatureConverter(UseCaseConverter useCaseConverter, UserConverter userConverter) {
         this.useCaseConverter = useCaseConverter;
+        this.userConverter = userConverter;
     }
 
     /**
@@ -35,15 +38,14 @@ public class FeatureConverter {
         List<FeatureDom> featureDomList = new ArrayList<>();
         for(Feature feature: featureList){
             List<UseCaseDom> useCaseDomList = useCaseConverter.toDomain(feature.getUseCases());
-            if(feature.getAssignedTo() == null){
-                feature.setAssignedTo(0);
-            }
+            UserDom author = userConverter.toDomain(feature.getAuthor());
+            UserDom assignedTo = userConverter.toDomain(feature.getAssignedTo());
             FeatureDom featureDom = new FeatureDom(
                     feature.getIdFeature(),
                     feature.getName(),
                     feature.getIdentifier(),
-                    feature.getAuthor(),
-                    feature.getAssignedTo(),
+                    author,
+                    assignedTo,
                     feature.getObject().getProject().getIdProject(),
                     useCaseDomList
             );
@@ -59,9 +61,8 @@ public class FeatureConverter {
      */
     public FeatureDom toDomain(Feature feature) {
         List<UseCaseDom> useCaseDomList = useCaseConverter.toDomain(feature.getUseCases());
-        if(feature.getAssignedTo() == null){
-            feature.setAssignedTo(0);
-        }
+        UserDom author = userConverter.toDomain(feature.getAuthor());
+        UserDom assignedTo = userConverter.toDomain(feature.getAssignedTo());
         if(feature.getEstimatedHours() == null){
             feature.setEstimatedHours(0.00);
         }
@@ -86,8 +87,8 @@ public class FeatureConverter {
                 feature.getLastUpdated(),
                 feature.getVersion(),
                 feature.getValidationMethod(),
-                feature.getAuthor(),
-                feature.getAssignedTo(),
+                author,
+                assignedTo,
                 feature.getJustification(),
                 feature.getTestCases(),
                 feature.getObject().getProject().getIdProject(),
@@ -102,9 +103,11 @@ public class FeatureConverter {
      * @return {@link Feature}
      */
     public Feature toModel(FeatureDom featureDom) {
+        if(featureDom.getCost()==null){
+            featureDom.setCost(0.0);
+        }
         ObjectEntity objectEntity = new ObjectEntity();
         objectEntity.setIdobject(featureDom.getIdFeature());
-        List<UseCase> useCases = useCaseConverter.toModel(featureDom.getUseCases());
         Feature feature = new Feature();
         feature.setIdFeature(featureDom.getIdFeature());
         feature.setName(featureDom.getName());
@@ -123,8 +126,6 @@ public class FeatureConverter {
         feature.setLastUpdated(featureDom.getLastUpdated());
         feature.setVersion(featureDom.getVersion());
         feature.setValidationMethod(featureDom.getValidationMethod());
-        feature.setAuthor(featureDom.getAuthor());
-        feature.setAssignedTo(featureDom.getAssignedTo());
         feature.setJustification(featureDom.getJustification());
         feature.setTestCases(featureDom.getTestCases());
         feature.setObject(objectEntity);

@@ -181,7 +181,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${feature.getAuthor()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${feature.getAuthor().getEmail()}"
+                                       th:text="${feature.getAuthor().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>
@@ -190,7 +194,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${feature.getAssignedTo()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${feature.getAssignedTo().getEmail()}"
+                                       th:text="${feature.getAssignedTo().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>

@@ -59,11 +59,11 @@ public class EpicController {
      */
     @RequestMapping(value = PATH_BASE+"epics", method = RequestMethod.GET)
     public ModelAndView getEpicListView(@PathVariable int projectId, ModelAndView modelAndView, Principal principal){
-        List<EpicDom> epicDomList = epicService.getEpics(projectId);
         ProjectDom project = projectService.getProject(projectId);
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
+            List<EpicDom> epicDomList = epicService.getEpics(projectId);
             boolean isPm = commonMethods.isPM(user,principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
             modelAndView.setViewName("epicsDashboard");
@@ -74,11 +74,10 @@ public class EpicController {
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
-        } else {
-            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a list of epics of project "
-                    +projectId);
-            throw new AccessDeniedException("Not allowed");
         }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a list of epics of project "
+                +projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 
     /**
@@ -107,10 +106,9 @@ public class EpicController {
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
-        } else {
-            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain an epic from project "+projectId);
-            throw new AccessDeniedException("Not allowed");
         }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain an epic from project "+projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 
     /**
@@ -142,10 +140,9 @@ public class EpicController {
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
-        } else {
-            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to create an epic from project "+projectId);
-            throw new AccessDeniedException("Not allowed");
         }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to create an epic in project "+projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 
     /**
@@ -170,7 +167,7 @@ public class EpicController {
                 boolean isPm = commonMethods.isPM(user, principal.getName());
                 List<Group_user> group = project.getGroup().getUsers();
                 ModelAndView modelAndView = new ModelAndView();
-                modelAndView.setViewName("epic");
+                modelAndView.setViewName("createEpic");
                 modelAndView.addObject("epic", epic);
                 modelAndView.addObject("project", project);
                 modelAndView.addObject("projectList", projectDomList);
@@ -183,10 +180,9 @@ public class EpicController {
             String path = "/project/"+projectId+"/epic/"+persistedEpic.getIdEpic();
             return new ModelAndView("redirect:"+path);
 
-        } else {
-            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to create an epic from project "+projectId);
-            throw new AccessDeniedException("Not allowed");
         }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to create an epic from project "+projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 
     /**
@@ -219,10 +215,9 @@ public class EpicController {
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
-        } else {
-            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to update an epic from project "+projectId);
-            throw new AccessDeniedException("Not allowed");
         }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to update an epic from project "+projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 
     /**
@@ -237,27 +232,31 @@ public class EpicController {
      *       {@link EpicDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"epic/{epicId}/update", method = RequestMethod.POST)
-    public ModelAndView updateEpic(@PathVariable int projectId, @PathVariable int epicId, @ModelAttribute @Valid EpicDom epic, Principal principal){
+    public ModelAndView updateEpic(@PathVariable int projectId, @PathVariable int epicId, @ModelAttribute @Valid EpicDom epic,
+                                   Principal principal, BindingResult result){
         ProjectDom project = projectService.getProject(projectId);
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
-            boolean isPm = commonMethods.isPM(user, principal.getName());
-            List<Group_user> group = project.getGroup().getUsers();
+            if (result.hasErrors()) {
+                boolean isPm = commonMethods.isPM(user, principal.getName());
+                List<Group_user> group = project.getGroup().getUsers();
+                ModelAndView modelAndView = new ModelAndView();
+                modelAndView.setViewName("updateEpic");
+                modelAndView.addObject("epic", epic);
+                modelAndView.addObject("project", project);
+                modelAndView.addObject("projectList", projectDomList);
+                modelAndView.addObject("user", principal.getName());
+                modelAndView.addObject("group", group);
+                modelAndView.addObject("isPM", isPm);
+                return modelAndView;
+            }
             EpicDom persistedEpic = epicService.update(epic, epicId, projectId);
-            ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("epic");
-            modelAndView.addObject("epic", persistedEpic);
-            modelAndView.addObject("project", project);
-            modelAndView.addObject("projectList", projectDomList);
-            modelAndView.addObject("user", principal.getName());
-            modelAndView.addObject("group", group);
-            modelAndView.addObject("isPM", isPm);
-            return modelAndView;
-        }else {
-            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to update an epic from project "+projectId);
-            throw new AccessDeniedException("Not allowed");
+            String path = "/project/"+projectId+"/epic/"+persistedEpic.getIdEpic();
+            return new ModelAndView("redirect:"+path);
         }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to update an epic from project "+projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 
     /**
@@ -280,9 +279,8 @@ public class EpicController {
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
             }
-        }else {
-            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to delete an epic from project "+projectId);
-            throw new AccessDeniedException("Not allowed");
         }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to delete an epic from project "+projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 }

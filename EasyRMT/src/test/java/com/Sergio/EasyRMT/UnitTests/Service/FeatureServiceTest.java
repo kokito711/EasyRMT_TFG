@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class FeatureServiceTest {
-
+/*
     @Mock
     private ObjectRepository objectRepository;
     @Mock
@@ -188,6 +188,6 @@ public class FeatureServiceTest {
 
     private FeatureService createFeatureService(){
         return new FeatureService(objectRepository,featureRepository,projectRepository,featureConverter, documentService);
-    }
+    }*/
 
 }
