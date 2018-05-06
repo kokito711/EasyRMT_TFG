@@ -127,8 +127,16 @@
                         <td th:text="${epic.getIdentifier()}"></td>
                         <td th:text="${epic.getName()}"></td>
                         <td th:text="${#lists.size(epic.userStoryDoms)}"></td>
-                        <td th:text="${epic.getAuthor()}"></td>
-                        <td th:text="${epic.getAssignedTo()}"></td>
+                        <td>
+                            <a th:href="'mailto:'+${epic.getAuthor().getEmail()}"
+                               th:text="${epic.getAuthor().getUsername()}">
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="'mailto:'+${epic.getAssignedTo().getEmail()}"
+                               th:text="${epic.getAssignedTo().getUsername()}">
+                            </a>
+                        </td>
                         <td>
                             <a th:href="'/project/'+${epic.getProjectId()}+'/epic/'+${epic.getIdEpic()}">
                                 <span class="fa fa-info-circle fa-2x" style="color: #204d74"

@@ -40,7 +40,7 @@ public class Epic implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @Length( max = 10)
+    @Length(min=1, max = 10)
     @Column(name = "identifier")
     private String identifier;
 
@@ -78,7 +78,7 @@ public class Epic implements Serializable {
     @Column(name="storypoints")
     private Integer storyPoints;
 
-    @Length(min=1, max = 64)
+    @Length( max = 64)
     @Column(name = "source")
     private String source;
 
@@ -102,7 +102,7 @@ public class Epic implements Serializable {
     @CreatedDate
     private Date lastUpdated;
 
-    @Length(min=1, max = 45)
+    @Length(max = 45)
     @Column(name = "version")
     private String version;
 
@@ -121,7 +121,7 @@ public class Epic implements Serializable {
 
 
     @Lob
-    @Size(min = 1, max = 16777215)
+    @Size(max = 16777215)
     @Column(name = "justification")
     private String justification;
 

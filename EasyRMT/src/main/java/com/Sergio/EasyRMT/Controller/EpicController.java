@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -64,13 +65,13 @@ public class EpicController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user,principal.getName());
-            List<Group_user> groups = user.getGroups();
+            List<Group_user> group = project.getGroup().getUsers();
             modelAndView.setViewName("epicsDashboard");
             modelAndView.addObject("project", project);
             modelAndView.addObject("epicList", epicDomList);
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("user", principal.getName());
-            modelAndView.addObject("groups", groups);
+            modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
         } else {
@@ -96,14 +97,14 @@ public class EpicController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user,principal.getName());
-            List<Group_user> groups = user.getGroups();
+            List<Group_user> group = project.getGroup().getUsers();
             modelAndView.setViewName("epic");
             modelAndView.addObject("epic", epicService.getEpic(epicId));
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("fileList", documentService.getFileList(projectId, epicId));
             modelAndView.addObject("user", principal.getName());
-            modelAndView.addObject("groups", groups);
+            modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
         } else {
@@ -126,7 +127,7 @@ public class EpicController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user,principal.getName());
-            List<Group_user> groups = user.getGroups();
+            List<Group_user> group =project.getGroup().getUsers();
             EpicDom epicDom = new EpicDom();
             modelAndView.setViewName("createEpic");
             modelAndView.addObject("project", project);
@@ -138,7 +139,7 @@ public class EpicController {
             modelAndView.addObject("complexity", Complexity.values());
             modelAndView.addObject("scope", Scope.values());
             modelAndView.addObject("user", principal.getName());
-            modelAndView.addObject("groups", groups);
+            modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
         } else {
@@ -158,23 +159,30 @@ public class EpicController {
      *       {@link EpicDom} as object.
      */
     @RequestMapping(value = PATH_BASE+"epics", method = RequestMethod.POST)
-    public ModelAndView createEpic(@PathVariable int projectId, @ModelAttribute @Valid EpicDom epic, Principal principal){
+    public ModelAndView createEpic(@PathVariable int projectId, @ModelAttribute @Valid EpicDom epic, Principal principal,
+                                   BindingResult result){
         ProjectDom project = projectService.getProject(projectId);
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        epic.setAuthorId(user.getUserId());
         if (commonMethods.isAllowed(projectDomList, project)) {
-            boolean isPm = commonMethods.isPM(user,principal.getName());
-            List<Group_user> groups = user.getGroups();
+            if(result.hasErrors()) {
+                boolean isPm = commonMethods.isPM(user, principal.getName());
+                List<Group_user> group = project.getGroup().getUsers();
+                ModelAndView modelAndView = new ModelAndView();
+                modelAndView.setViewName("epic");
+                modelAndView.addObject("epic", epic);
+                modelAndView.addObject("project", project);
+                modelAndView.addObject("projectList", projectDomList);
+                modelAndView.addObject("user", principal.getName());
+                modelAndView.addObject("group", group);
+                modelAndView.addObject("isPM", isPm);
+                return modelAndView;
+            }
             EpicDom persistedEpic = epicService.create(epic, projectId);
-            ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("epic");
-            modelAndView.addObject("epic", persistedEpic);
-            modelAndView.addObject("project", project);
-            modelAndView.addObject("projectList", projectDomList);
-            modelAndView.addObject("user", principal.getName());
-            modelAndView.addObject("groups", groups);
-            modelAndView.addObject("isPM", isPm);
-            return modelAndView;
+            String path = "/project/"+projectId+"/epic/"+persistedEpic.getIdEpic();
+            return new ModelAndView("redirect:"+path);
+
         } else {
             LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to create an epic from project "+projectId);
             throw new AccessDeniedException("Not allowed");
@@ -196,7 +204,7 @@ public class EpicController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user, principal.getName());
-            List<Group_user> groups = user.getGroups();
+            List<Group_user> group = project.getGroup().getUsers();
             EpicDom epicDom = epicService.getEpic(epicId);
             modelAndView.setViewName("updateEpic");
             modelAndView.addObject("project", project);
@@ -208,7 +216,7 @@ public class EpicController {
             modelAndView.addObject("complexity", Complexity.values());
             modelAndView.addObject("scope", Scope.values());
             modelAndView.addObject("user", principal.getName());
-            modelAndView.addObject("groups", groups);
+            modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
         } else {
@@ -235,7 +243,7 @@ public class EpicController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user, principal.getName());
-            List<Group_user> groups = user.getGroups();
+            List<Group_user> group = project.getGroup().getUsers();
             EpicDom persistedEpic = epicService.update(epic, epicId, projectId);
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("epic");
@@ -243,7 +251,7 @@ public class EpicController {
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("user", principal.getName());
-            modelAndView.addObject("groups", groups);
+            modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             return modelAndView;
         }else {

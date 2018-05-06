@@ -6,6 +6,7 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.*;
 import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
