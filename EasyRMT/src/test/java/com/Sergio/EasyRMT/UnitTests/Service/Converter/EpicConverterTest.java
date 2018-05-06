@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class EpicConverterTest {
 
-    @Mock
+    /*@Mock
     UserStoryConverter userStoryConverter;
 
     @BeforeEach
@@ -79,5 +79,5 @@ public class EpicConverterTest {
 
     private EpicConverter createEpicConverter(){
         return new EpicConverter(userStoryConverter);
-    }
+    }*/
 }

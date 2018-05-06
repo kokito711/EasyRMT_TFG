@@ -221,7 +221,7 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="user : ${project.getGroup().getUsers()}"
-                                            th:if="${not user.isPM() and not user.isStakeholder()}">
+                                            th:if="${not user.isStakeholder()}">
                                             <td th:text="${user.getPrimaryKey().getUser().getUsername()}"></td>
                                             <td> <a th:href="'mailto:'+${user.getPrimaryKey().getUser().getEmail()}"
                                                     th:text="${user.getPrimaryKey().getUser().getEmail()}"></a>

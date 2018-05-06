@@ -39,4 +39,8 @@ public class CommonMethods {
         }
         return projectDomList;
     }
+
+    public boolean isAllowed(List<ProjectDom> projectDomList, ProjectDom projectDom){
+        return projectDomList.contains(projectDom);
+    }
 }

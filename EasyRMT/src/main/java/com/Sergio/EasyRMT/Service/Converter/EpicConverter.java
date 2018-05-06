@@ -6,6 +6,7 @@
 package com.Sergio.EasyRMT.Service.Converter;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.Epic;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
@@ -21,10 +22,12 @@ public class EpicConverter {
 
 
     UserStoryConverter userStoryConverter;
+    UserConverter userConverter;
 
     @Autowired
-    public EpicConverter(UserStoryConverter userStoryConverter) {
+    public EpicConverter(UserStoryConverter userStoryConverter, UserConverter userConverter) {
         this.userStoryConverter = userStoryConverter;
+        this.userConverter = userConverter;
     }
 
     /**
@@ -36,15 +39,14 @@ public class EpicConverter {
         List<EpicDom> epicDomList = new ArrayList<>();
         for(Epic epic: epicList){
             List<UserStoryDom> userStoryDomList = userStoryConverter.toDomain(epic.getUserStories());
-            if(epic.getAssignedTo() == null){
-                epic.setAssignedTo(0);
-            }
+            UserDom author = userConverter.toDomain(epic.getAuthor());
+            UserDom assignedTo = userConverter.toDomain(epic.getAssignedTo());
             EpicDom epicDom = new EpicDom(
                     epic.getIdEpic(),
                     epic.getName(),
                     epic.getIdentifier(),
-                    epic.getAuthor(),
-                    epic.getAssignedTo(),
+                    author,
+                    assignedTo,
                     epic.getObject().getProject().getIdProject(),
                     userStoryDomList
             );
@@ -60,9 +62,8 @@ public class EpicConverter {
      */
     public EpicDom toDomain(Epic epic) {
         List<UserStoryDom> userStoryDomList = userStoryConverter.toDomain(epic.getUserStories());
-        if(epic.getAssignedTo() == null){
-            epic.setAssignedTo(0);
-        }
+        UserDom author = userConverter.toDomain(epic.getAuthor());
+        UserDom assignedTo = userConverter.toDomain(epic.getAssignedTo());
         if(epic.getEstimatedHours() == null){
             epic.setEstimatedHours(0.00);
         }
@@ -88,8 +89,8 @@ public class EpicConverter {
                 epic.getLastUpdated(),
                 epic.getVersion(),
                 epic.getValidationMethod(),
-                epic.getAuthor(),
-                epic.getAssignedTo(),
+                author,
+                assignedTo,
                 epic.getJustification(),
                 epic.getTestCases(),
                 epic.getObject().getProject().getIdProject(),
@@ -106,7 +107,6 @@ public class EpicConverter {
     public Epic toModel(EpicDom epicDom) {
         ObjectEntity objectEntity = new ObjectEntity();
         objectEntity.setIdobject(epicDom.getIdEpic());
-        List<UserStory> userStory = userStoryConverter.toModel(epicDom.getUserStoryDoms());
         Epic epic = new Epic();
         epic.setIdEpic(epicDom.getIdEpic());
         epic.setName(epicDom.getName());
@@ -126,8 +126,6 @@ public class EpicConverter {
         epic.setLastUpdated(epicDom.getLastUpdated());
         epic.setVersion(epicDom.getVersion());
         epic.setValidationMethod(epicDom.getValidationMethod());
-        epic.setAuthor(epicDom.getAuthor());
-        epic.setAssignedTo(epicDom.getAssignedTo());
         epic.setJustification(epicDom.getJustification());
         epic.setTestCases(epicDom.getTestCases());
         epic.setObject(objectEntity);

@@ -6,13 +6,11 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
-import com.Sergio.EasyRMT.Model.Epic;
-import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.Project;
-import com.Sergio.EasyRMT.Model.UserStory;
+import com.Sergio.EasyRMT.Model.*;
 import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
+import com.Sergio.EasyRMT.Repository.UserRepository;
 import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,16 +28,17 @@ public class EpicService {
     ProjectRepository projectRepository;
     EpicConverter epicConverter;
     DocumentService documentService;
+    UserRepository userRepository;
 
     @Autowired
-    public EpicService(ObjectRepository objectRepository, EpicRepository epicRepository,
-                       ProjectRepository projectRepository, EpicConverter epicConverter,
-                       DocumentService documentService) {
+    public EpicService(ObjectRepository objectRepository, EpicRepository epicRepository, ProjectRepository projectRepository,
+                       EpicConverter epicConverter, DocumentService documentService, UserRepository userRepository) {
         this.objectRepository = objectRepository;
         this.epicRepository = epicRepository;
         this.projectRepository = projectRepository;
         this.epicConverter = epicConverter;
         this.documentService = documentService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -87,12 +86,14 @@ public class EpicService {
             objectEntity.setProject(project.get());
             objectEntity = objectRepository.save(objectEntity);
         }
-
+        User author = userRepository.findOne(epic.getAuthorId());
+        User assignedTo = userRepository.findOne(epic.getAssignedId());
         Date timestamp = new Date();
         epic.setCreated(timestamp);
         epic.setLastUpdated(timestamp);
-        epic.setAuthor(0); //TODO change this on second iteration
         epicModel = epicConverter.toModel(epic);
+        epicModel.setAuthor(author);
+        epicModel.setAssignedTo(assignedTo);
         epicModel.setIdEpic(objectEntity.getIdobject());
         epicModel.setUserStories(new ArrayList<>());
         epicModel.setObject(objectEntity);
@@ -143,9 +144,10 @@ public class EpicService {
             changed = true;
             epicModel.setRisk(epic.getRisk());
         }
-        if(!epicModel.getAssignedTo().equals(epic.getAssignedTo())){
+        if(epicModel.getAssignedTo().getUserId() != epic.getAssignedId()){
             changed = true;
-            epicModel.setAssignedTo(epic.getAssignedTo());
+            User user = userRepository.findOne(epic.getAssignedId());
+            epicModel.setAssignedTo(user);
         }
         if(!epicModel.getVersion().equals(epic.getVersion())){
             changed = true;

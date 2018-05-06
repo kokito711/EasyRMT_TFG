@@ -12,9 +12,11 @@ import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.UserService;
+import javassist.bytecode.stackmap.TypeData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,10 +27,14 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 public class ProjectController {
 
+    private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
+    private final String loggerMessage = "Unauthorized attempt to access: ";
     ProjectService projectService;
     DocumentService documentService;
     CommonMethods commonMethods;
@@ -104,19 +110,25 @@ public class ProjectController {
      */
     @RequestMapping(value = "/updateProject/{id}", method = RequestMethod.GET)
     public ModelAndView getUpdateView(@PathVariable int id, Principal principal){
-        ModelAndView modelAndView = new ModelAndView("updateProject");
-        ProjectDom projectDom = projectService.getProject(id);
-        modelAndView.addObject("project", projectDom);
-        modelAndView.addObject("reqTypes", projectService.getReqTypes());
-        modelAndView.addObject("user", principal.getName());
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
-        boolean isPm = commonMethods.isPM(user,principal.getName());
-        List<Group_user> groups = user.getGroups();
-        modelAndView.addObject("groups", groups);
-        modelAndView.addObject("projectList", projectDomList);
-        modelAndView.addObject("isPM", isPm);
-        return modelAndView;
+        ProjectDom projectDom = projectService.getProject(id);
+        if(commonMethods.isAllowed(projectDomList,projectDom)) {
+            ModelAndView modelAndView = new ModelAndView("updateProject");
+            modelAndView.addObject("project", projectDom);
+            modelAndView.addObject("reqTypes", projectService.getReqTypes());
+            modelAndView.addObject("user", principal.getName());
+            boolean isPm = commonMethods.isPM(user, principal.getName());
+            List<Group_user> groups = user.getGroups();
+            modelAndView.addObject("groups", groups);
+            modelAndView.addObject("projectList", projectDomList);
+            modelAndView.addObject("isPM", isPm);
+            return modelAndView;
+        }
+        else {
+            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to update project "+id);
+            throw new AccessDeniedException("Not allowed");
+        }
     }
 
     /**
@@ -129,9 +141,18 @@ public class ProjectController {
     @RequestMapping(value = "/project/{id}", method = RequestMethod.POST)
     public ModelAndView updateProject(@PathVariable int id, @ModelAttribute @Valid ProjectDom project,
                                       Principal principal){
-        ProjectDom projectDom = projectService.updateProject(id,project);
-        String path = "/project/"+projectDom.getIdProject();
-        return new ModelAndView("redirect:"+path);
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        ProjectDom projectDom = projectService.getProject(id);
+        if(commonMethods.isAllowed(projectDomList,projectDom)) {
+            projectDom = projectService.updateProject(id, project);
+            String path = "/project/" + projectDom.getIdProject();
+            return new ModelAndView("redirect:" + path);
+        }
+        else  {
+            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to update project "+id);
+            throw new AccessDeniedException("Not allowed");
+        }
     }
 
     /**
@@ -142,13 +163,21 @@ public class ProjectController {
      * @return HttpStatus.ok if correct. HttpStatus.INTERNAL_SERVER_ERROR if not correct.
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteProject(@PathVariable int id){
-        boolean deleted = projectService.deleteProject(id);
-        if(deleted){
-            return ResponseEntity.status(HttpStatus.OK).body("");
+    public ResponseEntity deleteProject(@PathVariable int id, Principal principal){
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        ProjectDom projectDom = projectService.getProject(id);
+        if(commonMethods.isAllowed(projectDomList,projectDom)) {
+            boolean deleted = projectService.deleteProject(id);
+            if (deleted) {
+                return ResponseEntity.status(HttpStatus.OK).body("");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+            }
         }
         else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to delete project "+id);
+            throw new AccessDeniedException("Not allowed");
         }
     }
 
@@ -163,18 +192,24 @@ public class ProjectController {
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
     public ModelAndView getProject(@PathVariable int id, Principal principal){
-        ModelAndView modelAndView = new ModelAndView("project");
         ProjectDom projectDom = projectService.getProject(id);
-        projectDom.setGroupId(projectDom.getGroup().getGroupId());
-        modelAndView.addObject("project", projectDom);
-        modelAndView.addObject("fileList", documentService.getFileList(id, null));
-        modelAndView.addObject("user", principal.getName());
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
-        boolean isPm = commonMethods.isPM(user,principal.getName());
-        modelAndView.addObject("projectList", projectDomList);
-        modelAndView.addObject("isPM", isPm);
-        return modelAndView;
+        if(commonMethods.isAllowed(projectDomList,projectDom)) {
+            ModelAndView modelAndView = new ModelAndView("project");
+            projectDom.setGroupId(projectDom.getGroup().getGroupId());
+            modelAndView.addObject("project", projectDom);
+            modelAndView.addObject("fileList", documentService.getFileList(id, null));
+            modelAndView.addObject("user", principal.getName());
+            boolean isPm = commonMethods.isPM(user, principal.getName());
+            modelAndView.addObject("projectList", projectDomList);
+            modelAndView.addObject("isPM", isPm);
+            return modelAndView;
+        }
+        else {
+            LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get project "+id);
+            throw new AccessDeniedException("Not allowed");
+        }
     }
 
 

@@ -29,3 +29,6 @@ databaseChangeLog:
   - include:
           relativeToChangelogFile: true
           file: rel_1.0/changeset-20180503.yaml
+  - include:
+          relativeToChangelogFile: true
+          file: rel_1.0/changeset-20180506.yaml
