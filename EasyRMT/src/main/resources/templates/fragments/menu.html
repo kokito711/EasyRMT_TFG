@@ -26,12 +26,12 @@
                     <li><a th:href="'/user/'+${user}"><i class="fa fa-user fa-fw" ></i><p th:text="#{userMenu.profile}"></p></a>
                     </li>
                     <li th:if="${#locale.language.equalsIgnoreCase('es_ES')} or ${#locale.language.equalsIgnoreCase('es')}">
-                        <a href="/dashboard?lang=en_GB">
+                        <a th:href="@{''+'?lang=en_GB'}">
                             <i><img src="/images/ukflag.png" width="20" height="20"/></i><p>Cambiar idioma</p>
                         </a>
                     </li>
                     <li th:if="${#locale.language.equalsIgnoreCase('en')} or ${#locale.language.equalsIgnoreCase('en_GB')}">
-                        <a href="/dashboard?lang=es_ES">
+                        <a th:href="@{''+'?lang=es_ES'}">
                            <i><img src="/images/espana.png" width="20" height="20"/></i><p>  Change language</p>
                         </a>
                     </li>

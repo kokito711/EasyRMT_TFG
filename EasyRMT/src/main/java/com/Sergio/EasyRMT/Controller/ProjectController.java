@@ -7,16 +7,23 @@
 package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
+import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,48 +31,67 @@ public class ProjectController {
 
     ProjectService projectService;
     DocumentService documentService;
+    CommonMethods commonMethods;
+    UserService userService;
 
     @Autowired
-    public ProjectController(ProjectService projectService, DocumentService documentService) {
+    public ProjectController(ProjectService projectService, DocumentService documentService, CommonMethods commonMethods, UserService userService) {
         this.projectService = projectService;
         this.documentService = documentService;
+        this.commonMethods = commonMethods;
+        this.userService = userService;
     }
 
     /**
      * This method returns the create project view
-     * @param model with project object and an array with requirement types
+     * @param modelAndView with project object and an array with requirement types
      * @return ModelAndView which is model received as param
      */
     @RequestMapping(value="/createProject", method = RequestMethod.GET)
-    public ModelAndView createProjectView(ModelAndView model, Principal principal){
-        List<ProjectDom> projectDomList = projectService.getProjects();
+    public ModelAndView createProjectView(ModelAndView modelAndView, Principal principal){ ;
         ProjectDom projectDom = new ProjectDom();
-        model.setViewName("createProject");
-        model.addObject("project", projectDom);
-        model.addObject("reqTypes", projectService.getReqTypes());
-        model.addObject("projectList", projectDomList);
-        model.addObject("user", principal.getName());
-        return model;
+        modelAndView.setViewName("createProject");
+        modelAndView.addObject("project", projectDom);
+        modelAndView.addObject("reqTypes", projectService.getReqTypes());
+        modelAndView.addObject("user", principal.getName());
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        boolean isPm = commonMethods.isPM(user,principal.getName());
+        List<Group_user> groups = user.getGroups();
+        modelAndView.addObject("groups", groups);
+        modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("isPM", isPm);
+        return modelAndView;
     }
 
     /**
      * This method gets the request of a project creation.
      * Then calls {@link ProjectService}to manage it.
-     * When the information is returned this method generate a new ModelAndView with a project view and the persisted
-     * {@link ProjectDom} as object.
+     * If bind resul has errors method will return a new view with these errors. if not, method will redirect to
+     * gerProject method.
      * @param project {@link ProjectDom} object returned from view to
-     * @return ModelAndView with a project view and the persisted
-     *       {@link ProjectDom} as object.
+     * @return ModelAndView with redirection to get project view
      */
     @RequestMapping(value = "/projects", method = RequestMethod.POST)
-    public ModelAndView createProject(@ModelAttribute @Valid ProjectDom project, Principal principal){
-        List<ProjectDom> projectDomList = projectService.getProjects();
+    public ModelAndView createProject(@ModelAttribute @Valid ProjectDom project, Principal principal,
+                                      BindingResult result){
+        if (result.hasErrors()){
+            ModelAndView modelAndView = new ModelAndView("createProject");
+            modelAndView.addObject("project", project);
+            modelAndView.addObject("reqTypes", projectService.getReqTypes());
+            modelAndView.addObject("user", principal.getName());
+            UserDom user = userService.findUser(principal.getName());
+            List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+            boolean isPm = commonMethods.isPM(user,principal.getName());
+            List<Group_user> groups = user.getGroups();
+            modelAndView.addObject("groups", groups);
+            modelAndView.addObject("projectList", projectDomList);
+            modelAndView.addObject("isPM", isPm);
+            return modelAndView;
+        }
         ProjectDom projectDom = projectService.createProject(project);
-        ModelAndView modelAndView = new ModelAndView("project");
-        modelAndView.addObject("project", projectDom);
-        modelAndView.addObject("projectList", projectDomList);
-        modelAndView.addObject("user", principal.getName());
-        return modelAndView;
+        String path = "/project/"+projectDom.getIdProject();
+        return new ModelAndView("redirect:"+path);
     }
 
     /**
@@ -78,32 +104,34 @@ public class ProjectController {
      */
     @RequestMapping(value = "/updateProject/{id}", method = RequestMethod.GET)
     public ModelAndView getUpdateView(@PathVariable int id, Principal principal){
-        List<ProjectDom> projectDomList = projectService.getProjects();
         ModelAndView modelAndView = new ModelAndView("updateProject");
         ProjectDom projectDom = projectService.getProject(id);
         modelAndView.addObject("project", projectDom);
-        modelAndView.addObject("projectList", projectDomList);
         modelAndView.addObject("reqTypes", projectService.getReqTypes());
         modelAndView.addObject("user", principal.getName());
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        boolean isPm = commonMethods.isPM(user,principal.getName());
+        List<Group_user> groups = user.getGroups();
+        modelAndView.addObject("groups", groups);
+        modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("isPM", isPm);
         return modelAndView;
     }
 
     /**
      * This method receives a post request and calls {@link ProjectService} to update a project
-     * When Project Service returns informaction, that is updated in database.
-     * @param id Project identificator
+     * Then Project Service returns information, that is updated in database.
+     * @param id Project identifier
      * @param project Project Object Filled with information
      * @return ModelAndView with new project information, redirected to update project
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.POST)
-    public ModelAndView updateProject(@PathVariable int id, @ModelAttribute @Valid ProjectDom project, Principal principal){
-        List<ProjectDom> projectDomList = projectService.getProjects();
+    public ModelAndView updateProject(@PathVariable int id, @ModelAttribute @Valid ProjectDom project,
+                                      Principal principal){
         ProjectDom projectDom = projectService.updateProject(id,project);
-        ModelAndView modelAndView = new ModelAndView("project");
-        modelAndView.addObject("project", projectDom);
-        modelAndView.addObject("projectList", projectDomList);
-        modelAndView.addObject("user", principal.getName());
-        return modelAndView;
+        String path = "/project/"+projectDom.getIdProject();
+        return new ModelAndView("redirect:"+path);
     }
 
     /**
@@ -135,13 +163,17 @@ public class ProjectController {
      */
     @RequestMapping(value = "/project/{id}", method = RequestMethod.GET)
     public ModelAndView getProject(@PathVariable int id, Principal principal){
-        List<ProjectDom> projectDomList = projectService.getProjects();
         ModelAndView modelAndView = new ModelAndView("project");
         ProjectDom projectDom = projectService.getProject(id);
+        projectDom.setGroupId(projectDom.getGroup().getGroupId());
         modelAndView.addObject("project", projectDom);
-        modelAndView.addObject("projectList", projectDomList);
         modelAndView.addObject("fileList", documentService.getFileList(id, null));
         modelAndView.addObject("user", principal.getName());
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        boolean isPm = commonMethods.isPM(user,principal.getName());
+        modelAndView.addObject("projectList", projectDomList);
+        modelAndView.addObject("isPM", isPm);
         return modelAndView;
     }
 

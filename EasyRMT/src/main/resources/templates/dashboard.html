@@ -5,7 +5,6 @@
 <body >
 <div id="wrapper" >
     <!--Navigation -->
-    <p th:text="${isPM}"></p>
     <nav th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList}, user=${user}, isPm=${isPM})"></nav>
     <div id="page-wrapper" style="background: url('/images/background-image.png') no-repeat fixed center center;">
     </div>

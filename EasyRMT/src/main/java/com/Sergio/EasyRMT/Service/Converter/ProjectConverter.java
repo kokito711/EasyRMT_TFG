@@ -38,7 +38,9 @@ public class ProjectConverter {
         Project project = new Project();
         List<RequirementType> reqTypeList = new ArrayList<>();
         project.setName(projectDom.getName());
-        project.setDescription(projectDom.getDescription());
+        if (projectDom.getDescription() != null){
+            project.setDescription(projectDom.getDescription());
+        }
         project.setType(projectDom.getType());
         for(RequirementTypeDom reqTypeDom : projectDom.getRequirementTypes()){
             Optional<RequirementType> reqObtained = reqTypeRepository.findByIdType(reqTypeDom.getIdType());
@@ -60,6 +62,9 @@ public class ProjectConverter {
             reqTypeDomList.add(reqTypeDom);
         }
         GroupDom group = groupConverter.toDomain(project.getGroup());
+        if(project.getDescription()== null){
+            project.setDescription("");
+        }
         ProjectDom projectDom = new ProjectDom(
                 project.getIdProject(),
                 project.getName(),

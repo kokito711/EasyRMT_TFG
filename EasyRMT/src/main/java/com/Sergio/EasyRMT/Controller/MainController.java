@@ -28,30 +28,22 @@ import java.util.List;
 public class MainController {
     ProjectService projectService;
     UserService userService;
+    CommonMethods commonMethods;
 
     @Autowired
-    public MainController(ProjectService projectService, UserService userService)
-    {
+    public MainController(ProjectService projectService, UserService userService, CommonMethods commonMethods) {
         this.projectService = projectService;
         this.userService = userService;
+        this.commonMethods = commonMethods;
     }
 
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public ModelAndView dashboard(Principal principal){
         ModelAndView modelAndView = new ModelAndView("dashboard");
-
         modelAndView.addObject("user", principal.getName());
         UserDom user = userService.findUser(principal.getName());
-        List<ProjectDom> projectDomList = new ArrayList<>();
-        boolean isPm = false;
-        for(Group_user groupDom : user.getGroups()){
-            if(groupDom.isPM() && groupDom.getPrimaryKey().getUser().getUsername().equals(principal.getName())){
-                isPm = true;
-            }
-            int groupId = groupDom.getPrimaryKey().getGroup().getGroup_id();
-            List<ProjectDom> projectsFromGroup = projectService.getProjects(groupId);
-            projectDomList.addAll(projectsFromGroup);
-        }
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        boolean isPm = commonMethods.isPM(user,principal.getName());
         modelAndView.addObject("projectList", projectDomList);
         modelAndView.addObject("isPM", isPm);
         return modelAndView;

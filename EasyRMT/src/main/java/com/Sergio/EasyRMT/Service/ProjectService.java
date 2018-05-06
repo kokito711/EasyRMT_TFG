@@ -2,8 +2,10 @@ package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
+import com.Sergio.EasyRMT.Model.Group;
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Model.RequirementType;
+import com.Sergio.EasyRMT.Repository.GroupRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
 import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
@@ -23,16 +25,18 @@ public class ProjectService {
     ProjectConverter projectConverter;
     ReqTypeConverter reqTypeConverter;
     DocumentService documentService;
+    GroupRepository groupRepository;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository,
                           ProjectConverter projectConverter, ReqTypeConverter reqTypeConverter,
-                          DocumentService documentService) {
+                          DocumentService documentService, GroupRepository groupRepository) {
         this.projectRepository = projectRepository;
         this.reqTypeRepository = reqTypeRepository;
         this.projectConverter = projectConverter;
         this.reqTypeConverter = reqTypeConverter;
         this.documentService = documentService;
+        this.groupRepository = groupRepository;
     }
 
     /**
@@ -81,8 +85,11 @@ public class ProjectService {
         for (String id: projectDom.getStringReqTypes()) {
             projectDom.getRequirementTypes().add(new RequirementTypeDom(Integer.parseInt(id)));
         }
+        Group group = groupRepository.findOne(projectDom.getGroupId());
         Project project = projectConverter.toModel(projectDom);
-        ProjectDom projectCretated = projectConverter.toDomain(projectRepository.save(project));
+        project.setGroup(group);
+        project = projectRepository.save(project);
+        ProjectDom projectCretated = projectConverter.toDomain(project);
         return projectCretated;
     }
 
@@ -98,6 +105,8 @@ public class ProjectService {
     public ProjectDom updateProject(int id, ProjectDom project) {
         Project projectModel = projectRepository.findByIdProject(id).get();
         ProjectDom projectDomPersisted = new ProjectDom();
+        Group group;
+        boolean groupChgd = false;
         boolean descChanged = false;
         boolean reqTypes = false;
         if(projectModel != null){
@@ -114,14 +123,21 @@ public class ProjectService {
             }
             reqTypes = true;
         }
+        if(project.getGroupId()!= projectModel.getGroup().getGroup_id()){
+            group = groupRepository.findOne(project.getGroupId());
+            projectModel.setGroup(group);
+            groupChgd = true;
+        }
         if (descChanged || reqTypes) {
             Project requested = projectConverter.toModel(projectDomPersisted);
-            if(descChanged){
+            if (descChanged) {
                 projectModel.setDescription(requested.getDescription());
             }
-            if(reqTypes){
+            if (reqTypes) {
                 projectModel.setRequirementTypes(requested.getRequirementTypes());
             }
+        }
+        if(descChanged || reqTypes || groupChgd){
             projectModel = projectRepository.save(projectModel);
             projectDomPersisted = projectConverter.toDomain(projectModel);
         }

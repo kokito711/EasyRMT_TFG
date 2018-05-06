@@ -22,7 +22,17 @@
                                     <div class="form-group">
                                         <label th:text="#{createProject.descriptionLabel}"></label>
                                         <textarea id="project-description" class="form-control" rows="5" name="description"
-                                                  th:field="*{description}" th:text="${project.getDescription()}"/>
+                                                  th:field="*{description}" th:text="${project.getDescription()}"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label th:text="#{createProject.group}"></label>
+                                        <select if="group" th:field="*{groupId}">
+                                            <option th:each="group : ${groups}"
+                                                    th:value="${group.getPrimaryKey().getGroup().getGroup_id()}"
+                                                    th:text="${group.getPrimaryKey().getGroup().getName()}"
+                                                    th:selected="${project.getGroupId()}==${group.getPrimaryKey().getGroup().getGroup_id()}">
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">

@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,10 @@ public class ProjectDom implements Serializable {
     @Getter
     @Setter
     private  List<String> stringReqTypes;
+
+    @Getter
+    @Setter
+    private int groupId;
 
     public ProjectDom(int idProject, String name, String description, ProjectType type, List<RequirementTypeDom> requirementTypes, GroupDom group) {
         this.idProject = idProject;
