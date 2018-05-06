@@ -77,9 +77,12 @@
                                 </option>
                             </select>
                             <br/>
-                            <label for="req-assi" class="text-center" th:text="#{createEpic.form.assigned}"></label>
-                            <select class="form-control center-block" th:field="*{assignedTo}" id="req-assi">
-                                <option th:value="0">0
+                            <label for="assignedId" class="text-center" th:text="#{createEpic.form.assigned}"></label>
+                            <select class="form-control center-block" name="assignedId" id="assignedId">
+                                <option th:each="user_group : ${group}" th:if="not ${user_group.isStakeholder()}"
+                                        th:value="${user_group.getPrimaryKey().getUser().getUserId()}"
+                                        th:text="${user_group.getPrimaryKey().getUser().getUsername()}"
+                                        th:selected="${userStory.getAssignedTo().getUserId() == user_group.getPrimaryKey().getUser().getUserId()}">
                                 </option>
                             </select>
                             <br/>

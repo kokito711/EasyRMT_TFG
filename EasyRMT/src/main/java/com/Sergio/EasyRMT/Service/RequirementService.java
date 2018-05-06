@@ -6,14 +6,8 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.RequirementDom;
-import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.Project;
-import com.Sergio.EasyRMT.Model.Requirement;
-import com.Sergio.EasyRMT.Model.RequirementType;
-import com.Sergio.EasyRMT.Repository.ObjectRepository;
-import com.Sergio.EasyRMT.Repository.ProjectRepository;
-import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
-import com.Sergio.EasyRMT.Repository.RequirementRepository;
+import com.Sergio.EasyRMT.Model.*;
+import com.Sergio.EasyRMT.Repository.*;
 import com.Sergio.EasyRMT.Service.Converter.RequirementConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,17 +25,20 @@ public class RequirementService {
     RequirementRepository requirementRepository;
     ReqTypeRepository reqTypeRepository;
     DocumentService documentService;
+    UserRepository userRepository;
 
     @Autowired
-    public RequirementService(ObjectRepository objectRepository, ProjectRepository projectRepository,
-                              RequirementConverter requirementConverter, RequirementRepository requirementRepository,
-                             ReqTypeRepository reqTypeRepository,  DocumentService documentService) {
+    public RequirementService(ObjectRepository objectRepository, RequirementConverter requirementConverter,
+                              ProjectRepository projectRepository, RequirementRepository requirementRepository,
+                              ReqTypeRepository reqTypeRepository, DocumentService documentService,
+                              UserRepository userRepository) {
         this.objectRepository = objectRepository;
-        this.projectRepository = projectRepository;
         this.requirementConverter = requirementConverter;
+        this.projectRepository = projectRepository;
         this.requirementRepository = requirementRepository;
         this.reqTypeRepository = reqTypeRepository;
         this.documentService = documentService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -90,11 +87,14 @@ public class RequirementService {
             objectEntity.setProject(project.get());
             objectEntity = objectRepository.save(objectEntity);
         }
+        User author = userRepository.findOne(requirementDom.getAuthorId());
+        User assignedTo = userRepository.findOne(requirementDom.getAssignedId());
         Date timestamp = new Date();
         requirementDom.setCreated(timestamp);
         requirementDom.setLastUpdated(timestamp);
-        requirementDom.setAuthor(0); //TODO change this on second iteration
         requirement = requirementConverter.toModel(requirementDom);
+        requirement.setAuthor(author);
+        requirement.setAssignedTo(assignedTo);
         requirement.setIdRequirement(objectEntity.getIdobject());
         Integer reqTypeId = requirementDom.getRequirementTypeId();
         Optional<RequirementType> requirementType = reqTypeRepository.findByIdType(reqTypeId);
@@ -152,7 +152,8 @@ public class RequirementService {
         if(!requirement.getAssignedTo().equals(requirementObtained.getAssignedTo())
                 && requirementObtained.getAssignedTo()!=null){
             changed = true;
-            requirement.setAssignedTo(requirementObtained.getAssignedTo());
+            User user = userRepository.findOne(requirementObtained.getAssignedId());
+            requirement.setAssignedTo(user);
         }
         if(!requirement.getVersion().equals(requirementObtained.getVersion())
                 && requirementObtained.getVersion()!=null){

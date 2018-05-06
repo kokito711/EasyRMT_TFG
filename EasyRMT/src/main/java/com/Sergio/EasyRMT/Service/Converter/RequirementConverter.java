@@ -6,6 +6,7 @@
 package com.Sergio.EasyRMT.Service.Converter;
 
 import com.Sergio.EasyRMT.Domain.RequirementDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Requirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,9 +16,11 @@ import java.util.List;
 
 @Component
 public class RequirementConverter {
+    UserConverter userConverter;
 
     @Autowired
-    public RequirementConverter() {
+    public RequirementConverter(UserConverter userConverter) {
+        this.userConverter = userConverter;
     }
 
     /**
@@ -29,15 +32,14 @@ public class RequirementConverter {
     public List<RequirementDom> toDomain(List<Requirement> requirementList) {
         List<RequirementDom> requirementDomList = new ArrayList<>();
         for(Requirement requirement: requirementList){
-            if(requirement.getAssignedTo() == null){
-                requirement.setAssignedTo(0);
-            }
+            UserDom author = userConverter.toDomain(requirement.getAuthor());
+            UserDom assignedTo = userConverter.toDomain(requirement.getAssignedTo());
             RequirementDom requirementDom = new RequirementDom(
                     requirement.getIdRequirement(),
                     requirement.getName(),
                     requirement.getIdentifier(),
-                    requirement.getAuthor(),
-                    requirement.getAssignedTo(),
+                    author,
+                    assignedTo,
                     requirement.getRequirementType().getIdType(),
                     requirement.getObject().getProject().getIdProject()
             );
@@ -52,14 +54,16 @@ public class RequirementConverter {
      * @return {@link Requirement}
      */
     public RequirementDom toDomain(Requirement requirement) {
-        if(requirement.getAssignedTo() == null){
-            requirement.setAssignedTo(0);
-        }
+        UserDom author = userConverter.toDomain(requirement.getAuthor());
+        UserDom assignedTo = userConverter.toDomain(requirement.getAssignedTo());
         if(requirement.getEstimatedHours() == null){
             requirement.setEstimatedHours(0.00);
         }
         if (requirement.getStoryPoints()==null){
             requirement.setStoryPoints(0);
+        }
+        if(requirement.getCost()==null){
+            requirement.setCost(0.0);
         }
         RequirementDom requirementDom = new RequirementDom(
                 requirement.getIdRequirement(),
@@ -79,8 +83,8 @@ public class RequirementConverter {
                 requirement.getLastUpdated(),
                 requirement.getVersion(),
                 requirement.getValidationMethod(),
-                requirement.getAuthor(),
-                requirement.getAssignedTo(),
+                author,
+                assignedTo,
                 requirement.getJustification(),
                 requirement.getTestCases(),
                 requirement.getRequirementType().getIdType(),
@@ -95,6 +99,9 @@ public class RequirementConverter {
      * @return {@link Requirement}
      */
     public Requirement toModel(RequirementDom requirementDom) {
+        if(requirementDom.getCost()==null){
+            requirementDom.setCost(0.0);
+        }
         Requirement requirement = new Requirement();
         requirement.setName(requirementDom.getName());
         requirement.setIdentifier(requirementDom.getIdentifier());
@@ -112,8 +119,6 @@ public class RequirementConverter {
         requirement.setLastUpdated(requirementDom.getLastUpdated());
         requirement.setVersion(requirementDom.getVersion());
         requirement.setValidationMethod(requirementDom.getValidationMethod());
-        requirement.setAuthor(requirementDom.getAuthor());
-        requirement.setAssignedTo(requirementDom.getAssignedTo());
         requirement.setJustification(requirementDom.getJustification());
         requirement.setTestCases(requirementDom.getTestCases());
         return requirement;

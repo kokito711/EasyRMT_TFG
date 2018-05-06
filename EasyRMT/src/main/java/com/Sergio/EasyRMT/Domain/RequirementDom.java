@@ -16,104 +16,62 @@ import java.util.Date;
 
 @ToString
 @EqualsAndHashCode
+@Getter
+@Setter
 public class RequirementDom implements Serializable {
 
-    @Getter
-    @Setter
     private int idRequirement;
 
-    @Getter
-    @Setter
     private String name;
 
-    @Setter
-    @Getter
     private String identifier;
 
-    @Getter
-    @Setter
     private String description;
 
-    @Getter
-    @Setter
     private Priority priority;
 
-    @Getter
-    @Setter
     private Complexity complexity;
 
-    @Getter
-    @Setter
     private State state;
 
-    @Getter
-    @Setter
     private Double cost;
 
-    @Getter
-    @Setter
     private Double estimatedHours;
 
-    @Getter
-    @Setter
     private Integer storyPoints;
 
-    @Setter
-    @Getter
     private String source;
 
-    @Getter
-    @Setter
     private Scope scope;
 
-    @Getter
-    @Setter
     private Risk risk;
 
-    @Getter
-    @Setter
     private Date created;
 
-    @Getter
-    @Setter
     private Date lastUpdated;
 
-    @Setter
-    @Getter
     private String version;
 
-    @Getter
-    @Setter
     private String validationMethod;
 
-    @Getter
-    @Setter
-    private Integer author;
+    private UserDom author;
 
-    @Getter
-    @Setter
-    private Integer assignedTo;
+    private UserDom assignedTo;
 
-    @Getter
-    @Setter
     private String justification;
 
-    @Getter
-    @Setter
     private String testCases;
 
-    @Getter
-    @Setter
     private Integer requirementTypeId;
-
-    @Getter
-    @Setter
     private Integer projectId;
+    private int authorId;
+    private int assignedId;
+
 
     public RequirementDom() {
     }
 
-    public RequirementDom(int idRequirement, String name, String identifier, Integer author, Integer assignedTo,
+    public RequirementDom(int idRequirement, String name, String identifier, UserDom author, UserDom assignedTo,
                           Integer requirementType, Integer projectId) {
         this.idRequirement = idRequirement;
         this.name = name;
@@ -127,7 +85,7 @@ public class RequirementDom implements Serializable {
     public RequirementDom(int idRequirement, String name, String identifier, String description, Priority priority,
                           Complexity complexity, State state, Double cost, Double estimatedHours, Integer storyPoints,
                           String source, Scope scope, Risk risk, Date created, Date lastUpdated, String version,
-                          String validationMethod, Integer author, Integer assignedTo, String justification,
+                          String validationMethod, UserDom author, UserDom assignedTo, String justification,
                           String testCases, Integer requirementTypeId, Integer projectId) {
         this.idRequirement = idRequirement;
         this.name = name;

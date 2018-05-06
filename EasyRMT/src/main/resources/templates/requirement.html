@@ -44,7 +44,7 @@
             <a href="#">
                 <span class="fa fa-print pull-right fa-2x"></span>
             </a>
-            <a th:href="'/project/'+${project.getIdProject()}+'/requirement/update/'+${requirement.getIdRequirement()}">
+            <a th:href="'/project/'+${project.getIdProject()}+'/requirement/update/'+${requirement.getIdRequirement()}" class="tooltip-demo">
             <span class="fa fa-edit pull-right fa-2x"
                   data-toggle="tooltip" data-placement="top" th:title="#{requirement.modifyButton}"></span>
             </a>
@@ -116,7 +116,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${requirement.getAuthor()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${requirement.getAuthor().getEmail()}"
+                                       th:text="${requirement.getAuthor().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>
@@ -125,7 +129,11 @@
                                 <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
                             </div>
                             <div class="col-lg-3">
-                                <p th:text="${requirement.getAssignedTo()}"></p>
+                                <p>
+                                    <a th:href="'mailto:'+${requirement.getAssignedTo().getEmail()}"
+                                       th:text="${requirement.getAssignedTo().getUsername()}">
+                                    </a>
+                                </p>
                             </div>
                             <br/>
                         </div>
@@ -249,6 +257,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>

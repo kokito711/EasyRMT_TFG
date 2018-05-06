@@ -108,7 +108,7 @@
                                 <a href="#">
                                 <span class="fa fa-print pull-right fa-2x"></span>
                                 </a>
-                                <a th:href="'/project/'+${project.getIdProject()}+'/requirements/create'">
+                                <a th:href="'/project/'+${project.getIdProject()}+'/requirements/create'" class="tooltip-demo">
                                 <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                                       data-toggle="tooltip" data-placement="top" th:title="#{reqsDashboard.createButton}"></span>
                                 </a>
@@ -128,20 +128,30 @@
                                 <td th:text="${requirement.getIdentifier()}"></td>
                                 <td th:text="${requirement.getName()}"></td>
                                 <td th:each="reqType : ${reqTypes}"
-                                    th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}" th:text="${reqType.getName()}">
+                                    th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}"
+                                    th:text="${reqType.getName()}">
                                     <p></p>
                                 </td>
-                                <td th:text="${requirement.getAuthor()}"></td>
-                                <td th:text="${requirement.getAssignedTo()}"></td>
                                 <td>
-                                    <a th:href="'/project/'+${requirement.getProjectId()}+'/requirement/'+${requirement.getIdRequirement()}">
+                                    <a th:href="'mailto:'+${requirement.getAuthor().getEmail()}"
+                                       th:text="${requirement.getAuthor().getUsername()}">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a th:href="'mailto:'+${requirement.getAssignedTo().getEmail()}"
+                                       th:text="${requirement.getAssignedTo().getUsername()}">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a th:href="'/project/'+${requirement.getProjectId()}+'/requirement/'+
+                                    ${requirement.getIdRequirement()}" class="tooltip-demo">
                                         <span class="fa fa-info-circle fa-2x" style="color: #204d74"
                                                       data-toggle="tooltip" data-placement="top"
                                                       th:title="#{reqsDashboard.Table.Tbody.reqInformation}">
                                         </span>
                                     </a>
                                     <a href="" data-toggle="modal" data-target="#deleteRequirementModal"
-                                        th:onclick="'modalValue('+${requirement.getIdRequirement()}+')'">
+                                        th:onclick="'modalValue('+${requirement.getIdRequirement()}+')'" class="tooltip-demo">
                                         <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                               data-toggle="tooltip" data-placement="top"
                                               th:title="#{epicsDashboard.Table.Tbody.deleteEpic}">
@@ -153,7 +163,7 @@
                     </table>
                     <div class="alert alert-info" th:if="${#lists.isEmpty(requirementList)}">
                         <p th:text="#{epicsDashboard.Table.Tbody.emptyList}"></p>
-                        <a th:href="'/project/'+${project.getIdProject()}+'/requirements/create'">
+                        <a th:href="'/project/'+${project.getIdProject()}+'/requirements/create'" class="tooltip-demo">
                                 <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
                                       data-toggle="tooltip" data-placement="top" th:title="#{epicsDashboard.createButton}"></span>
                         </a>
@@ -167,6 +177,12 @@
     $(document).ready(
         startTable()
     );
+    $("[data-toggle=popover]")
+        .popover()
+    $('.tooltip-demo').tooltip({
+        selector: "[data-toggle=tooltip]",
+        container: "body"
+    })
 </script>
 </body>
 </html>
