@@ -40,6 +40,13 @@ public class ProjectService {
      * @return List of {@link ProjectDom} with existing projects
      */
     @Transactional(readOnly = true)
+    public List<ProjectDom> getProjects(int groupId){
+        List<Project> projectModelList = projectRepository.findByGroup(groupId);
+        List<ProjectDom> projectDomList = projectConverter.toDomain(projectModelList);
+        return projectDomList;
+    }
+    //TODO DELETE THIS METHOD WHEN FINISHED TO UPDATE
+    @Transactional(readOnly = true)
     public List<ProjectDom> getProjects(){
         List<Project> projectModelList = projectRepository.findAll();
         List<ProjectDom> projectDomList = projectConverter.toDomain(projectModelList);

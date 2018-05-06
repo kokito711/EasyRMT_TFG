@@ -29,11 +29,14 @@ public class MainControllerTest {
     ProjectService projectService;
     @Mock
     UserService userService;
+    @Mock
+    Principal principal;
 
     @BeforeEach
     public void initMocks(){
         projectService = mock(ProjectService.class);
         userService = mock(UserService.class);
+        principal = mock(Principal.class);
     }
 
     @Test

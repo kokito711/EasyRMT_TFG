@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS easyrmt.project (
   `name` VARCHAR(64) NOT NULL DEFAULT 'Project',
   `description` LONGTEXT NULL,
   `projecttype` ENUM('AGILE', 'NOT_AGILE') NOT NULL DEFAULT 'NOT_AGILE',
+  `group_groupId` INT NULL,
   PRIMARY KEY (`idproject`),
   UNIQUE INDEX `idProject_UNIQUE` (`idproject` ASC))
 ENGINE = InnoDB;

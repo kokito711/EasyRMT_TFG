@@ -43,14 +43,19 @@ public class ProjectDom implements Serializable {
 
     @Getter
     @Setter
+    private GroupDom group;
+
+    @Getter
+    @Setter
     private  List<String> stringReqTypes;
 
-    public ProjectDom(int idProject, String name, String description, ProjectType type, List<RequirementTypeDom> requirementTypes) {
+    public ProjectDom(int idProject, String name, String description, ProjectType type, List<RequirementTypeDom> requirementTypes, GroupDom group) {
         this.idProject = idProject;
         this.name = name;
         this.description = description;
         this.type = type;
         this.requirementTypes = requirementTypes;
+        this.group = group;
     }
 
     public ProjectDom(int idProject, String name) {

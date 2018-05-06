@@ -31,3 +31,12 @@ CREATE TABLE IF NOT EXISTS easyrmt.group_user (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+ALTER TABLE easyrmt.project
+ADD INDEX group_Owner_idx (group_groupId ASC);
+ALTER TABLE easyrmt.project
+ADD CONSTRAINT group_Owner
+  FOREIGN KEY (group_groupId)
+  REFERENCES easyrmt.app_group (group_id)
+  ON DELETE SET NULL
+  ON UPDATE SET NULL;

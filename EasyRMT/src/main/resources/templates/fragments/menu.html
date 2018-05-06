@@ -5,7 +5,7 @@
   -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0" th:fragment="menu_project(project,projectList,user)">
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0" th:fragment="menu_project(project,projectList,user, isPm)">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -78,41 +78,7 @@
                         </ul>
                     </li>
                     <!-- Management Dashboard -->
-                    <li>
-                        <a href="#"><i class="fa fa-gears  fa-fw"></i><p th:text="#{mainMenu.management.label}"></p>
-                            <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#"><p th:text="#{mainMenu.management.project}"></p><span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="/createProject" th:text="#{mainMenu.management.CreateProject}"></a>
-                                    </li>
-                                    <li id="update-project" class="" th:unless="${project}==null">
-                                        <a th:href="'/updateProject/'+${project.getIdProject()}"
-                                           th:text="#{mainMenu.management.updateProject}"></a>
-                                    </li>
-                                    <li id="delete-project" class="" th:unless="${project}==null">
-                                        <a href="#" th:text="#{mainMenu.management.deleteProject}" data-toggle="modal"
-                                           data-target="#deleteProjectModal"></a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                            <li>
-                                <a href="#">Team <span class="fa arrow"></span></a>
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="#">View</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Stakeholder</a>
-                                    </li>
-                                </ul>
-                                <!-- /.nav-third-level -->
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
+                    <li th:replace="fragments/pmMenu :: pmMenu(project = ${project})">
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->

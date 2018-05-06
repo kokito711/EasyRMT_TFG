@@ -24,43 +24,39 @@ import java.util.List;
 @Table(name = "project")
 @ToString
 @EqualsAndHashCode
+@Getter
+@Setter
 public class Project implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idproject")
-    @Getter
-    @Setter
     private int idProject;
 
     @NotNull
     @Length(min=1, max = 64)
-    @Setter
-    @Getter
     @Column(name = "name")
     private String name;
 
-    @Getter
-    @Setter
     @Lob
     @Column(name = "description")
     private String description;
 
-    @Getter
-    @Setter
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "projecttype")
     private ProjectType type;
 
-    @Getter
-    @Setter
     @JsonManagedReference
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "project_has_requirement_type",
         joinColumns = @JoinColumn(name = "project_idproject", referencedColumnName = "idproject", foreignKey = @ForeignKey(name = "idproject")),
         inverseJoinColumns = @JoinColumn(name = "object_types_idtype", referencedColumnName = "idtype", foreignKey = @ForeignKey(name = "idtype")))
     private List<RequirementType> requirementTypes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "group_groupId", referencedColumnName = "group_id")
+    private Group group;
 
 }
