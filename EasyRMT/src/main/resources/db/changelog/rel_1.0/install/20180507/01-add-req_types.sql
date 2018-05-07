@@ -1,0 +1,17 @@
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Bussiness requirement', 'SCOPE');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Metric', 'SCOPE');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Risk', 'SCOPE');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Assumption', 'SCOPE');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Dependency', 'SCOPE');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Limitation', 'SCOPE');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Development consideration', 'SCOPE');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('User requirement', 'ENGINEERING');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Non Functional requirement', 'ENGINEERING');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Bussiness rule', 'ENGINEERING');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Functional  requirement', 'ENGINEERING');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Restriction', 'ENGINEERING');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Information requirement', 'ENGINEERING');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('External interface requirement', 'ENGINEERING');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Quality attribute', 'QA');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Solution proposal','USER_EXP');
+INSERT IGNORE INTO requirement_type (requirement_name,requirement_type) VALUES ('Design requirement','USER_EXP');
