@@ -5,6 +5,7 @@
 
 package com.Sergio.EasyRMT.Domain;
 
+import com.Sergio.EasyRMT.Model.types.Requirement_Type;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,19 +13,22 @@ import lombok.Setter;
 import java.io.Serializable;
 
 @EqualsAndHashCode
+@Getter
+@Setter
 public class RequirementTypeDom implements Serializable{
 
-    @Getter
-    @Setter
+
     private int idType;
 
-    @Setter
-    @Getter
     private String name;
 
-    public RequirementTypeDom(int idType, String name) {
+    private Requirement_Type type;
+
+
+    public RequirementTypeDom(int idType, String name, Requirement_Type type) {
         this.idType = idType;
         this.name = name;
+        this.type = type;
     }
 
     public RequirementTypeDom(int idType) {

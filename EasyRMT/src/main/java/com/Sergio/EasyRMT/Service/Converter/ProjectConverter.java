@@ -57,7 +57,8 @@ public class ProjectConverter {
         for (RequirementType reqType : project.getRequirementTypes()){
             RequirementTypeDom reqTypeDom = new RequirementTypeDom(
                     reqType.getIdType(),
-                    reqType.getName()
+                    reqType.getName(),
+                    reqType.getType()
             );
             reqTypeDomList.add(reqTypeDom);
         }

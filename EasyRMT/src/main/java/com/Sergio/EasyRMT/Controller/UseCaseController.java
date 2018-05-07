@@ -35,16 +35,19 @@ public class UseCaseController {
     DocumentService documentService;
     CommonMethods commonMethods;
     UserService userService;
+    TraceabilityService traceabilityService;
 
     @Autowired
     public UseCaseController(ProjectService projectService, FeatureService featureService, UseCaseService useCaseService,
-                             DocumentService documentService, CommonMethods commonMethods, UserService userService) {
+                             DocumentService documentService, CommonMethods commonMethods, UserService userService,
+                             TraceabilityService traceabilityService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.useCaseService = useCaseService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
+        this.traceabilityService = traceabilityService;
     }
 
     /**
@@ -130,6 +133,7 @@ public class UseCaseController {
             FeatureDom featureDom = featureService.getFeature(featureId);
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
+            TraceDom traceability = traceabilityService.getTraceability(useCaseId);
             modelAndView.setViewName("useCase");
             modelAndView.addObject("useCase", useCaseService.getUseCase(useCaseId));
             modelAndView.addObject("project", project);
@@ -140,6 +144,10 @@ public class UseCaseController {
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("traceability", traceability);
+            modelAndView.addObject("traceObject", new TraceDom());
+            modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,useCaseId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a use case from project "+projectId);

@@ -7,13 +7,11 @@ package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.types.*;
-import com.Sergio.EasyRMT.Service.DocumentService;
-import com.Sergio.EasyRMT.Service.EpicService;
-import com.Sergio.EasyRMT.Service.ProjectService;
-import com.Sergio.EasyRMT.Service.UserService;
+import com.Sergio.EasyRMT.Service.*;
 import javassist.bytecode.stackmap.TypeData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,15 +37,17 @@ public class EpicController {
     DocumentService documentService;
     CommonMethods commonMethods;
     UserService userService;
+    TraceabilityService traceabilityService;
 
     @Autowired
-    public EpicController(ProjectService projectService, EpicService epicService, DocumentService documentService,
-                          CommonMethods commonMethods, UserService userService) {
+     public EpicController(ProjectService projectService, EpicService epicService, DocumentService documentService,
+                          CommonMethods commonMethods, UserService userService, TraceabilityService traceabilityService) {
         this.projectService = projectService;
         this.epicService = epicService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
+        this.traceabilityService = traceabilityService;
     }
 
     /**
@@ -97,6 +97,7 @@ public class EpicController {
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user,principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
+            TraceDom traceability = traceabilityService.getTraceability(epicId);
             modelAndView.setViewName("epic");
             modelAndView.addObject("epic", epicService.getEpic(epicId));
             modelAndView.addObject("project", project);
@@ -105,6 +106,10 @@ public class EpicController {
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("traceability", traceability);
+            modelAndView.addObject("traceObject", new TraceDom());
+            modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,epicId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain an epic from project "+projectId);

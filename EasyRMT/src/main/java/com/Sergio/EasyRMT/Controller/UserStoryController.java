@@ -5,10 +5,7 @@
 
 package com.Sergio.EasyRMT.Controller;
 
-import com.Sergio.EasyRMT.Domain.EpicDom;
-import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Domain.UserDom;
-import com.Sergio.EasyRMT.Domain.UserStoryDom;
+import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.types.*;
 import com.Sergio.EasyRMT.Service.*;
@@ -38,16 +35,19 @@ public class UserStoryController {
     DocumentService documentService;
     CommonMethods commonMethods;
     UserService userService;
+    TraceabilityService traceabilityService;
 
     @Autowired
     public UserStoryController(ProjectService projectService, EpicService epicService, UserStoryService userStoryService,
-                               DocumentService documentService, CommonMethods commonMethods, UserService userService) {
+                               DocumentService documentService, CommonMethods commonMethods, UserService userService,
+                               TraceabilityService traceabilityService) {
         this.projectService = projectService;
         this.epicService = epicService;
         this.userStoryService = userStoryService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
+        this.traceabilityService = traceabilityService;
     }
 
     /**
@@ -134,6 +134,7 @@ public class UserStoryController {
             EpicDom epicDom = epicService.getEpic(epicId);
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
+            TraceDom traceability = traceabilityService.getTraceability(userStoryId);
             modelAndView.setViewName("userStory");
             modelAndView.addObject("userStory", userStoryService.getUserStory(userStoryId));
             modelAndView.addObject("project", project);
@@ -144,6 +145,10 @@ public class UserStoryController {
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("traceability", traceability);
+            modelAndView.addObject("traceObject", new TraceDom());
+            modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,userStoryId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a user story from project "+projectId);

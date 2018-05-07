@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ReqTypeConverterTest {
-    @Test
+/*    @Test
     @DisplayName("Method toDomain receives a list of RequirementType and returns a list of ReqTypeDom")
     public void toDomain_reqTypeListProvided_ReqTypeDomListReturned(){
         RequirementType requirementType = new RequirementType();
@@ -37,5 +37,5 @@ public class ReqTypeConverterTest {
         assertTrue(list.toArray().length == 1);
         assertFalse(list.isEmpty());
         assertEquals(listReqTypeExpected,list);
-    }
+    }*/
 }

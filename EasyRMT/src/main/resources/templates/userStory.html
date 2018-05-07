@@ -61,6 +61,9 @@
                 </li>
                 <li><a href="#additionalInfo" data-toggle="tab" th:text="#{epic.tab.additionalInfo}"></a>
                 </li>
+                <li>
+                    <a href="#traceability" data-toggle="tab" th:text="#{requirement.tab.traceability}"></a>
+                </li>
                 <li><a href="#fileTab" data-toggle="tab" th:text="#{fileTab.page_header}"></a></li>
             </ul>
             <!-- Tab panes -->
@@ -241,6 +244,8 @@
                         <hr/>
                     </div>
                 </div>
+                <div th:replace="fragments/objectTraceability :: objectTraceability(traceability= ${traceability},
+                objectId=${useCase.getIdUseCase()}, requirementList=${reqsNotTraced}, traceDom=${traceObject}, reqTypes=${reqTypes})"></div>
                 <div class="tab-pane fade" id="fileTab"
                      th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
                      ${userStory.getIdUserStory()},fileList = ${fileList})">
@@ -251,7 +256,8 @@
 </div>
 <script>
     $(document).ready(
-        startTable()
+        //startTable()
+        $('table.display').DataTable()
     );
     $("[data-toggle=popover]")
         .popover()

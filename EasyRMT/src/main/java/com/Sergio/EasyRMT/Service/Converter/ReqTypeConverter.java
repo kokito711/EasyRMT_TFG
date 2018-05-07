@@ -14,7 +14,8 @@ public class ReqTypeConverter {
         for(RequirementType reqType : requirementTypeList){
             RequirementTypeDom reqTypeDom = new RequirementTypeDom(
                     reqType.getIdType(),
-                    reqType.getName()
+                    reqType.getName(),
+                    reqType.getType()
             );
             requirementTypeDomList.add(reqTypeDom);
         }

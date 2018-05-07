@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+  ~                             All rights reserved
+  -->
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div class="tab-pane fade" id="traceability" th:fragment="objectTraceability(traceability, objectId, requirementList, traceDom, reqTypes)">
+    <br/>
+    <div class="col-lg-12">
+        <!-- Deletion Modal -->
+        <div class="modal fade" id="deleteTraceModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteTraceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteTraceModalLabel" th:text="#{traceability.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{traceability.deleteModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{epicsDashboard.deleteModal.cancelButton}"></button>
+                        <button type="button" class="btn btn-danger"
+                                th:onclick="'deleteTrace('+${objectId}+',this.value)'"
+                                th:text="#{epicsDashboard.deleteModal.deleteButton}" id="delete_button"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion modal -->
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="deleteTraceModalModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="deleteTraceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteTraceModalLabelOk" th:text="#{traceability.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{traceability.deleteModal.Oktext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                                onclick="location.reload();"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="deleteRequirementModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteEpicModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteRequirementModalLabelFail" th:text="#{traceability.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{traceability.deleteModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
+
+        <!--&lt;!&ndash; Creation Modal &ndash;&gt;
+        <div class="modal fade" id="addToTrace" tabindex="-1" role="dialog"
+             aria-labelledby="addToTraceLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="addToTraceLabel" th:text="#{traceability.createModal.label}"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form autocomplete="off" action="#" th:action="@{'/traceability/add/'+${objectId}}"
+                              th:object="${traceDom}" method="post" class="form-horizontal" role="form">
+                            <div class="row">
+                                <h5 th:text="#{traceability.scope}"></h5>
+                                <hr/>
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <select class="form-control" id="firstRole" th:field="*{newTraces}">
+                                        <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
+                                                th:if="${requirement.getIdRequirement()==12 } or ${requirement.getIdRequirement()==13}
+                                                or ${requirement.getIdRequirement()==14} or ${requirement.getIdRequirement()==15}
+                                                or ${requirement.getIdRequirement()==16} or ${requirement.getIdRequirement()==17}
+                                                or ${requirement.getIdRequirement()==18}"
+                                                th:value="${requirement.getIdRequirement()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <h5 th:text="#{traceability.engineering}"></h5>
+                                <hr/>
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <select class="form-control" id="firstRole" th:field="*{newTraces}" multiple="multiple">
+                                        <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
+                                                th:if="${requirement.getIdRequirement()==19 } or ${requirement.getIdRequirement()==20}
+                                                or ${requirement.getIdRequirement()==21} or ${requirement.getIdRequirement()==22}
+                                                or ${requirement.getIdRequirement()==23} or ${requirement.getIdRequirement()==24}
+                                                or ${requirement.getIdRequirement()==25}"
+                                                th:value="${requirement.getIdRequirement()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <h5 th:text="#{traceability.ux}"></h5>
+                                <hr/>
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <select class="form-control" id="firstRole" th:field="*{newTraces}" multiple="multiple">
+                                        <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
+                                                th:if="${requirement.getIdRequirement()}==27 or ${requirement.getIdRequirement()}==28"
+                                                th:value="${requirement.getIdRequirement()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <h5 th:text="#{traceability.qa}"></h5>
+                                <hr/>
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <select class="form-control" id="firstRole" th:field="*{newTraces}" multiple="multiple">
+                                        <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
+                                                th:if="${requirement.getIdRequirement()}==26"
+                                                th:value="${requirement.getIdRequirement()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <button type="submit" class="btn btn-primary btn-block" th:text="#{traceability.addbutton}"></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                &lt;!&ndash; /.modal-content &ndash;&gt;
+            </div>
+            &lt;!&ndash; /.modal-dialog &ndash;&gt;
+        </div>
+-->
+
+        <div class="col-lg-1 col-lg-offset-11">
+            <a href="" data-toggle="modal" data-target="#addToTrace" class="tooltip-demo">
+                <span class="fa fa-plus-circle fa-2x" style="color: #5cb85c;"
+                data-toggle="tooltip" data-placement="top" th:title="#{traceability.addButton}"></span>
+            </a>
+        </div>
+        <div class="col-lg-12">
+            <div class="row">
+                <h3 th:text="#{traceability.scope}"></h3>
+                <hr/>
+                <div class="col-lg-10 col-lg-offset-1 table-responsive">
+                    <table width="100%" class="table table-striped table-bordered table-hover display" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th th:text="#{epicsDashboard.Table.Thead.identifier}"></th>
+                                <th th:text="#{epicsDashboard.Table.Thead.name}"></th>
+                                <th th:text="#{reqsDashboard.Table.Thead.reqType}"></th>
+                                <th th:text="#{epicsDashboard.Table.Thead.author}"></th>
+                                <th th:text="#{epicsDashboard.Table.Thead.assignedTo}"></th>
+                                <th th:text="#{epicsDashboard.Table.Thead.options}"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="requirement : ${traceability.getScope()}">
+                            <td th:text="${requirement.getIdentifier()}"></td>
+                            <td th:text="${requirement.getName()}"></td>
+                            <td th:each="reqType : ${reqTypes}"
+                                th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}"
+                                th:text="${reqType.getName()}">
+                                <p></p>
+                            </td>
+                            <td>
+                                <a th:href="'mailto:'+${requirement.getAuthor().getEmail()}"
+                                   th:text="${requirement.getAuthor().getUsername()}">
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="'mailto:'+${requirement.getAssignedTo().getEmail()}"
+                                   th:text="${requirement.getAssignedTo().getUsername()}">
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="'/project/'+${requirement.getProjectId()}+'/requirement/'+
+                                    ${requirement.getIdRequirement()}" class="tooltip-demo">
+                                        <span class="fa fa-info-circle fa-2x" style="color: #204d74"
+                                              data-toggle="tooltip" data-placement="top"
+                                              th:title="#{reqsDashboard.Table.Tbody.reqInformation}">
+                                        </span>
+                                </a>
+                                <a href="" data-toggle="modal" data-target="#deleteTraceModal"
+                                   th:onclick="'modalValue('+${requirement.getIdRequirement()}+')'" class="tooltip-demo">
+                                        <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
+                                              data-toggle="tooltip" data-placement="top"
+                                              th:title="#{traceability.deleteTrace}">
+                                        </span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <h3 th:text="#{traceability.engineering}"></h3>
+                <hr/>
+                <div class="col-lg-10 col-lg-offset-1 table-responsive">
+                    <table width="100%" class="table table-striped table-bordered table-hover display" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th th:text="#{epicsDashboard.Table.Thead.identifier}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.name}"></th>
+                            <th th:text="#{reqsDashboard.Table.Thead.reqType}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.author}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.assignedTo}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.options}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="requirement : ${traceability.getEngineering()}">
+                            <td th:text="${requirement.getIdentifier()}"></td>
+                            <td th:text="${requirement.getName()}"></td>
+                            <td th:each="reqType : ${reqTypes}"
+                                th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}"
+                                th:text="${reqType.getName()}">
+                                <p></p>
+                            </td>
+                            <td>
+                                <a th:href="'mailto:'+${requirement.getAuthor().getEmail()}"
+                                   th:text="${requirement.getAuthor().getUsername()}">
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="'mailto:'+${requirement.getAssignedTo().getEmail()}"
+                                   th:text="${requirement.getAssignedTo().getUsername()}">
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="'/project/'+${requirement.getProjectId()}+'/requirement/'+
+                                    ${requirement.getIdRequirement()}" class="tooltip-demo">
+                                        <span class="fa fa-info-circle fa-2x" style="color: #204d74"
+                                              data-toggle="tooltip" data-placement="top"
+                                              th:title="#{reqsDashboard.Table.Tbody.reqInformation}">
+                                        </span>
+                                </a>
+                                <a href="" data-toggle="modal" data-target="#deleteTraceModal"
+                                   th:onclick="'modalValue('+${requirement.getIdRequirement()}+')'" class="tooltip-demo">
+                                        <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
+                                              data-toggle="tooltip" data-placement="top"
+                                              th:title="#{traceability.deleteTrace}">
+                                        </span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <h3 th:text="#{traceability.qa}"></h3>
+                <hr/>
+                <div class="col-lg-10 col-lg-offset-1 table-responsive">
+                    <table width="100%" class="table table-striped table-bordered table-hover display" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th th:text="#{epicsDashboard.Table.Thead.identifier}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.name}"></th>
+                            <th th:text="#{reqsDashboard.Table.Thead.reqType}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.author}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.assignedTo}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.options}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="requirement : ${traceability.getQuality()}">
+                                <td th:text="${requirement.getIdentifier()}"></td>
+                                <td th:text="${requirement.getName()}"></td>
+                                <td th:each="reqType : ${reqTypes}"
+                                    th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}"
+                                    th:text="${reqType.getName()}">
+                                    <p></p>
+                                </td>
+                                <td>
+                                    <a th:href="'mailto:'+${requirement.getAuthor().getEmail()}"
+                                       th:text="${requirement.getAuthor().getUsername()}">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a th:href="'mailto:'+${requirement.getAssignedTo().getEmail()}"
+                                       th:text="${requirement.getAssignedTo().getUsername()}">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a th:href="'/project/'+${requirement.getProjectId()}+'/requirement/'+
+                                        ${requirement.getIdRequirement()}" class="tooltip-demo">
+                                            <span class="fa fa-info-circle fa-2x" style="color: #204d74"
+                                                  data-toggle="tooltip" data-placement="top"
+                                                  th:title="#{reqsDashboard.Table.Tbody.reqInformation}">
+                                            </span>
+                                    </a>
+                                    <a href="" data-toggle="modal" data-target="#deleteTraceModal"
+                                       th:onclick="'modalValue('+${requirement.getIdRequirement()}+')'" class="tooltip-demo">
+                                            <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
+                                                  data-toggle="tooltip" data-placement="top"
+                                                  th:title="#{traceability.deleteTrace}">
+                                            </span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <h3 th:text="#{traceability.ux}"></h3>
+                <hr/>
+                <div class="col-lg-10 col-lg-offset-1 table-responsive">
+                    <table width="100%" class="table table-striped table-bordered table-hover display" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th th:text="#{epicsDashboard.Table.Thead.identifier}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.name}"></th>
+                            <th th:text="#{reqsDashboard.Table.Thead.reqType}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.author}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.assignedTo}"></th>
+                            <th th:text="#{epicsDashboard.Table.Thead.options}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="requirement : ${traceability.getUserExp()}">
+                            <td th:text="${requirement.getIdentifier()}"></td>
+                            <td th:text="${requirement.getName()}"></td>
+                            <td th:each="reqType : ${reqTypes}"
+                                th:if="${reqType.getIdType() == requirement.getRequirementTypeId()}"
+                                th:text="${reqType.getName()}">
+                                <p></p>
+                            </td>
+                            <td>
+                                <a th:href="'mailto:'+${requirement.getAuthor().getEmail()}"
+                                   th:text="${requirement.getAuthor().getUsername()}">
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="'mailto:'+${requirement.getAssignedTo().getEmail()}"
+                                   th:text="${requirement.getAssignedTo().getUsername()}">
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="'/project/'+${requirement.getProjectId()}+'/requirement/'+
+                                        ${requirement.getIdRequirement()}" class="tooltip-demo">
+                                            <span class="fa fa-info-circle fa-2x" style="color: #204d74"
+                                                  data-toggle="tooltip" data-placement="top"
+                                                  th:title="#{reqsDashboard.Table.Tbody.reqInformation}">
+                                            </span>
+                                </a>
+                                <a href="" data-toggle="modal" data-target="#deleteTraceModal"
+                                   th:onclick="'modalValue('+${requirement.getIdRequirement()}+')'" class="tooltip-demo">
+                                            <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
+                                                  data-toggle="tooltip" data-placement="top"
+                                                  th:title="#{traceability.deleteTrace}">
+                                            </span>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

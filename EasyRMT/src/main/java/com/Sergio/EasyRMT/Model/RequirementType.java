@@ -5,6 +5,7 @@
 
 package com.Sergio.EasyRMT.Model;
 
+import com.Sergio.EasyRMT.Model.types.Requirement_Type;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,6 +21,8 @@ import java.util.List;
 @Entity
 @Table(name = "requirement_type")
 @EqualsAndHashCode
+@Getter
+@Setter
 public class RequirementType implements Serializable{
     private static final long serialVersionUID = 1L;
 
@@ -27,19 +30,18 @@ public class RequirementType implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idtype")
     @Basic(optional = false)
-    @Getter
-    @Setter
     private int idType;
 
     @NotNull
     @Length(min=1, max = 64)
-    @Setter
-    @Getter
-    @Column(name = "type")
+    @Column(name = "requirement_name")
     private String name;
 
-    @Getter
-    @Setter
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "requirement_type")
+    private Requirement_Type type;
+
     @JsonBackReference
     @ManyToMany(mappedBy = "requirementTypes", fetch = FetchType.LAZY)
     private List<Project> projects = new ArrayList<>();

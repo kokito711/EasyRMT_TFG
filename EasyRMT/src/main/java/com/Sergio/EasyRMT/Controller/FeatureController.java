@@ -7,13 +7,12 @@ package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.FeatureDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.types.*;
-import com.Sergio.EasyRMT.Service.DocumentService;
-import com.Sergio.EasyRMT.Service.FeatureService;
-import com.Sergio.EasyRMT.Service.ProjectService;
-import com.Sergio.EasyRMT.Service.UserService;
+import com.Sergio.EasyRMT.Service.*;
 import javassist.bytecode.stackmap.TypeData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,15 +38,17 @@ public class FeatureController {
     DocumentService documentService;
     CommonMethods commonMethods;
     UserService userService;
+    TraceabilityService traceabilityService;
 
     @Autowired
     public FeatureController(ProjectService projectService, FeatureService featureService, DocumentService documentService,
-                             CommonMethods commonMethods, UserService userService) {
+                             CommonMethods commonMethods, UserService userService, TraceabilityService traceabilityService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
+        this.traceabilityService = traceabilityService;
     }
 
     /**
@@ -97,14 +98,19 @@ public class FeatureController {
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
+            TraceDom traceability = traceabilityService.getTraceability(featureId);
             modelAndView.setViewName("feature");
-            modelAndView.addObject("feature", featureService.getFeature(featureId));
+            modelAndView.addObject("feature",featureService.getFeature(featureId));
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("fileList", documentService.getFileList(projectId,featureId));
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("traceability", traceability);
+            modelAndView.addObject("traceObject", new TraceDom());
+            modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,featureId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a feature from project "+projectId);

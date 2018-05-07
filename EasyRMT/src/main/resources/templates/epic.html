@@ -112,7 +112,7 @@
             <a href="#">
                 <span class="fa fa-print pull-right fa-2x"></span>
             </a>
-            <a th:href="'/project/'+${project.getIdProject()}+'/epic/update/'+${epic.getIdEpic()}">
+            <a th:href="'/project/'+${project.getIdProject()}+'/epic/update/'+${epic.getIdEpic()}" class="tooltip-demo">
             <span class="fa fa-edit pull-right fa-2x"
                   data-toggle="tooltip" data-placement="top" th:title="#{epic.modifyButton}"></span>
             </a>
@@ -124,6 +124,9 @@
                 <li><a href="#userStories" data-toggle="tab" th:text="#{epic.tab.userStories}"></a>
                 </li>
                 <li><a href="#additionalInfo" data-toggle="tab" th:text="#{epic.tab.additionalInfo}"></a>
+                </li>
+                <li>
+                    <a href="#traceability" data-toggle="tab" th:text="#{requirement.tab.traceability}"></a>
                 </li>
                 <li><a href="#fileTab" data-toggle="tab" th:text="#{fileTab.page_header}"></a></li>
             </ul>
@@ -229,7 +232,7 @@
                 <div class="tab-pane fade" id="userStories">
                     <br/>
                     <div class="table-responsive">
-                        <table width="100%" class="table table-striped table-bordered table-hover"
+                        <table width="100%" class="table table-striped table-bordered table-hover display"
                                th:unless="${#lists.isEmpty(epic.userStoryDoms)}" id="dataTable">
                             <thead>
                             <tr>
@@ -389,6 +392,8 @@
                         <hr/>
                     </div>
                 </div>
+                <div th:replace="fragments/objectTraceability :: objectTraceability(traceability= ${traceability},
+                objectId=${epic.getIdEpic()}, requirementList=${reqsNotTraced}, traceDom=${traceObject}, reqTypes=${reqTypes})"></div>
                 <div class="tab-pane fade" id="fileTab"
                      th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
                      ${epic.getIdEpic()},fileList = ${fileList})">
@@ -400,6 +405,7 @@
 <script>
     $(document).ready(
         startTable()
+    $('table.display').DataTable()
     );
 </script>
 </body>
