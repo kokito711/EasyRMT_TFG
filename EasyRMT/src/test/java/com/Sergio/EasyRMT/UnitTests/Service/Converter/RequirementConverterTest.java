@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RequirementConverterTest {
-    private Date date;
+  /*  private Date date;
     @BeforeEach
     public void initDate(){
         date = new Date();
@@ -206,6 +206,6 @@ public class RequirementConverterTest {
         requirement.setRequirementTypeId(1);
         requirement.setProjectId(1);
         return requirement;
-    }
+    }*/
 
 }
