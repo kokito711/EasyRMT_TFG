@@ -149,6 +149,8 @@ public class UserStoryController {
             modelAndView.addObject("traceObject", new TraceDom());
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,userStoryId));
+            modelAndView.addObject("epicList", traceabilityService.getNotTracedEpics(projectId, userStoryId));
+            modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,userStoryId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a user story from project "+projectId);

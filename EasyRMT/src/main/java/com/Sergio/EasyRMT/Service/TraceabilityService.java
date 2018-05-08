@@ -6,6 +6,7 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.*;
+import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
@@ -45,6 +46,7 @@ public class TraceabilityService {
     public TraceDom getTraceability(int idOjbect) {
         ObjectEntity objectEntity = objectRepository.findOne(idOjbect);
         TraceDom traceability = new TraceDom();
+        traceability.init();
         List<RequirementDom> requirements = new ArrayList<>();
         addObjectToTrace(objectEntity, traceability, requirements);
         return traceability;
@@ -59,6 +61,70 @@ public class TraceabilityService {
             ObjectEntity objectRequirement = objectRepository.findOne(requirement.getIdRequirement());
             if (!objectEntity.getTraced().contains(objectRequirement)){
                 notTraced.add(requirement);
+            }
+        }
+        return notTraced;
+    }
+
+    @Transactional
+    public List<FeatureDom> getNotTracedFeatures(int projectId, int object){
+        List<FeatureDom> notTraced = new ArrayList<>();
+        List<FeatureDom> featureDoms = featureService.getFeatures(projectId);
+        for (FeatureDom featureDom : featureDoms){
+            if(featureDom.getIdFeature()!= object) {
+                ObjectEntity objectEntity = objectRepository.findOne(object);
+                ObjectEntity objectRequirement = objectRepository.findOne(featureDom.getIdFeature());
+                if (!objectEntity.getTraced().contains(objectRequirement)) {
+                    notTraced.add(featureDom);
+                }
+            }
+        }
+        return notTraced;
+    }
+
+    @Transactional
+    public List<EpicDom> getNotTracedEpics(int projectId, int object){
+        List<EpicDom> notTraced = new ArrayList<>();
+        List<EpicDom> epicDomList = epicService.getEpics(projectId);
+        for (EpicDom epicDom : epicDomList){
+            if(epicDom.getIdEpic()!= object) {
+                ObjectEntity objectEntity = objectRepository.findOne(object);
+                ObjectEntity objectRequirement = objectRepository.findOne(epicDom.getIdEpic());
+                if (!objectEntity.getTraced().contains(objectRequirement)) {
+                    notTraced.add(epicDom);
+                }
+            }
+        }
+        return notTraced;
+    }
+
+    @Transactional
+    public List<UseCaseDom> getNotTracedUseCases(int projectId, int object){
+        List<UseCaseDom> notTraced = new ArrayList<>();
+        List<UseCaseDom> useCaseDoms = useCaseService.getByProjectID(projectId);
+        for (UseCaseDom useCaseDom : useCaseDoms){
+            if(useCaseDom.getIdUseCase()!= object) {
+                ObjectEntity objectEntity = objectRepository.findOne(object);
+                ObjectEntity objectRequirement = objectRepository.findOne(useCaseDom.getIdUseCase());
+                if (!objectEntity.getTraced().contains(objectRequirement)) {
+                    notTraced.add(useCaseDom);
+                }
+            }
+        }
+        return notTraced;
+    }
+
+    @Transactional
+    public List<UserStoryDom> getNotTracedUserStories(int projectId, int object){
+        List<UserStoryDom> notTraced = new ArrayList<>();
+        List<UserStoryDom> userStoryDoms = userStoryService.getByProjectID(projectId);
+        for (UserStoryDom userStoryDom : userStoryDoms){
+            if(userStoryDom.getIdUserStory()!= object) {
+                ObjectEntity objectEntity = objectRepository.findOne(object);
+                ObjectEntity objectRequirement = objectRepository.findOne(userStoryDom.getIdUserStory());
+                if (!objectEntity.getTraced().contains(objectRequirement)) {
+                    notTraced.add(userStoryDom);
+                }
             }
         }
         return notTraced;

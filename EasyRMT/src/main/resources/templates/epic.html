@@ -394,7 +394,8 @@
                 </div>
                 <div th:replace="fragments/objectTraceability :: objectTraceability(traceability= ${traceability},
                 objectId=${epic.getIdEpic()}, requirementList=${reqsNotTraced}, traceDom=${traceObject}, reqTypes=${reqTypes},
-                projectId = ${project.getIdProject()})"></div>
+                projectId = ${project.getIdProject()}, featureList= null, epicList = ${epicList}, useCaseList= null,
+                userStoryList= ${userStoryList})"></div>
                 <div class="tab-pane fade" id="fileTab"
                      th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
                      ${epic.getIdEpic()},fileList = ${fileList})">

@@ -25,11 +25,14 @@ public class TraceDom {
     List<UseCaseDom> useCases;
     List<UserStoryDom> userStories;
 
-    List<Integer> newTraces;
+    List<String> newTraces;
     int object;
 
-
     public TraceDom() {
+
+    }
+
+    public void init(){
         scope = new ArrayList<>();
         engineering = new ArrayList<>();
         quality = new ArrayList<>();
@@ -41,10 +44,5 @@ public class TraceDom {
         newTraces = new ArrayList<>();
     }
 
-    public TraceDom(List<RequirementDom> scope, List<RequirementDom> engineering, List<RequirementDom> quality, List<RequirementDom> userExp) {
-        this.scope = scope;
-        this.engineering = engineering;
-        this.quality = quality;
-        this.userExp = userExp;
-    }
+
 }

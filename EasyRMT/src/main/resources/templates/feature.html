@@ -390,7 +390,7 @@
                 </div>
                 <div th:replace="fragments/objectTraceability :: objectTraceability(traceability= ${traceability},
                 objectId=${feature.getIdFeature()}, requirementList=${reqsNotTraced}, traceDom=${traceObject}, reqTypes=${reqTypes},
-                projectId = ${project.getIdProject()})"></div>
+                projectId = ${project.getIdProject()}, featureList= ${featureList}, epicList = null, useCaseList= ${useCaseList}, userStoryList= null)"></div>
                 <div class="tab-pane fade" id="fileTab"
                      th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
                      ${feature.getIdFeature()},fileList = ${fileList})">

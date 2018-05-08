@@ -148,6 +148,8 @@ public class UseCaseController {
             modelAndView.addObject("traceObject", new TraceDom());
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,useCaseId));
+            modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, useCaseId));
+            modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,useCaseId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a use case from project "+projectId);

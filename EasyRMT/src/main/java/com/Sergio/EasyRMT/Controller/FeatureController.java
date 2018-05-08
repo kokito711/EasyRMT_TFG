@@ -99,6 +99,7 @@ public class FeatureController {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(featureId);
+            TraceDom extension = new TraceDom();
             modelAndView.setViewName("feature");
             modelAndView.addObject("feature",featureService.getFeature(featureId));
             modelAndView.addObject("project", project);
@@ -108,9 +109,11 @@ public class FeatureController {
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             modelAndView.addObject("traceability", traceability);
-            modelAndView.addObject("traceObject", new TraceDom());
+            modelAndView.addObject("traceObject",extension );
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,featureId));
+            modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, featureId));
+            modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,featureId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a feature from project "+projectId);

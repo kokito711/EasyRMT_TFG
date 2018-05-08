@@ -110,6 +110,8 @@ public class EpicController {
             modelAndView.addObject("traceObject", new TraceDom());
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,epicId));
+            modelAndView.addObject("epicList", traceabilityService.getNotTracedEpics(projectId, epicId));
+            modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,epicId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain an epic from project "+projectId);

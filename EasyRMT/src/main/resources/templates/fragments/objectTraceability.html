@@ -6,7 +6,8 @@
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div class="tab-pane fade" id="traceability" th:fragment="objectTraceability(traceability, objectId, requirementList, traceDom, reqTypes, projectId)">
+<div class="tab-pane fade" id="traceability" th:fragment="objectTraceability(traceability, objectId, requirementList, traceDom, reqTypes, projectId,
+featureList, epicList, useCaseList, userStoryList)">
     <br/>
     <div class="col-lg-12">
         <!-- Deletion Modal -->
@@ -79,7 +80,7 @@
         </div>
         <!-- /. deletion fail modal -->
 
-        <!--&lt;!&ndash; Creation Modal &ndash;&gt;
+        <!-- Creation Modal -->
         <div class="modal fade" id="addToTrace" tabindex="-1" role="dialog"
              aria-labelledby="addToTraceLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -91,11 +92,46 @@
                     <div class="modal-body">
                         <form autocomplete="off" action="#" th:action="@{'/traceability/add/'+${objectId}}"
                               th:object="${traceDom}" method="post" class="form-horizontal" role="form">
-                            <div class="row">
-                                <h5 th:text="#{traceability.scope}"></h5>
-                                <hr/>
-                                <div class="col-sm-8 col-sm-offset-2">
-                                    <select class="form-control" id="firstRole" th:field="*{newTraces}">
+                            <div class="row col-md-12">
+                                <h4 class=" col-sm-5 col-sm-offset-1" th:text="#{project.notAgile}" th:if="${featureList!=null}"></h4>
+                                <h4 class="col-sm-5 col-sm-offset-1" th:text="#{project.useCase}" th:if="${useCaseList!=null}"></h4>
+                                <h4 class=" col-sm-5 col-sm-offset-1" th:text="#{project.agile}" th:if="${epicList!=null}"></h4>
+                                <h4 class="col-sm-5 col-sm-offset-1" th:text="#{project.userStory}" th:if="${userStoryList!=null}"></h4>
+                            </div>
+                            <div class="row col-md-12">
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${featureList!=null}">
+                                        <option th:each="feature : ${featureList}" th:text="${feature.getName()}"
+                                                th:value="${feature.getIdFeature()}">
+                                        </option>
+                                    </select>
+                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${epicList!=null}">
+                                        <option th:each="epic : ${epicList}" th:text="${feature.getName()}"
+                                                th:value="${epic.getIdEpic()}">
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${useCaseList!=null}">
+                                        <option th:each="useCase : ${useCaseList}" th:text="${useCase.getName()}"
+                                                th:value="${useCase.getIdUseCase()}">
+                                        </option>
+                                    </select>
+                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${userStoryList!=null}">
+                                        <option th:each="userStory : ${userStoryList}" th:text="${userStory.getName()}"
+                                                th:value="${userStory.getIdUserStory()}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr class="row col-md-12"/>
+                            <div class="row col-md-12">
+                                <h4 class=" col-sm-5 col-sm-offset-1" th:text="#{traceability.scope}"></h4>
+                                <h4 class="col-sm-5 col-sm-offset-1" th:text="#{traceability.engineering}"></h4>
+                            </div>
+                            <div class="row col-md-12">
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple">
                                         <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
                                                 th:if="${requirement.getIdRequirement()==12 } or ${requirement.getIdRequirement()==13}
                                                 or ${requirement.getIdRequirement()==14} or ${requirement.getIdRequirement()==15}
@@ -105,12 +141,8 @@
                                         </option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <h5 th:text="#{traceability.engineering}"></h5>
-                                <hr/>
-                                <div class="col-sm-8 col-sm-offset-2">
-                                    <select class="form-control" id="firstRole" th:field="*{newTraces}" multiple="multiple">
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <select class="form-control" id="newTraces2" name="newTraces" multiple="multiple">
                                         <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
                                                 th:if="${requirement.getIdRequirement()==19 } or ${requirement.getIdRequirement()==20}
                                                 or ${requirement.getIdRequirement()==21} or ${requirement.getIdRequirement()==22}
@@ -121,23 +153,22 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row">
-                                <h5 th:text="#{traceability.ux}"></h5>
-                                <hr/>
-                                <div class="col-sm-8 col-sm-offset-2">
-                                    <select class="form-control" id="firstRole" th:field="*{newTraces}" multiple="multiple">
+                            <hr class="row col-md-12"/>
+                            <div class="row row col-md-12">
+                                <h4 class="col-sm-5 col-sm-offset-1" th:text="#{traceability.ux}"></h4>
+                                <h4 class="col-sm-5 col-sm-offset-1" th:text="#{traceability.qa}"></h4>
+                            </div>
+                            <div class="row row col-md-12">
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <select class="form-control" id="newTraces3" name="newTraces" multiple="multiple">
                                         <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
                                                 th:if="${requirement.getIdRequirement()}==27 or ${requirement.getIdRequirement()}==28"
                                                 th:value="${requirement.getIdRequirement()}">
                                         </option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <h5 th:text="#{traceability.qa}"></h5>
-                                <hr/>
-                                <div class="col-sm-8 col-sm-offset-2">
-                                    <select class="form-control" id="firstRole" th:field="*{newTraces}" multiple="multiple">
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <select class="form-control" id="newTraces4" name="newTraces" multiple="multiple">
                                         <option th:each="requirement : ${requirementList}" th:text="${requirement.getName()}"
                                                 th:if="${requirement.getIdRequirement()}==26"
                                                 th:value="${requirement.getIdRequirement()}">
@@ -147,17 +178,17 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-8 col-sm-offset-2">
+                                    <br/>
                                     <button type="submit" class="btn btn-primary btn-block" th:text="#{traceability.addbutton}"></button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-                &lt;!&ndash; /.modal-content &ndash;&gt;
+                <!-- /.modal-content -->
             </div>
-            &lt;!&ndash; /.modal-dialog &ndash;&gt;
+            <!-- /.modal-dialog -->
         </div>
--->
 
         <div class="col-lg-1 col-lg-offset-11">
             <a href="" data-toggle="modal" data-target="#addToTrace" class="tooltip-demo">
