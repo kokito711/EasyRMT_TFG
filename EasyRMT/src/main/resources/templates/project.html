@@ -9,78 +9,85 @@
     <!--Navigation -->
     <nav th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList}, user=${user}, isPm=${isPM})"></nav>
     <div id="page-wrapper">
+        <!-- Deletion Modal -->
+        <div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog"
+             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteProjectModalLabel" th:text="#{project.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{project.deleteModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{project.deleteModal.cancelButton}"></button>
+                        <button type="button" class="btn btn-danger" th:onclick="${'deleteProject('+project.getIdProject()+')'}"
+                                th:text="#{project.deleteModal.deleteButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion modal -->
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="deleteProjectModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteProjectModalLabelOk" th:text="#{project.deleteModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{project.deleteNotificationModal.text}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                                onclick="window.location = '/dashboard'" th:text="#{project.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="deleteProjectModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="deleteProjectModalLabelFail" th:text="#{project.deleteModal.FailLabel}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{project.deleteNotificationModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{project.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
         <div class="row">
             <div class="col-lg-12">
                 <h1 id="project-name" class="page-header" th:text="${project.getName()}"></h1>
             </div>
         </div>
-        <div class="row">
-            <!-- Deletion Modal -->
-            <div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog"
-                 aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                            <h4 class="modal-title" id="deleteProjectModalLabel" th:text="#{project.deleteModal.label}"></h4>
-                        </div>
-                        <div class="modal-body" th:text="#{project.deleteModal.text}">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"
-                                    th:text="#{project.deleteModal.cancelButton}"></button>
-                            <button type="button" class="btn btn-danger" th:onclick="${'deleteProject('+project.getIdProject()+')'}"
-                                    th:text="#{project.deleteModal.deleteButton}"></button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!-- /. deletion modal -->
-            <!-- Deletion notify Modal -->
-            <div class="modal fade" id="deleteProjectModalOk" tabindex="-1" role="dialog"
-                 aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                            <h4 class="modal-title" id="deleteProjectModalLabelOk" th:text="#{project.deleteModal.label}"></h4>
-                        </div>
-                        <div class="modal-body" th:text="#{project.deleteNotificationModal.text}">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
-                            onclick="window.location = '/dashboard'" th:text="#{project.deleteNotificationModal.dismissButton}">
-                            </button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!-- /. deletion notify modal -->
-            <!-- Deletion fail Modal -->
-            <div class="modal fade" id="deleteProjectModalFail" tabindex="-1" role="dialog"
-                 aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                            <h4 class="modal-title" id="deleteProjectModalLabelFail" th:text="#{project.deleteModal.FailLabel}"></h4>
-                        </div>
-                        <div class="modal-body" th:text="#{project.deleteNotificationModal.Failtext}">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"
-                                    th:text="#{project.deleteNotificationModal.dismissButton}"></button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <!-- /. deletion fail modal -->
+        <div class="row col-lg-12">
+            <p class="-align-justify" th:if="${project.getDescription()}!= null" th:text="${project.getDescription()}">
+
+            </p>
+            <br/>
+            <br/>
+        </div>
+        <div class="row col-lg-12">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -106,17 +113,16 @@
                             <div class="clearfix"></div>
                         </a>
                         <a th:unless="${project.getType().name() == 'AGILE'}"
-                               th:href="'/project/'+${project.getIdProject()}+'/features'" id="feat-link">
-                        <span class="pull-left" th:text="#{project.viewDetails}"></span>
-                        <span class="pull-right">
-                                <i class="fa fa-arrow-circle-right"></i>
-                            </span>
-                        <div class="clearfix"></div>
-                    </a>
+                                   th:href="'/project/'+${project.getIdProject()}+'/features'" id="feat-link">
+                            <span class="pull-left" th:text="#{project.viewDetails}"></span>
+                            <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right"></i>
+                                </span>
+                            <div class="clearfix"></div>
+                        </a>
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -131,7 +137,6 @@
                                  id="elements-panel-useCases" th:text="#{project.useCase}">
                             </div>
                         </div>
-
                     </div>
                     <a href="">
                         <div class="panel-footer">
@@ -178,7 +183,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row col-lg-12">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#generalInfo" data-toggle="tab" th:text="#{epic.tab.generalInfo}"></a>
                 </li>
