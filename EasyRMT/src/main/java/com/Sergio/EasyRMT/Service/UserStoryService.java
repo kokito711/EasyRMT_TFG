@@ -28,9 +28,9 @@ public class UserStoryService {
     UserRepository userRepository;
 
     @Autowired
-    public UserStoryService(ObjectRepository objectRepository, EpicRepository epicRepository,
-                            ProjectRepository projectRepository, UserStoryRepository userStoryRepository,
-                            UserStoryConverter userStoryConverter, DocumentService documentService, UserRepository userRepository) {
+    public UserStoryService(ObjectRepository objectRepository, EpicRepository epicRepository, ProjectRepository projectRepository,
+                            UserStoryRepository userStoryRepository, UserStoryConverter userStoryConverter,
+                            DocumentService documentService, UserRepository userRepository) {
         this.objectRepository = objectRepository;
         this.epicRepository = epicRepository;
         this.projectRepository = projectRepository;
@@ -101,6 +101,11 @@ public class UserStoryService {
         userStoryModel.setEpic(epicModel);
         userStoryModel.setObject(objectEntity);
         userStoryModel = userStoryRepository.save(userStoryModel);
+        ObjectEntity epic = objectRepository.findOne(epicId);
+        epic.getTraced().add(objectEntity);
+        epic = objectRepository.save(epic);
+        objectEntity.getTraced().add(epic);
+        objectRepository.save(objectEntity);
         userStoryDom = userStoryConverter.toDomain(userStoryModel);
         return userStoryDom;
     }
@@ -219,9 +224,20 @@ public class UserStoryService {
      * @param projectId
      * @return
      */
+    @Transactional(readOnly = true)
     public List<UserStoryDom> getByProjectID(int projectId) {
         List<UserStory> userStoryList = userStoryRepository.findByProjectId(projectId);
         List<UserStoryDom> userStoryDomList = userStoryConverter.toDomain(userStoryList);
         return userStoryDomList;
+    }
+
+    /**
+     * This methods checks if exists a user story in DB
+     * @param idobject object to check if exists
+     * @return true if exists or false if not exists
+     */
+    @Transactional(readOnly = true)
+    public boolean exists(int idobject) {
+        return userStoryRepository.exists(idobject);
     }
 }

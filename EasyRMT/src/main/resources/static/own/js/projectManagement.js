@@ -132,6 +132,22 @@ function deleteFromGroup(user, groupId) {
     });
 }
 
+function deleteTrace(projectId, object1Id, object2Id) {
+    $.ajax({
+        url: '/traceability/'+projectId+'/obj1/'+object1Id+'/obj2/'+object2Id,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteTraceModal").modal('hide');
+            $("#deleteTraceModalModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteTraceModal").modal('hide');
+            $("#deleteRequirementModalFail").modal('show');
+        }
+    });
+}
+
+
 function sendForm(groupId) {
     $.ajax({
         type: "POST",

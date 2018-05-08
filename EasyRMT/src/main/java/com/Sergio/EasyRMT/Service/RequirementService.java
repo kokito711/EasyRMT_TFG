@@ -235,4 +235,14 @@ public class RequirementService {
             return false;
         }
     }
+
+    /**
+     * This methods checks if exists a requirement in DB
+     * @param idobject object to check if exists
+     * @return true if exists or false if not exists
+     */
+    @Transactional(readOnly = true)
+    public boolean exists(int idobject) {
+        return requirementRepository.exists(idobject);
+    }
 }

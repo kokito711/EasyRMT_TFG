@@ -28,9 +28,9 @@ public class UseCaseService {
     UserRepository userRepository;
 
     @Autowired
-    public UseCaseService(ObjectRepository objectRepository, FeatureRepository featureRepository,
-                          ProjectRepository projectRepository, UseCaseRepository useCaseRepository,
-                          UseCaseConverter useCaseConverter, DocumentService documentService, UserRepository userRepository) {
+    public UseCaseService(ObjectRepository objectRepository, FeatureRepository featureRepository, ProjectRepository projectRepository,
+                          UseCaseRepository useCaseRepository, UseCaseConverter useCaseConverter,
+                          DocumentService documentService, UserRepository userRepository) {
         this.objectRepository = objectRepository;
         this.featureRepository = featureRepository;
         this.projectRepository = projectRepository;
@@ -100,7 +100,12 @@ public class UseCaseService {
         useCase.setIdUseCase(objectEntity.getIdobject());
         useCase.setFeature(featureModel);
         useCase.setObject(objectEntity);
-        useCase = useCaseRepository.save(useCase);
+        useCaseRepository.save(useCase);
+        ObjectEntity feature = objectRepository.findOne(featureId);
+        feature.getTraced().add(objectEntity);
+        feature = objectRepository.save(feature);
+        objectEntity.getTraced().add(feature);
+        objectRepository.save(objectEntity);
         useCaseDom = useCaseConverter.toDomain(useCase);
         return useCaseDom;
     }
@@ -225,9 +230,20 @@ public class UseCaseService {
      * @param projectId
      * @return List of {@link UseCaseDom}
      */
+    @Transactional(readOnly = true)
     public List<UseCaseDom> getByProjectID(int projectId) {
         List<UseCase> useCaseList = useCaseRepository.findByProjectId(projectId);
         List<UseCaseDom> useCaseDomList = useCaseConverter.toDomain(useCaseList);
         return useCaseDomList;
+    }
+
+    /**
+     * This methods checks if exists a use case in DB
+     * @param idobject object to check if exists
+     * @return true if exists or false if not exists
+     */
+    @Transactional(readOnly = true)
+    public boolean exists(int idobject) {
+        return useCaseRepository.exists(idobject);
     }
 }

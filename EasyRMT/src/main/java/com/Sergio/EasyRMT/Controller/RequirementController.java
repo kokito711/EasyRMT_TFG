@@ -5,16 +5,10 @@
 
 package com.Sergio.EasyRMT.Controller;
 
-import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Domain.RequirementDom;
-import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
-import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.types.*;
-import com.Sergio.EasyRMT.Service.DocumentService;
-import com.Sergio.EasyRMT.Service.ProjectService;
-import com.Sergio.EasyRMT.Service.RequirementService;
-import com.Sergio.EasyRMT.Service.UserService;
+import com.Sergio.EasyRMT.Service.*;
 import javassist.bytecode.stackmap.TypeData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,15 +34,18 @@ public class RequirementController {
     DocumentService documentService;
     CommonMethods commonMethods;
     UserService userService;
+    TraceabilityService traceabilityService;
 
     @Autowired
     public RequirementController(ProjectService projectService, RequirementService requirementService,
-                                 DocumentService documentService, CommonMethods commonMethods, UserService userService) {
+                                 DocumentService documentService, CommonMethods commonMethods, UserService userService,
+                                 TraceabilityService traceabilityService) {
         this.projectService = projectService;
         this.requirementService = requirementService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
+        this.traceabilityService = traceabilityService;
     }
 
     /**
@@ -101,6 +98,7 @@ public class RequirementController {
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
+            TraceDom traceability = traceabilityService.getTraceability(requirementId);
             modelAndView.setViewName("requirement");
             modelAndView.addObject("requirement", requirementService.getRequirement(requirementId));
             modelAndView.addObject("project", project);
@@ -110,6 +108,10 @@ public class RequirementController {
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("traceability", traceability);
+            modelAndView.addObject("traceObject", new TraceDom());
+            modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,requirementId));
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a list of requirements" +

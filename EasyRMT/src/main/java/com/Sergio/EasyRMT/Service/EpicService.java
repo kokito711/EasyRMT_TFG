@@ -228,4 +228,14 @@ public class EpicService {
             return false;
         }
     }
+
+    /**
+     * This methods checks if exists an epic in DB
+     * @param idobject object to check if exists
+     * @return true if exists or false if not exists
+     */
+    @Transactional(readOnly = true)
+    public boolean exists(int idobject) {
+        return epicRepository.exists(idobject);
+    }
 }

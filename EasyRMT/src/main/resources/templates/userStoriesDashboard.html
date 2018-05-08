@@ -125,7 +125,6 @@
                     <tr>
                         <th th:text="#{usDash.Table.Thead.identifier}"></th>
                         <th th:text="#{usDash.Table.Thead.name}"></th>
-                        <th th:text="#{usDash.Table.Thead.requirementsNumber}"></th>
                         <th th:text="#{usDash.Table.Thead.author}"></th>
                         <th th:text="#{usDash.Table.Thead.assignedTo}"></th>
                         <th th:text="#{usDash.Table.Thead.options}"></th>
@@ -135,7 +134,6 @@
                     <tr th:each="userStory : ${userStoriesList}">
                         <td th:text="${userStory.getIdentifier()}"></td>
                         <td th:text="${userStory.getName()}"></td>
-                        <td th:text="0"></td>
                         <td>
                             <a th:href="'mailto:'+${userStory.getAuthor().getEmail()}"
                                th:text="${userStory.getAuthor().getUsername()}">
