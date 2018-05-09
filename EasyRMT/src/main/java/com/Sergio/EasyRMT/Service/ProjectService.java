@@ -1,11 +1,15 @@
 package com.Sergio.EasyRMT.Service;
 
+import com.Sergio.EasyRMT.Domain.ObjectDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
+import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Model.Group;
+import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Repository.GroupRepository;
+import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
 import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,17 +31,21 @@ public class ProjectService {
     ReqTypeConverter reqTypeConverter;
     DocumentService documentService;
     GroupRepository groupRepository;
+    ObjectRepository objectRepository;
+    TraceabilityService traceabilityService;
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository,
-                          ProjectConverter projectConverter, ReqTypeConverter reqTypeConverter,
-                          DocumentService documentService, GroupRepository groupRepository) {
+    public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository, ProjectConverter projectConverter,
+                          ReqTypeConverter reqTypeConverter, DocumentService documentService, GroupRepository groupRepository,
+                          ObjectRepository objectRepository, TraceabilityService traceabilityService) {
         this.projectRepository = projectRepository;
         this.reqTypeRepository = reqTypeRepository;
         this.projectConverter = projectConverter;
         this.reqTypeConverter = reqTypeConverter;
         this.documentService = documentService;
         this.groupRepository = groupRepository;
+        this.objectRepository = objectRepository;
+        this.traceabilityService = traceabilityService;
     }
 
     /**
@@ -164,6 +173,15 @@ public class ProjectService {
         }
     }
 
+   @Transactional
+    public List<ObjectDom> getProjectTraceability(int projectId){
+        List<ObjectEntity> objects = objectRepository.findByProjectId(projectId);
+        List<ObjectDom> objectDomList = new ArrayList<>();
+       getObjectDomList(objects, objectDomList);
+       return  objectDomList;
+    }
+
+
     /**
      * This method returns the complete list of requirement types existing in db
      * @return List of {@link RequirementTypeDom} with RequirementTypeDom related with {@link ProjectDom}
@@ -175,5 +193,17 @@ public class ProjectService {
         return requirementTypeDomList;
     }
 
-
+    private void getObjectDomList(List<ObjectEntity> objects, List<ObjectDom> objectDomList) {
+        for (ObjectEntity objectEntity : objects){
+            ObjectDom object = new ObjectDom();
+            object.setIdObject(objectEntity.getIdobject());
+            object.setProject(projectConverter.toDomain(objectEntity.getProject()));
+            object.setTraceability(new ArrayList<>());
+            for(ObjectEntity trace : objectEntity.getTraced()){
+                TraceDom traceDom = traceabilityService.getTraceability(trace.getIdobject());
+                object.getTraceability().add(traceDom);
+            }
+            objectDomList.add(object);
+        }
+    }
 }

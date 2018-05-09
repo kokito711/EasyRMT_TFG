@@ -6,6 +6,7 @@
 
 package com.Sergio.EasyRMT.Controller;
 
+import com.Sergio.EasyRMT.Domain.ObjectDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
@@ -210,6 +211,30 @@ public class ProjectController {
             LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get project "+id);
             throw new AccessDeniedException("Not allowed");
         }
+    }
+
+    @RequestMapping(value = "/project/{projectId}/traceability", method = RequestMethod.GET)
+    public ModelAndView getProjectTraceability(@PathVariable int projectId, Principal principal){
+        ProjectDom project = projectService.getProject(projectId);
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        if (commonMethods.isAllowed(projectDomList, project)) {
+            List<ObjectDom> traceability = projectService.getProjectTraceability(projectId);
+
+            ModelAndView modelAndView = new ModelAndView("projectTraceability");
+            project.setGroupId(project.getGroup().getGroupId());
+            modelAndView.addObject("project", project);
+            modelAndView.addObject("fileList", documentService.getFileList(projectId, null));
+            modelAndView.addObject("user", principal.getName());
+            boolean isPm = commonMethods.isPM(user, principal.getName());
+            modelAndView.addObject("projectList", projectDomList);
+            modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("traceability", traceability);
+            return modelAndView;
+        }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a traceability " +
+                "relationship from project "+projectId);
+        throw new AccessDeniedException("Not allowed");
     }
 
 
