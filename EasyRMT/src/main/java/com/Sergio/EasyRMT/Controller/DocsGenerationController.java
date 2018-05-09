@@ -97,6 +97,37 @@ public class DocsGenerationController {
         throw new AccessDeniedException("Not allowed");
     }
 
+    @RequestMapping(value = PRINTER_PATH_BASE+"{type}/list/{objectId}", method = RequestMethod.GET)
+    public ModelAndView getListPrinterPage (@PathVariable int projectId,@PathVariable String type,
+                                        @PathVariable int objectId,Principal principal){
+        ProjectDom project = projectService.getProject(projectId);
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        if (commonMethods.isAllowed(projectDomList, project)) {
+            ModelAndView modelAndView = new ModelAndView("printListPage");
+            boolean isPm = commonMethods.isPM(user, principal.getName());
+            List<Group_user> group = project.getGroup().getUsers();
+            TraceDom extension = new TraceDom();
+            TraceDom traceability= traceabilityService.getTraceability(objectId);
+            populateModelAndView(project, type, objectId, modelAndView);
+            modelAndView.addObject("project", project);
+            modelAndView.addObject("projectList", projectDomList);
+            modelAndView.addObject("fileList", documentService.getFileList(projectId,objectId));
+            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,objectId));
+            modelAndView.addObject("user", principal.getName());
+            modelAndView.addObject("group", group);
+            modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("traceability", traceability);
+            modelAndView.addObject("traceObject",extension );
+            modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            return modelAndView;
+        }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document to print from project "
+                +projectId);
+        throw new AccessDeniedException("Not allowed");
+    }
+
+
     private void populateModelAndView( ProjectDom project, String type, int objectId, ModelAndView modelAndView) {
         switch (type){
             case "feature":
