@@ -83,7 +83,6 @@ public class DocsGenerationController {
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("fileList", documentService.getFileList(projectId,objectId));
-            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,objectId));
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
@@ -107,18 +106,15 @@ public class DocsGenerationController {
             ModelAndView modelAndView = new ModelAndView("printListPage");
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
-            TraceDom extension = new TraceDom();
             TraceDom traceability= traceabilityService.getTraceability(objectId);
             populateModelAndView(project, type, objectId, modelAndView);
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("fileList", documentService.getFileList(projectId,objectId));
-            modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,objectId));
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
             modelAndView.addObject("traceability", traceability);
-            modelAndView.addObject("traceObject",extension );
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             return modelAndView;
         }
@@ -132,46 +128,18 @@ public class DocsGenerationController {
         switch (type){
             case "feature":
                 modelAndView.addObject("object",featureService.getFeature(objectId));
-                modelAndView.addObject("featureList",
-                        traceabilityService.getNotTracedFeatures(project.getIdProject(), objectId));
-                modelAndView.addObject("useCaseList",
-                        traceabilityService.getNotTracedUseCases(project.getIdProject(),objectId));
                 break;
             case "epic":
                 modelAndView.addObject("object",epicService.getEpic(objectId));
-                modelAndView.addObject("epicList",
-                        traceabilityService.getNotTracedFeatures(project.getIdProject(), objectId));
-                modelAndView.addObject("userStoryList",
-                        traceabilityService.getNotTracedUseCases(project.getIdProject(),objectId));
                 break;
             case "usecase":
                 modelAndView.addObject("object",useCaseService.getUseCase(objectId));
-                modelAndView.addObject("featureList",
-                        traceabilityService.getNotTracedFeatures(project.getIdProject(), objectId));
-                modelAndView.addObject("useCaseList",
-                        traceabilityService.getNotTracedUseCases(project.getIdProject(),objectId));
                 break;
             case "userstory":
                 modelAndView.addObject("object",userStoryService.getUserStory(objectId));
-                modelAndView.addObject("epicList",
-                        traceabilityService.getNotTracedFeatures(project.getIdProject(), objectId));
-                modelAndView.addObject("userStoryList",
-                        traceabilityService.getNotTracedUseCases(project.getIdProject(),objectId));
                 break;
             case "requirement":
                 modelAndView.addObject("object",requirementService.getRequirement(objectId));
-                if (project.getType().equals(ProjectType.AGILE)) {
-                    modelAndView.addObject("featureList",
-                            traceabilityService.getNotTracedFeatures(project.getIdProject(), objectId));
-                    modelAndView.addObject("useCaseList",
-                            traceabilityService.getNotTracedUseCases(project.getIdProject(), objectId));
-                }
-                else {
-                    modelAndView.addObject("epicList",
-                            traceabilityService.getNotTracedFeatures(project.getIdProject(), objectId));
-                    modelAndView.addObject("userStoryList",
-                            traceabilityService.getNotTracedUseCases(project.getIdProject(),objectId));
-                }
             default:
                 throw new AccessDeniedException("Not allowed");
         }

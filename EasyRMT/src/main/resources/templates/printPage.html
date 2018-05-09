@@ -70,117 +70,207 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>
 </head>
-<body>
-    <div class="row">
-        <h2 class="page-header" th:if="${object.getIdentifier()} ==null" th:text="${object.getName()}"
-            style="alignment: center">
-        </h2>
-        <h2 class="page-header" th:unless="${object.getIdentifier()} ==null"
-            th:text="${object.getIdentifier()}+'  '+${object.getName()}" style="alignment: center">
-        </h2>
+<body onload="window.print()">
+    <div class="row col-xs-12">
+        <h5 th:text="${project.getName()}"></h5>
+        <div class="col-lg-10">
+            <h2>
+                <span th:unless="${object.getIdentifier()} ==null or ${object.getIdentifier()} == ''"
+                      th:text="${object.getIdentifier()}"></span>
+                <span th:text="${object.getName()}"></span>
+                (<span th:unless="${object.getVersion()}== null or ${object.getVersion()} == ''"
+                       th:text="${object.getVersion()}"></span>)
+            </h2>
+        </div>
+        <div class="col-lg-2">
+            <span>
+                <h3 th:if="${object.getState().name()}=='DRAFT'" class="text-muted" th:text="#{objectPrintable.state.draft}"></h3>
+                <h3 th:if="${object.getState().name()}=='APPROVED'" class="text-success" th:text="#{objectPrintable.state.approved}"></h3>
+                <h3 th:if="${object.getState().name()}=='WORKING'" class="text-warning" th:text="#{objectPrintable.state.working}"></h3>
+                <h3 th:if="${object.getState().name()}=='TESTING'" class="text-primary" th:text="#{objectPrintable.state.testing}"></h3>
+                <h3 th:if="${object.getState().name()}=='IMPLEMENTED'" class="text-info" th:text="#{objectPrintable.state.implemented}"></h3>
+                <h3 th:if="${object.getState().name()}=='REJECTED'" class="text-danger" th:text="#{objectPrintable.state.rejected}"></h3>
+            </span>
+        </div>
     </div>
-    <div class="row table-responsive">
-        <table width="80%" class="table table-striped table-bordered table-hover">
-            <tr>
-                <td colspan="4"></td>
-                <td colspan="2"></td>
+    <table class="table table-bordered table-responsive">
+        <tr  th:if="${project.getType().name()}=='AGILE'">
+            <td colspan="4" class="print_title">
+                <strong th:text="#{objectPrintable.storyPoints}"></strong>
+            </td>
+            <td colspan="2" th:text="${object.getStoryPoints()}"></td>
+        </tr>
+        <tr th:if="${object.getDescription()} != null">
+            <td colspan="6" class="print_title">
+                <strong th:text="#{objectPrintable.description}"></strong>
+            </td>
+        </tr>
+        <tr th:if="${object.getDescription()} != null">
+            <td colspan="6" rowspan="10">
+                <p th:text="${object.getDescription()}" class="text-justify"></p>
+            </td>
+        </tr>
+    </table>
+    <table class="table table-bordered table-responsive">
+        <tr>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.generalInfoTab.priority}"></strong>
+            </td>
+            <td colspan="1" th:if="${object.getPriority().name()}=='VERY_LOW'" th:text="#{objectPrintable.priority.veryLow}"></td>
+            <td colspan="1" th:if="${object.getPriority().name()}=='LOW'" th:text="#{objectPrintable.priority.low}"></td>
+            <td colspan="1" th:if="${object.getPriority().name()}=='NORMAL'">Normal</td>
+            <td colspan="1" th:if="${object.getPriority().name()}=='HIGH'" th:text="#{objectPrintable.priority.high}"></td>
+            <td colspan="1" th:if="${object.getPriority().name()}=='VERY_HIGH'" th:text="#{objectPrintable.priority.veryHigh}"></td>
+            <td colspan="1" th:if="${object.getPriority().name()}=='BLOCKER'" th:text="#{objectPrintable.priority.blocker}"></td>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.generalInfoTab.author}"></strong>
+            </td>
+            <td colspan="1">
+                <a th:href="'mailto:'+${object.getAuthor().getEmail()}"
+                   th:text="${object.getAuthor().getUsername()}">
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.generalInfoTab.risk}"></strong>
+            </td>
+            <td th:if="${object.getRisk().name()}=='NONE'" th:text="#{objectPrintable.risk.none}"></td>
+            <td th:if="${object.getRisk().name()}=='LOW'" th:text="#{objectPrintable.priority.low}"></td>
+            <td th:if="${object.getRisk().name()}=='HIGH'" th:text="#{objectPrintable.priority.high}"></td>
+            <td th:if="${object.getRisk().name()}=='MEDIUM'" th:text="#{objectPrintable.risk.medium}"></td>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.generalInfoTab.assignedTo}"></strong>
+            </td>
+            <td colspan="1">
+                <a th:href="'mailto:'+${object.getAssignedTo().getEmail()}"
+                   th:text="${object.getAssignedTo().getUsername()}">
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.generalInfoTab.source}"></strong>
+            </td>
+            <td colspan="1" th:text="${object.getSource()}"></td>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.additionalInfoTab.complexity}"></strong>
+            </td>
+            <td colspan="1" th:if="${object.getComplexity().name()}=='VERY_LOW'" th:text="#{objectPrintable.priority.veryLow}"></td>
+            <td colspan="1" th:if="${object.getComplexity().name()}=='LOW'" th:text="#{objectPrintable.priority.low}"></td>
+            <td colspan="1" th:if="${object.getComplexity().name()}=='NORMAL'">Normal</td>
+            <td colspan="1" th:if="${object.getComplexity().name()}=='HIGH'" th:text="#{objectPrintable.priority.high}"></td>
+            <td colspan="1" th:if="${object.getComplexity().name()}=='VERY_HIGH'" th:text="#{objectPrintable.priority.veryHigh}"></td>
+            <td colspan="1" th:if="${object.getComplexity().name()}=='BLOCKER'" th:text="#{objectPrintable.priority.blocker}"></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.additionalInfoTab.cost}"></strong>
+            </td>
+            <td colspan="1" th:text="${object.getCost()}+' UM'"></td>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.additionalInfoTab.estHours}"></strong>
+            </td>
+            <td colspan="1" th:text="${object.getEstimatedHours()}+' '+#{objectPrintable.hours}"></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.additionalInfoTab.created}"></strong>
+            </td>
+            <td colspan="1" th:text="${object.getCreated()}"></td>
+            <td colspan="2" class="print_title">
+                <strong th:text="#{epic.tab.additionalInfoTab.lastUpdated}"></strong>
+            </td>
+            <td colspan="1" th:text="${object.getLastUpdated()}"></td>
+        </tr>
+        <tr th:unless="${object.getValidationMethod()}!=null or ${object.getValidationMethod()} == ''">
+            <td colspan="6" class="print_title">
+                <strong th:text="#{epic.tab.additionalInfoTab.validationMethod}"></strong>
+            </td>
+        </tr>
+        <tr th:unless="${object.getValidationMethod()}!=null or ${object.getValidationMethod()} == ''">
+            <td colspan="6" th:text="${object.getValidationMethod()}"></td>
+        </tr>
+        <tr th:unless="${object.getTestCases()}!=null or ${object.getTestCases().length()}==0">
+            <td colspan="6" class="print_title">
+                <strong th:text="#{epic.tab.additionalInfoTab.testCases}"></strong>
+            </td>
+        </tr>
+        <tr th:unless="${object.getTestCases()}!=null or ${object.getTestCases().length()}==0">
+            <td colspan="6" th:text="${object.getTestCases()}"></td>
+        </tr>
+        <tr>
+            <td colspan="6" class="print_title">
+                <strong th:text="#{requirement.tab.traceability}"></strong>
+            </td>
+        </tr>
+        <tr>
+            <tr  th:unless="${#lists.isEmpty(traceability.getFeatures())}">
+                <td colspan="6" th:text="#{project.notAgile}">
+                </td>
             </tr>
-            <tr>
-                <td colspan="6"></td>
+            <tr th:unless="${#lists.isEmpty(traceability.getFeatures())}">
+                <td  colspan="6" th:each="feature : ${traceability.getFeatures()}">
+                    <p th:text="${feature.getIdentifier()}+' '+${feature.getName()}"></p>
+                </td>
             </tr>
-            <tr>
-                <td colspan="6"></td>
+            <tr  th:unless="${#lists.isEmpty(traceability.getUseCases())}">
+                <td colspan="6" th:text="#{project.useCase}">
+                </td>
             </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td></td>
-                <td colspan="2"></td>
-                <td></td>
+            <tr th:unless="${#lists.isEmpty(traceability.getUseCases())}">
+                <td  colspan="6" th:each="usecase : ${traceability.getUseCases()}">
+                    <p th:text="${usecase.getIdentifier()}+' '+${usecase.getName()}"></p>
+                </td>
             </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td></td>
-                <td colspan="2"></td>
-                <td></td>
+            <tr  th:unless="${#lists.isEmpty(traceability.getEpics())}">
+                <td colspan="6" th:text="#{project.agile}">
+                </td>
             </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td></td>
-                <td colspan="2"></td>
-                <td></td>
+            <tr th:unless="${#lists.isEmpty(traceability.getEpics())}">
+                <td  colspan="6" th:each="epic : ${traceability.getEpics()}">
+                    <p th:text="${epic.getIdentifier()}+' '+${epic.getName()}"></p>
+                </td>
             </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td></td>
-                <td colspan="2"></td>
-                <td></td>
+            <tr  th:unless="${#lists.isEmpty(traceability.getUserStories())}">
+                <td colspan="6" th:text="#{project.userStory}">
+                </td>
             </tr>
-            <tr>
-                <td colspan="2"></td>
-                <td></td>
-                <td colspan="2"></td>
-                <td></td>
+            <tr th:unless="${#lists.isEmpty(traceability.getUserStories())}">
+                <td  colspan="6" th:each="userStory : ${traceability.getUserStories()}">
+                    <p th:text="${userStory.getIdentifier()}+' '+${userStory.getName()}"></p>
+                </td>
             </tr>
-            <tr>
-                <td colspan="6"></td>
+            <tr  th:unless="${#lists.isEmpty(traceability.getScope())} and ${#lists.isEmpty(traceability.getEngineering())}
+                and ${#lists.isEmpty(traceability.getQuality())} and ${#lists.isEmpty(traceability.getUserExp())}">
+                <td colspan="6" th:text="#{project.requirements}">
+                </td>
             </tr>
-            <tr>
-                <td colspan="6"></td>
+            <tr th:unless="${#lists.isEmpty(traceability.getScope())} and ${#lists.isEmpty(traceability.getEngineering())}
+                and ${#lists.isEmpty(traceability.getQuality())} and ${#lists.isEmpty(traceability.getUserExp())}">
+                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getScope())}"
+                     th:each="req : ${traceability.getScope()}">
+                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+                </td>
+                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getEngineering())}"
+                     th:each="req : ${traceability.getEngineering()}">
+                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+                </td>
+                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getQuality())}"
+                     th:each="req : ${traceability.getQuality()}">
+                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+                </td>
+                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getUserExp())}"
+                     th:each="req : ${traceability.getUserExp()}">
+                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+                </td>
             </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="6"></td>
-            </tr>
-        </table>
-    </div>
+            <td th:if="${#lists.isEmpty(traceability.getScope())} and ${#lists.isEmpty(traceability.getEngineering())}
+                and ${#lists.isEmpty(traceability.getQuality())} and ${#lists.isEmpty(traceability.getUserExp())}"
+                th:text="#{objectPrintable.empty}" colspan="6">
+            </td>
+        </tr>
 
-
-
+    </table>
 </body>
 </html>
