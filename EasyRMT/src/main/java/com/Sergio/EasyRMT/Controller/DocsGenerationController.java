@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Nullable;
 import java.security.Principal;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,7 +35,6 @@ public class DocsGenerationController {
     ProjectService projectService;
     FeatureService featureService;
     EpicService epicService;
-    DocumentService documentService;
     CommonMethods commonMethods;
     UserService userService;
     UseCaseService useCaseService;
@@ -44,13 +44,12 @@ public class DocsGenerationController {
 
     @Autowired
     public DocsGenerationController(ProjectService projectService, FeatureService featureService, EpicService epicService,
-                                    DocumentService documentService, CommonMethods commonMethods, UserService userService,
+                                    CommonMethods commonMethods, UserService userService,
                                     UseCaseService useCaseService, TraceabilityService traceabilityService,
                                     UserStoryService userStoryService, RequirementService requirementService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.epicService = epicService;
-        this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
         this.useCaseService = useCaseService;
@@ -79,10 +78,9 @@ public class DocsGenerationController {
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom extension = new TraceDom();
             TraceDom traceability= traceabilityService.getTraceability(objectId);
-            populateModelAndView(project, type, objectId, modelAndView);
+            populateModelAndView(type, objectId, modelAndView);
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
-            modelAndView.addObject("fileList", documentService.getFileList(projectId,objectId));
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
@@ -96,9 +94,17 @@ public class DocsGenerationController {
         throw new AccessDeniedException("Not allowed");
     }
 
+    /**
+     * This method obtains a request to generate a page that will be printable
+     * @param projectId id of project
+     * @param type type of element
+     * @param objectId id of object to be printed
+     * @param principal element with login information
+     * @return ModelAndView with printable page
+     */
     @RequestMapping(value = PRINTER_PATH_BASE+"{type}/list/{objectId}", method = RequestMethod.GET)
-    public ModelAndView getListPrinterPage (@PathVariable int projectId,@PathVariable String type,
-                                        @PathVariable int objectId,Principal principal){
+    public ModelAndView getListPrinterPage (@PathVariable int projectId, @PathVariable String type,
+                                            @PathVariable int objectId, Principal principal){
         ProjectDom project = projectService.getProject(projectId);
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
@@ -106,15 +112,13 @@ public class DocsGenerationController {
             ModelAndView modelAndView = new ModelAndView("printListPage");
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
-            TraceDom traceability= traceabilityService.getTraceability(objectId);
-            populateModelAndView(project, type, objectId, modelAndView);
+            populateListModelAndView(project, type, objectId, modelAndView);
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
-            modelAndView.addObject("fileList", documentService.getFileList(projectId,objectId));
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
             modelAndView.addObject("isPM", isPm);
-            modelAndView.addObject("traceability", traceability);
+            modelAndView.addObject("type", type);
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             return modelAndView;
         }
@@ -123,8 +127,45 @@ public class DocsGenerationController {
         throw new AccessDeniedException("Not allowed");
     }
 
+    private void populateListModelAndView(ProjectDom project, String type, int objectId, ModelAndView modelAndView) {
+        switch (type){
+            case "feature":
+                if(objectId==0) {
+                    modelAndView.addObject("object", featureService.getFeatures(project.getIdProject()));
+                }
+                else {
+                    modelAndView.addObject("object", useCaseService.getUseCases(objectId));
+                }
+                break;
+            case "epic":
+                if(objectId==0) {
+                    modelAndView.addObject("object", epicService.getEpics(objectId));
+                }
+                else {
+                    modelAndView.addObject("object", userStoryService.getUserStory(objectId));
+                }
+                break;
+            case "usecase":
+                modelAndView.addObject("object",useCaseService.getByProjectID(project.getIdProject()));
+                break;
+            case "userstory":
+                modelAndView.addObject("object",userStoryService.getByProjectID(project.getIdProject()));
+                break;
+            case "requirement":
+                if(objectId==0) {
+                    modelAndView.addObject("object", requirementService.getRequirements(project.getIdProject()));
+                }
+                else {
+                    throw new AccessDeniedException("Not allowed");
+                }
+                break;
+            default:
+                throw new AccessDeniedException("Not allowed");
+        }
+    }
 
-    private void populateModelAndView( ProjectDom project, String type, int objectId, ModelAndView modelAndView) {
+
+    private void populateModelAndView(String type, int objectId, ModelAndView modelAndView) {
         switch (type){
             case "feature":
                 modelAndView.addObject("object",featureService.getFeature(objectId));

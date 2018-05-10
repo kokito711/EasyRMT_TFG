@@ -46,8 +46,10 @@
             <a href="#">
                 <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
             </a>
-            <a href="#">
-                <span class="fa fa-print pull-right fa-2x"></span>
+            <a th:href="@{'/print/'+${project.getIdProject()}+'/usecase/'+${useCase.getIdUseCase()}}" class="tooltip-demo"
+               target="_blank">
+                <span class="fa fa-print pull-right fa-2x" data-toggle="tooltip" data-placement="left"
+                      th:title="#{elements.printButton}"></span>
             </a>
             <a th:href="'/project/'+${project.getIdProject()}+'/feature/'+${featureId}+'/usecase/update/'
             +${useCase.getIdUseCase()}" class="tooltip-demo">

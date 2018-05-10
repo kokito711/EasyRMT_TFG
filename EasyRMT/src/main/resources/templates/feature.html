@@ -248,7 +248,6 @@
                                 <th th:text="#{epic.tab.userStoriesTab.Table.Thead.identifier}"></th>
                                 <th th:text="#{epic.tab.userStoriesTab.Table.Thead.name}"></th>
                                 <th th:text="#{epic.tab.userStoriesTab.Table.Thead.author}"></th>
-                                <th th:text="#{epic.tab.userStoriesTab.Table.Thead.requirements}"></th>
                                 <th th:text="#{epic.tab.userStoriesTab.Table.Thead.assignedTo}"></th>
                                 <th th:text="#{epic.tab.userStoriesTab.Table.Thead.options}"></th>
                             </tr>
@@ -257,7 +256,6 @@
                             <tr th:each="useCase : ${feature.useCases}">
                                 <td th:text="${useCase.getIdentifier()}"></td>
                                 <td th:text="${useCase.getName()}"></td>
-                                <td>0</td><!-- Change this when traceability being created-->
                                 <td>
                                     <a th:href="'mailto:'+${useCase.getAuthor().getEmail()}"
                                        th:text="${useCase.getAuthor().getUsername()}">
@@ -278,8 +276,10 @@
                                     <a href="#">
                                         <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
                                     </a>
-                                    <a href="#">
-                                    <span class="fa fa-print pull-right fa-2x"></span>
+                                    <a th:href="@{'/print/'+${project.getIdProject()}+'/feature/list/'+${feature.getIdFeature()}}" class="tooltip-demo"
+                                       target="_blank">
+                                        <span class="fa fa-print pull-right fa-2x" data-toggle="tooltip" data-placement="left"
+                                              th:title="#{elements.printButton}"></span>
                                     </a>
                                     <a href="" data-toggle="modal" data-target="#deleteUcModal"
                                        th:onclick="'modalValue('+${useCase.getIdUseCase()}+')'" class="tooltip-demo">

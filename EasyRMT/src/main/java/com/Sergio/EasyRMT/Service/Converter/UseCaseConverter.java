@@ -43,6 +43,7 @@ public class UseCaseConverter {
                     useCase.getObject().getProject().getIdProject(),
                     useCase.getFeature().getIdFeature()
             );
+            useCaseDom.setState(useCase.getState());
             useCaseDomList.add(useCaseDom);
         }
         return useCaseDomList;

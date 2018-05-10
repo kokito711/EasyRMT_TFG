@@ -50,6 +50,7 @@ public class EpicConverter {
                     epic.getObject().getProject().getIdProject(),
                     userStoryDomList
             );
+            epicDom.setState(epic.getState());
             epicDomList.add(epicDom);
         }
         return epicDomList;
