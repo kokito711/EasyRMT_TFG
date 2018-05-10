@@ -17,6 +17,11 @@ public class ObjectDom {
     private int idObject;
 
     private ProjectDom project;
+    private FeatureDom featureDom;
+    private EpicDom epicDom;
+    private UseCaseDom useCaseDom;
+    private UserStoryDom userStoryDom;
+    private RequirementDom requirementDom;
 
     private List<TraceDom> traceability;
 }

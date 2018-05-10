@@ -213,14 +213,13 @@ public class ProjectController {
         }
     }
 
-    @RequestMapping(value = "/project/{projectId}/traceability", method = RequestMethod.GET)
+   /* @RequestMapping(value = "/project/{projectId}/traceability", method = RequestMethod.GET)
     public ModelAndView getProjectTraceability(@PathVariable int projectId, Principal principal){
         ProjectDom project = projectService.getProject(projectId);
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             List<ObjectDom> traceability = projectService.getProjectTraceability(projectId);
-
             ModelAndView modelAndView = new ModelAndView("projectTraceability");
             project.setGroupId(project.getGroup().getGroupId());
             modelAndView.addObject("project", project);
@@ -235,7 +234,7 @@ public class ProjectController {
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a traceability " +
                 "relationship from project "+projectId);
         throw new AccessDeniedException("Not allowed");
-    }
+    }*/
 
 
 }

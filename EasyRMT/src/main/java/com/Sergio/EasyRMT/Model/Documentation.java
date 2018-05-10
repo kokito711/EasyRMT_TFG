@@ -32,24 +32,20 @@ public class Documentation implements Serializable {
 
     @NotNull
     @Column(name = "name")
-    @Builder.Default
     @Length(max = 64, min = 1)
     private String name = "file";
 
     @NotNull
     @Column(name = "size")
-    @Builder.Default
     private Double size = 0.0;
 
     @NotNull
     @Column(name = "type")
-    @Builder.Default
     @Length(max = 255, min = 1)
     private String type = "application/octet-stream";
 
     @NotNull
     @Column(name = "path")
-    @Builder.Default
     @Length(max = 255, min = 1)
     private String path = "/";
 

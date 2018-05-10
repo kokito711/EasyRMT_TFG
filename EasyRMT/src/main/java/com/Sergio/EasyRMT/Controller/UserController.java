@@ -6,8 +6,13 @@
 package com.Sergio.EasyRMT.Controller;
 
 
+import com.Sergio.EasyRMT.Domain.GroupDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Model.Group;
+import com.Sergio.EasyRMT.Model.Group_user;
+import com.Sergio.EasyRMT.Service.Converter.GroupConverter;
+import com.Sergio.EasyRMT.Service.GroupService;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -26,13 +32,12 @@ public class UserController {
 
     private final String USER_BASE_PATH = "/user/";
     private UserService userService;
-    private ProjectService projectService;
+    private CommonMethods commonMethods;
 
     @Autowired
-    public UserController(UserService userService, ProjectService projectService)
-    {
-        this.projectService = projectService;
+    public UserController(UserService userService, CommonMethods commonMethods) {
         this.userService = userService;
+        this.commonMethods = commonMethods;
     }
 
     /**
@@ -54,7 +59,7 @@ public class UserController {
     @RequestMapping(value = USER_BASE_PATH+"{username}", method = RequestMethod.GET)
     public ModelAndView getUserProfile(@PathVariable String username){
         UserDom user = userService.findUser(username);
-        List<ProjectDom> projects = projectService.getProjects();
+        List<ProjectDom> projects = commonMethods.getProjectsFromGroup(user);
         ModelAndView modelAndView = new ModelAndView("/user/profile");
         modelAndView.addObject("userProf", user);
         modelAndView.addObject("user", user.getUsername());
@@ -71,7 +76,7 @@ public class UserController {
     @RequestMapping(value = USER_BASE_PATH+"{username}", method = RequestMethod.POST)
     public ModelAndView updateUserProfile(@PathVariable String username,  @Valid UserDom userInfo, BindingResult result){
         UserDom user = userService.modifyUser(null,username, userInfo);
-        List<ProjectDom> projects = projectService.getProjects();
+        List<ProjectDom> projects = commonMethods.getProjectsFromGroup(user);
         ModelAndView modelAndView = new ModelAndView("/user/profile");
         modelAndView.addObject("success", true);
         modelAndView.addObject("userProf", user);

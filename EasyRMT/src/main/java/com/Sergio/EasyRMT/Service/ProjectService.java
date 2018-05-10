@@ -1,9 +1,6 @@
 package com.Sergio.EasyRMT.Service;
 
-import com.Sergio.EasyRMT.Domain.ObjectDom;
-import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
-import com.Sergio.EasyRMT.Domain.TraceDom;
+import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.Group;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.Project;
@@ -33,11 +30,18 @@ public class ProjectService {
     GroupRepository groupRepository;
     ObjectRepository objectRepository;
     TraceabilityService traceabilityService;
+    FeatureService featureService;
+    EpicService epicService;
+    UseCaseService useCaseService;
+    UserStoryService userStoryService;
+    RequirementService requirementService;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository, ProjectConverter projectConverter,
                           ReqTypeConverter reqTypeConverter, DocumentService documentService, GroupRepository groupRepository,
-                          ObjectRepository objectRepository, TraceabilityService traceabilityService) {
+                          ObjectRepository objectRepository, TraceabilityService traceabilityService, FeatureService featureService,
+                          EpicService epicService, UseCaseService useCaseService, UserStoryService userStoryService,
+                          RequirementService requirementService) {
         this.projectRepository = projectRepository;
         this.reqTypeRepository = reqTypeRepository;
         this.projectConverter = projectConverter;
@@ -46,6 +50,11 @@ public class ProjectService {
         this.groupRepository = groupRepository;
         this.objectRepository = objectRepository;
         this.traceabilityService = traceabilityService;
+        this.featureService = featureService;
+        this.epicService = epicService;
+        this.useCaseService = useCaseService;
+        this.userStoryService = userStoryService;
+        this.requirementService = requirementService;
     }
 
     /**
@@ -55,13 +64,6 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public List<ProjectDom> getProjects(int groupId){
         List<Project> projectModelList = projectRepository.findByGroup(groupId);
-        List<ProjectDom> projectDomList = projectConverter.toDomain(projectModelList);
-        return projectDomList;
-    }
-    //TODO DELETE THIS METHOD WHEN FINISHED TO UPDATE
-    @Transactional(readOnly = true)
-    public List<ProjectDom> getProjects(){
-        List<Project> projectModelList = projectRepository.findAll();
         List<ProjectDom> projectDomList = projectConverter.toDomain(projectModelList);
         return projectDomList;
     }
@@ -173,13 +175,13 @@ public class ProjectService {
         }
     }
 
-   @Transactional
+   /*@Transactional
     public List<ObjectDom> getProjectTraceability(int projectId){
         List<ObjectEntity> objects = objectRepository.findByProjectId(projectId);
         List<ObjectDom> objectDomList = new ArrayList<>();
        getObjectDomList(objects, objectDomList);
        return  objectDomList;
-    }
+    }*/
 
 
     /**
@@ -193,9 +195,34 @@ public class ProjectService {
         return requirementTypeDomList;
     }
 
-    private void getObjectDomList(List<ObjectEntity> objects, List<ObjectDom> objectDomList) {
+    /*private void getObjectDomList(List<ObjectEntity> objects, List<ObjectDom> objectDomList) {
         for (ObjectEntity objectEntity : objects){
             ObjectDom object = new ObjectDom();
+            try {
+                FeatureDom feature = featureService.getFeature(objectEntity.getIdobject());
+                object.setFeatureDom(feature);
+            }catch (Exception e){
+                try {
+                    EpicDom epic = epicService.getEpic(objectEntity.getIdobject());
+                    object.setEpicDom(epic);
+                }
+                catch (Exception f){
+                    try {
+                        UseCaseDom useCase = useCaseService.getUseCase(objectEntity.getIdobject());
+                        object.setUseCaseDom(useCase);
+                    }
+                    catch (Exception g){
+                        try {
+                            UserStoryDom userStory = userStoryService.getUserStory(objectEntity.getIdobject());
+                            object.setUserStoryDom(userStory);
+                        }
+                        catch (Exception h){
+                            RequirementDom requirement = requirementService.getRequirement(objectEntity.getIdobject());
+                            object.setRequirementDom(requirement);
+                        }
+                    }
+                }
+            }
             object.setIdObject(objectEntity.getIdobject());
             object.setProject(projectConverter.toDomain(objectEntity.getProject()));
             object.setTraceability(new ArrayList<>());
@@ -205,5 +232,5 @@ public class ProjectService {
             }
             objectDomList.add(object);
         }
-    }
+    }*/
 }

@@ -8,77 +8,75 @@
 
     <!--Navigation -->
     <nav th:replace="fragments/menu :: menu_project(project= ${project},projectList = ${projectList}, user=${user}, isPm=${isPM})"></nav>
+    <!-- Deletion Modal -->
+    <div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog"
+         aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteProjectModalLabel" th:text="#{project.deleteModal.label}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{project.deleteModal.text}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{project.deleteModal.cancelButton}"></button>
+                    <button type="button" class="btn btn-danger" th:onclick="${'deleteProject('+project.getIdProject()+')'}"
+                            th:text="#{project.deleteModal.deleteButton}"></button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /. deletion modal -->
+    <!-- Deletion notify Modal -->
+    <div class="modal fade" id="deleteProjectModalOk" tabindex="-1" role="dialog"
+         aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteProjectModalLabelOk" th:text="#{project.deleteModal.label}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{project.deleteNotificationModal.text}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                            onclick="window.location = '/dashboard'" th:text="#{project.deleteNotificationModal.dismissButton}">
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /. deletion notify modal -->
+    <!-- Deletion fail Modal -->
+    <div class="modal fade" id="deleteProjectModalFail" tabindex="-1" role="dialog"
+         aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteProjectModalLabelFail" th:text="#{project.deleteModal.FailLabel}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{project.deleteNotificationModal.Failtext}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{project.deleteNotificationModal.dismissButton}"></button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /. deletion fail modal -->
     <div id="page-wrapper">
-        <!-- Deletion Modal -->
-        <div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog"
-             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                        <h4 class="modal-title" id="deleteProjectModalLabel" th:text="#{project.deleteModal.label}"></h4>
-                    </div>
-                    <div class="modal-body" th:text="#{project.deleteModal.text}">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"
-                                th:text="#{project.deleteModal.cancelButton}"></button>
-                        <button type="button" class="btn btn-danger" th:onclick="${'deleteProject('+project.getIdProject()+')'}"
-                                th:text="#{project.deleteModal.deleteButton}"></button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /. deletion modal -->
-        <!-- Deletion notify Modal -->
-        <div class="modal fade" id="deleteProjectModalOk" tabindex="-1" role="dialog"
-             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                        <h4 class="modal-title" id="deleteProjectModalLabelOk" th:text="#{project.deleteModal.label}"></h4>
-                    </div>
-                    <div class="modal-body" th:text="#{project.deleteNotificationModal.text}">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
-                                onclick="window.location = '/dashboard'" th:text="#{project.deleteNotificationModal.dismissButton}">
-                        </button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /. deletion notify modal -->
-        <!-- Deletion fail Modal -->
-        <div class="modal fade" id="deleteProjectModalFail" tabindex="-1" role="dialog"
-             aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                        <h4 class="modal-title" id="deleteProjectModalLabelFail" th:text="#{project.deleteModal.FailLabel}"></h4>
-                    </div>
-                    <div class="modal-body" th:text="#{project.deleteNotificationModal.Failtext}">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"
-                                th:text="#{project.deleteNotificationModal.dismissButton}"></button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <!-- /. deletion fail modal -->
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 id="project-name" class="page-header" th:text="${project.getName()}"></h1>
-            </div>
+        <div class="row col-lg-12">
+            <h1 id="project-name" class="page-header" th:text="${project.getName()}"></h1>
         </div>
         <div class="row col-lg-12">
             <p class="-align-justify" th:if="${project.getDescription()}!= null" th:text="${project.getDescription()}">
@@ -182,6 +180,28 @@
                     </a>
                 </div>
             </div>
+            <!--<div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-sitemap fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right h3" id="traceability-panel" th:text="#{project.traceability}">
+                            </div>
+                        </div>
+                    </div>
+                    <a th:href="'/project/'+${project.getIdProject()}+'/traceability'">
+                        <div class="panel-footer">
+                            <span class="pull-left" th:text="#{project.viewDetails}"></span>
+                            <span class="pull-right">
+                                    <i class="fa fa-arrow-circle-right"></i>
+                                </span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>-->
         </div>
         <div class="row col-lg-12">
             <ul class="nav nav-tabs">
@@ -208,7 +228,7 @@
                         <h1 id="group-name" class="page-header" th:text="${project.getGroup().getName()}"></h1>
                     </div>
                     <div class="row">
-                        <div class="col-md-4 col-sm-offset-1">
+                        <div class="col-md-4">
                             <div class="row">
                                 <h3 th:text="#{createUser.role.analyst}+'s'"></h3>
                             </div>
@@ -227,20 +247,20 @@
                                     <tbody>
                                         <tr th:each="user : ${project.getGroup().getUsers()}"
                                             th:if="${not user.isStakeholder()}">
-                                            <td th:text="${user.getPrimaryKey().getUser().getUsername()}"></td>
+                                            <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getUsername(),15)}"></td>
                                             <td> <a th:href="'mailto:'+${user.getPrimaryKey().getUser().getEmail()}"
-                                                    th:text="${user.getPrimaryKey().getUser().getEmail()}"></a>
+                                                    th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getEmail(),30)}"></a>
                                             </td>
-                                            <td th:text="${user.getPrimaryKey().getUser().getName()}"></td>
-                                            <td th:text="${user.getPrimaryKey().getUser().getLastName()}"></td>
-                                            <td th:text="${user.getPrimaryKey().getUser().getPhone()}"></td>
+                                            <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getName(), 15)}"></td>
+                                            <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getLastName(),15)}"></td>
+                                            <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getPhone(),12)}"></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="col-sm-1"></div>
-                        <div class="col-md-4 ">
+                        <div class="col-md-4  col-sm-offset-1">
                             <div class="row">
                                 <h3>Stakeholders</h3>
                             </div>
@@ -258,20 +278,19 @@
                                     </thead>
                                     <tbody>
                                     <tr th:each="user : ${project.getGroup().getUsers()}" th:if="${user.isStakeholder()}">
-                                        <td th:text="${user.getPrimaryKey().getUser().getUsername()}"></td>
+                                        <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getUsername(),15)}"></td>
                                         <td> <a th:href="'mailto:'+${user.getPrimaryKey().getUser().getEmail()}"
-                                                th:text="${user.getPrimaryKey().getUser().getEmail()}"></a>
+                                                th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getEmail(),30)}"></a>
                                         </td>
-                                        <td th:text="${user.getPrimaryKey().getUser().getName()}"></td>
-                                        <td th:text="${user.getPrimaryKey().getUser().getLastName()}"></td>
-                                        <td th:text="${user.getPrimaryKey().getUser().getPhone()}"></td>
+                                        <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getName(), 15)}"></td>
+                                        <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getLastName(),15)}"></td>
+                                        <td th:text="${#strings.abbreviate(user.getPrimaryKey().getUser().getPhone(),12)}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
