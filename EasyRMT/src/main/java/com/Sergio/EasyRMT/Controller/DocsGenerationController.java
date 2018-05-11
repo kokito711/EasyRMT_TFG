@@ -9,10 +9,12 @@ import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
-import com.Sergio.EasyRMT.Model.types.ProjectType;
 import com.Sergio.EasyRMT.Service.*;
 import javassist.bytecode.stackmap.TypeData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Nullable;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response;
+import java.io.*;
 import java.security.Principal;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,21 +37,24 @@ public class DocsGenerationController {
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
     final String PRINTER_PATH_BASE = "/print/{projectId}/";
-    ProjectService projectService;
-    FeatureService featureService;
-    EpicService epicService;
-    CommonMethods commonMethods;
-    UserService userService;
-    UseCaseService useCaseService;
-    TraceabilityService traceabilityService;
-    UserStoryService userStoryService;
-    RequirementService requirementService;
+    final String DOCX_PATH_BASE = "/file/docx/{projectId}/";
+    final String PDF_PATH_BASE = "/file/pdf/{projectId}/";
+    private ProjectService projectService;
+    private FeatureService featureService;
+    private EpicService epicService;
+    private CommonMethods commonMethods;
+    private UserService userService;
+    private UseCaseService useCaseService;
+    private TraceabilityService traceabilityService;
+    private UserStoryService userStoryService;
+    private RequirementService requirementService;
+    private DocsService docsService;
 
     @Autowired
     public DocsGenerationController(ProjectService projectService, FeatureService featureService, EpicService epicService,
-                                    CommonMethods commonMethods, UserService userService,
-                                    UseCaseService useCaseService, TraceabilityService traceabilityService,
-                                    UserStoryService userStoryService, RequirementService requirementService) {
+                                    CommonMethods commonMethods, UserService userService, UseCaseService useCaseService,
+                                    TraceabilityService traceabilityService, UserStoryService userStoryService,
+                                    RequirementService requirementService, DocsService docsService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.epicService = epicService;
@@ -56,6 +64,7 @@ public class DocsGenerationController {
         this.traceabilityService = traceabilityService;
         this.userStoryService = userStoryService;
         this.requirementService = requirementService;
+        this.docsService = docsService;
     }
 
     /**
@@ -123,6 +132,40 @@ public class DocsGenerationController {
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document to print from project "
+                +projectId);
+        throw new AccessDeniedException("Not allowed");
+    }
+
+
+    @RequestMapping(value = DOCX_PATH_BASE+"{type}/{objectId}", method = RequestMethod.GET)
+    public HttpEntity<byte[]> getObjectAsDocx(@PathVariable int projectId, @PathVariable String type,
+                                              @PathVariable int objectId, Principal principal, Locale locale){
+        ProjectDom project = projectService.getProject(projectId);
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        if (commonMethods.isAllowed(projectDomList, project)) {
+            File file = docsService.generateDocx(project, type, objectId, locale);
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment;filename="+ file.getName());
+            //Converting file to bytearray
+            byte[] content = new byte[(int) file.length()];
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                fileInputStream.read(content);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+            }
+            header.setContentLength(content.length);
+            HttpEntity<byte[]> response = new HttpEntity<>(content, header);
+            return response;
+        }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document from project "
                 +projectId);
         throw new AccessDeniedException("Not allowed");
     }
