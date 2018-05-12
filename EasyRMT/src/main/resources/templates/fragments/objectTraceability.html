@@ -373,7 +373,7 @@ featureList, epicList, useCaseList, userStoryList)">
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="useCase : ${traceability.getUseCases()}">
+                        <tr th:each="userStory : ${traceability.getUserStories()}">
                             <td th:text="${userStory.getIdentifier()}"></td>
                             <td th:text="${userStory.getName()}"></td>
                             <td>
@@ -395,7 +395,7 @@ featureList, epicList, useCaseList, userStoryList)">
                                     </span>
                                 </a>
                                 <a href="" data-toggle="modal" data-target="#deleteTraceModal"
-                                   th:onclick="'modalValue('+${useCase.getIdUseCase()}+')'" class="tooltip-demo">
+                                   th:onclick="'modalValue('+${userStory.getIdUserStory()}+')'" class="tooltip-demo">
                                         <span class="fa fa-times-circle fa-2x" style="color: #b52b27"
                                               data-toggle="tooltip" data-placement="top"
                                               th:title="#{traceability.deleteTrace}">

@@ -103,11 +103,10 @@
             <a href="#">
                 <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
             </a>
-            <a href="#">
-                <span class="fa fa-file-excel-o pull-right fa-2x" style="color: #2b542c;"></span>
-            </a>
-            <a href="#">
-                <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
+            <a th:href="@{'/file/docx/'+${project.getIdProject()}+'/epic/'+${epic.getIdEpic()}}" class="tooltip-demo"
+               target="_blank">
+                <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"
+                      th:title="#{elements.getWord}" data-toggle="tooltip" data-placement="left"></span>
             </a>
             <a th:href="@{'/print/'+${project.getIdProject()}+'/epic/'+${epic.getIdEpic()}}" class="tooltip-demo"
                target="_blank">
@@ -276,26 +275,25 @@
                                     <a href="#">
                                         <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
                                     </a>
-                                    <a href="#">
-                                        <span class="fa fa-file-excel-o pull-right fa-2x" style="color: #2b542c;"></span>
+                                    <a th:href="@{'/file/docx/'+${project.getIdProject()}+'/userstory/'+${userStory.getIdUserStory()}}" class="tooltip-demo"
+                                       target="_blank">
+                                        <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"
+                                              th:title="#{elements.getWord}" data-toggle="tooltip" data-placement="left"></span>
                                     </a>
-                                    <a href="#">
-                                        <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
-                                    </a>
-                                    <a th:href="@{'/print/'+${project.getIdProject()}+'/epic/list/'+${epic.getIdEpic()}}" class="tooltip-demo"
+                                    <a th:href="@{'/print/'+${project.getIdProject()}+'/userstory/'+${userStory.getIdUserStory()}}" class="tooltip-demo"
                                        target="_blank">
                                         <span class="fa fa-print pull-right fa-2x" data-toggle="tooltip" data-placement="left"
                                               th:title="#{elements.printButton}"></span>
                                     </a>
                                     <a href="" data-toggle="modal" data-target="#deleteUsModal"
-                                       th:onclick="'modalValue('+${userStory.getIdUserStory()}+')'">
+                                       th:onclick="'modalValue('+${userStory.getIdUserStory()}+')'" class="tooltip-demo">
                                     <span class="fa fa-times-circle fa-2x pull-right" style="color: #b52b27"
                                           data-toggle="tooltip" data-placement="top"
                                           th:title="#{epic.tab.userStoriesTab.Table.Tbody.deleteUs}">
                                     </span>
                                     </a>
                                     <a th:href="'/project/'+${epic.getProjectId()}+'/epic/'+${epic.getIdEpic()}+
-                                    '/userstory/'+${userStory.getIdUserStory()}">
+                                    '/userstory/'+${userStory.getIdUserStory()}" class="tooltip-demo">
                                     <span class="fa fa-info-circle fa-2x pull-right" style="color: #204d74"
                                           data-toggle="tooltip" data-placement="top"
                                           th:title="#{epic.tab.userStoriesTab.Table.Tbody.usInformation}">

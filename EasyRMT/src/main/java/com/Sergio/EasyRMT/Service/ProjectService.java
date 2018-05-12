@@ -175,5 +175,15 @@ public class ProjectService {
         return requirementTypeDomList;
     }
 
+    /**
+     * This method returns a requirement type existing in db
+     * @return {@link RequirementTypeDom} with RequirementTypeDom related with {@link ProjectDom}
+     */
+    @Transactional(readOnly = true)
+    public RequirementTypeDom getReqType(int reqTypeId){
+        Optional<RequirementType> requirementTypeList = reqTypeRepository.findByIdType(reqTypeId);
+        RequirementTypeDom requirementTypeDomList = reqTypeConverter.toDomain(requirementTypeList.get());
+        return requirementTypeDomList;
+    }
 
 }

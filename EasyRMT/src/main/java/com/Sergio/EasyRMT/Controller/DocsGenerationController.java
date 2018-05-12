@@ -11,7 +11,6 @@ import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.*;
 import javassist.bytecode.stackmap.TypeData;
-import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
