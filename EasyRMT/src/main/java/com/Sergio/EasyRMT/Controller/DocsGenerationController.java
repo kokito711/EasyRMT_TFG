@@ -11,6 +11,7 @@ import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.*;
 import javassist.bytecode.stackmap.TypeData;
+import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -144,7 +145,13 @@ public class DocsGenerationController {
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
-            File file = docsService.generateDocx(project, type, objectId, locale);
+            File file = null;
+            try {
+                file = docsService.generateDocx(project, type, objectId, locale);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+            }
             HttpHeaders header = new HttpHeaders();
             header.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
             header.set(HttpHeaders.CONTENT_DISPOSITION,
@@ -154,15 +161,16 @@ public class DocsGenerationController {
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
                 fileInputStream.read(content);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
             }
             header.setContentLength(content.length);
             HttpEntity<byte[]> response = new HttpEntity<>(content, header);
+            boolean status = file.delete();
+            if(!status){
+                LOGGER.log(Level.SEVERE, "System failed to delete file. File path: "+file.getPath());
+            }
             return response;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document from project "
