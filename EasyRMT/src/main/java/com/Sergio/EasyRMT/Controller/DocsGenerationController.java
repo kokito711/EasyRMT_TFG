@@ -10,7 +10,9 @@ import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.*;
+import javafx.util.Pair;
 import javassist.bytecode.stackmap.TypeData;
+import org.docx4j.Docx4J;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,11 +27,16 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.nio.file.Files.deleteIfExists;
 
 @RestController
 public class DocsGenerationController {
@@ -157,16 +164,17 @@ public class DocsGenerationController {
                     "attachment;filename="+ file.getName());
             //Converting file to bytearray
             byte[] content = new byte[(int) file.length()];
-            try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                fileInputStream.read(content);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
-            }
+            convertFileToByteArray(file, content);
             header.setContentLength(content.length);
             HttpEntity<byte[]> response = new HttpEntity<>(content, header);
-            boolean status = file.delete();
+            Path root = Paths.get(file.getPath());
+            boolean status = false;
+            try {
+                status = Files.deleteIfExists(root);
+            }
+            catch (Exception e){
+                LOGGER.log(Level.SEVERE, "System failed to delete file. File path: "+file.getPath());
+            }
             if(!status){
                 LOGGER.log(Level.SEVERE, "System failed to delete file. File path: "+file.getPath());
             }
@@ -175,6 +183,57 @@ public class DocsGenerationController {
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document from project "
                 +projectId);
         throw new AccessDeniedException("Not allowed");
+    }
+
+    @RequestMapping(value = PDF_PATH_BASE+"{type}/{objectId}", method = RequestMethod.GET)
+    public HttpEntity<byte[]> getObjectAsPdf(@PathVariable int projectId, @PathVariable String type,
+                                              @PathVariable int objectId, Principal principal, Locale locale){
+        ProjectDom project = projectService.getProject(projectId);
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        if (commonMethods.isAllowed(projectDomList, project)) {
+            Pair<String,byte[]> file = null;
+            try {
+                file = docsService.generatePdf(project, type, objectId, locale);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+            }
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(MediaType.parseMediaType("application/pdf"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment;filename="+ file.getKey());
+            //Converting file to bytearray
+            byte[] content = file.getValue();
+            header.setContentLength(content.length);
+            HttpEntity<byte[]> response = new HttpEntity<>(content, header);
+            Path root = Paths.get(file.getKey());
+            boolean status = false;
+            try {
+                status = Files.deleteIfExists(root);
+            }
+            catch (Exception e){
+                LOGGER.log(Level.SEVERE, "System failed to delete file. File path: "+file.getKey());
+            }
+            if(!status){
+                LOGGER.log(Level.SEVERE, "System failed to delete file. File path: "+file.getKey());
+            }
+            return response;
+        }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document from project "
+                +projectId);
+        throw new AccessDeniedException("Not allowed");
+    }
+
+    private void convertFileToByteArray(File file, byte[] content) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.read(content);
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private void populateListModelAndView(ProjectDom project, String type, int objectId, ModelAndView modelAndView) {

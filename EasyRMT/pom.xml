@@ -145,7 +145,7 @@
 			<artifactId>jaxb-api</artifactId>
 			<version>LATEST</version>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>

@@ -112,6 +112,14 @@ public class RequirementController {
             modelAndView.addObject("traceObject", new TraceDom());
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,requirementId));
+            if(project.getType().equals(ProjectType.AGILE)){
+                modelAndView.addObject("epicList", traceabilityService.getNotTracedEpics(projectId, requirementId));
+                modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,requirementId));
+            }
+            else {
+                modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, requirementId));
+                modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,requirementId));
+            }
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a list of requirements" +

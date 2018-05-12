@@ -2,6 +2,9 @@ package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.types.*;
+import javafx.util.Pair;
+import org.docx4j.Docx4J;
+import org.docx4j.Docx4jProperties;
 import org.docx4j.XmlUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -12,10 +15,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import javax.xml.bind.JAXBElement;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -47,7 +50,7 @@ public class DocsService {
         this.requirementService = requirementService;
     }
 
-    public File generateDocx(ProjectDom project, String type, int objectId, Locale locale) throws IOException, Docx4JException {
+    public File generateDocx(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException {
         FeatureDom feature;
         EpicDom epic;
         UseCaseDom useCase;
@@ -79,13 +82,67 @@ public class DocsService {
                 requirement = requirementService.getRequirement(objectId);
                 exportFile = new File(requirement.getIdentifier()+"_"+requirement.getName()+".docx");
                 generateDocument(project, null,null,null, null, requirement, exportFile, locale);
+                break;
             default:
                 throw new AccessDeniedException("Not allowed");
         }
         return exportFile;
     }
 
-    private void generateDocument(ProjectDom project, @Nullable FeatureDom feature, @Nullable EpicDom epic,
+    public Pair<String,byte[]> generatePdf(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException, IOException {
+        FeatureDom feature;
+        EpicDom epic;
+        UseCaseDom useCase;
+        UserStoryDom userStory;
+        RequirementDom requirement;
+        File exportFile;
+        WordprocessingMLPackage docxFile = null;
+        String path = "";
+        switch (type) {
+            case "feature":
+                feature = featureService.getFeature(objectId);
+                exportFile = new File(feature.getIdentifier() + "_" + feature.getName() + ".docx");
+                path = feature.getIdentifier() + "_" + feature.getName() + ".pdf";
+                docxFile =generateDocument(project, feature, null, null, null, null, exportFile, locale);
+                break;
+            case "epic":
+                epic = epicService.getEpic(objectId);
+                exportFile = new File(epic.getIdentifier() + "_" + epic.getName() + ".docx");
+                path = epic.getIdentifier() + "_" + epic.getName() + ".pdf";
+                docxFile = generateDocument(project, null, epic, null, null, null, exportFile, locale);
+                break;
+            case "usecase":
+                useCase = useCaseService.getUseCase(objectId);
+                exportFile = new File(useCase.getIdentifier() + "_" + useCase.getName() + ".docx");
+                path = useCase.getIdentifier() + "_" + useCase.getName() + ".pdf";
+                docxFile =generateDocument(project, null, null, useCase, null, null, exportFile, locale);
+                break;
+            case "userstory":
+                userStory = userStoryService.getUserStory(objectId);
+                exportFile = new File(userStory.getIdentifier() + "_" + userStory.getName() + ".docx");
+                path = userStory.getIdentifier() + "_" + userStory.getName() + ".pdf";
+                docxFile =generateDocument(project, null, null, null, userStory, null, exportFile, locale);
+                break;
+            case "requirement":
+                requirement = requirementService.getRequirement(objectId);
+                exportFile = new File(requirement.getIdentifier() + "_" + requirement.getName() + ".docx");
+                path = requirement.getIdentifier() + "_" + requirement.getName() + ".pdf";
+                docxFile =generateDocument(project, null, null, null, null, requirement, exportFile, locale);
+                break;
+            default:
+                throw new AccessDeniedException("Not allowed");
+        }
+        Docx4jProperties.setProperty(
+                "com.plutext.converter.URL",
+                "http://127.0.0.1:9016/v1/00000000-0000-0000-0000-000000000000/convert");
+        Docx4J.toPDF(docxFile, new FileOutputStream(path));
+        Path root = Paths.get(path);
+        byte[] file = Files.readAllBytes(root);
+        Pair<String, byte[]> result = new Pair<>(path,file);
+        return result;
+    }
+
+    private WordprocessingMLPackage generateDocument(ProjectDom project, @Nullable FeatureDom feature, @Nullable EpicDom epic,
                                   @Nullable UseCaseDom useCase, @Nullable UserStoryDom userStory,
                                   @Nullable RequirementDom requirement, File exportFile, Locale locale) throws Docx4JException {
         int object = 0;
@@ -126,22 +183,21 @@ public class DocsService {
                     replacePlaceholder(wordPackage,useCase, placeholder, project, resourceBundle);
                     break;
                 case 4:
-                   // mdp.addStyledParagraphOfText("Title", userStory.getIdentifier()+" "+userStory.getName());
                     wordPackage = getTemplate("templates/docxFiles/epicTemplate.docx");
                     placeholder = generateEpicPlaceholder();
                     replacePlaceholder(wordPackage,userStory, placeholder, project, resourceBundle);
                     break;
                 case 5:
-                    //mdp.addStyledParagraphOfText("Title", requirement.getIdentifier()+" "+requirement.getName());
                     wordPackage = getTemplate("templates/docxFiles/reqTemplate.docx");
                     placeholder = generateCommonPlaceholder();
                     replacePlaceholder(wordPackage,requirement, placeholder, project, resourceBundle);
                     break;
             }
+            wordPackage.save(exportFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        wordPackage.save(exportFile);
+        return wordPackage;
     }
 
     private List<String> generateEpicPlaceholder() {
@@ -204,7 +260,6 @@ public class DocsService {
         }
         return template;
     }
-
 
     private static List<Object> getAllElementFromObject(Object obj, Class<?> toSearch) {
         List<Object> result = new ArrayList<Object>();
@@ -270,7 +325,6 @@ public class DocsService {
         information.put(placeholder.get(31), resourceBundle.get("epicsDashboard.Table.Thead.identifier"));
         information.put(placeholder.get(32), resourceBundle.get("epicsDashboard.Table.Thead.name"));
         information.put(placeholder.get(33), resourceBundle.get("reqsDashboard.Table.Thead.reqType"));
-        information.put(placeholder.get(34), Integer.toString(feature.getStoryPoints())+" pts");
         for (Object text : texts) {
             Text textElement = (Text) text;
             if (information.containsKey(textElement.getValue())){
@@ -541,6 +595,8 @@ public class DocsService {
         information.put(placeholder.get(31), resourceBundle.get("epicsDashboard.Table.Thead.identifier"));
         information.put(placeholder.get(32), resourceBundle.get("epicsDashboard.Table.Thead.name"));
         information.put(placeholder.get(33), resourceBundle.get("reqsDashboard.Table.Thead.reqType"));
+        RequirementTypeDom reqType = projectService.getReqType(requirement.getRequirementTypeId());
+        information.put("requirementType", reqType.getName());
         for (Object text : texts) {
             Text textElement = (Text) text;
             if (information.containsKey(textElement.getValue())){
@@ -858,7 +914,7 @@ public class DocsService {
         Map<String,String> resourceMap = new HashMap<>();
         try {
             ResourceBundle resourceBundle;
-            if(locale.getLanguage().equals("en_gb")) {
+            if(locale.getLanguage().equals("en")) {
                 resourceBundle=ResourceBundle.getBundle("messages_en_GB");
             }
             else {

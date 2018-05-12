@@ -32,8 +32,10 @@
             </h2>
         </div>
         <div class="row">
-            <a href="#">
-                <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
+            <a th:href="@{'/file/pdf/'+${project.getIdProject()}+'/requirement/'+${requirement.getIdRequirement()}}" class="tooltip-demo"
+               target="_blank">
+                <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;" th:title="#{elements.getPdf}"
+                      data-toggle="tooltip" data-placement="left"></span>
             </a>
             <a th:href="@{'/file/docx/'+${project.getIdProject()}+'/requirement/'+${requirement.getIdRequirement()}}" class="tooltip-demo"
                target="_blank">
@@ -248,7 +250,12 @@
                 </div>
                 <div th:replace="fragments/objectTraceability :: objectTraceability(traceability= ${traceability},
                 objectId=${requirement.getIdRequirement()}, requirementList=${reqsNotTraced}, traceDom=${traceObject}, reqTypes=${reqTypes},
-                projectId = ${project.getIdProject()})"></div>
+                projectId = ${project.getIdProject()}, featureList= ${featureList}, epicList = null, useCaseList= ${useCaseList},
+                userStoryList= null)" th:if="${project.getType().name()=='NOT_AGILE'}"></div>
+                <div th:replace="fragments/objectTraceability :: objectTraceability(traceability= ${traceability},
+                objectId=${requirement.getIdRequirement()}, requirementList=${reqsNotTraced}, traceDom=${traceObject}, reqTypes=${reqTypes},
+                projectId = ${project.getIdProject()}, featureList= null, epicList = ${epicList}, useCaseList= null,
+                userStoryList=${userStoryList})" th:unless="${project.getType().name()=='NOT_AGILE'}"></div>
                 <div class="tab-pane fade" id="fileTab"
                      th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
                      ${requirement.getIdRequirement()},fileList = ${fileList})">
@@ -259,7 +266,8 @@
 </div>
 <script>
     $(document).ready(
-        startTable()
+        //startTable()
+        $('table.display').DataTable()
     );
     $("[data-toggle=popover]")
         .popover()

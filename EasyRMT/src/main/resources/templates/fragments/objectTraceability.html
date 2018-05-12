@@ -106,7 +106,7 @@ featureList, epicList, useCaseList, userStoryList)">
                                         </option>
                                     </select>
                                     <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${epicList!=null}">
-                                        <option th:each="epic : ${epicList}" th:text="${feature.getName()}"
+                                        <option th:each="epic : ${epicList}" th:text="${epic.getName()}"
                                                 th:value="${epic.getIdEpic()}">
                                         </option>
                                     </select>
