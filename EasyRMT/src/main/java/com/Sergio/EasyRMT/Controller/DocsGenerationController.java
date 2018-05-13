@@ -185,6 +185,47 @@ public class DocsGenerationController {
         throw new AccessDeniedException("Not allowed");
     }
 
+    @RequestMapping(value = DOCX_PATH_BASE+"{type}/list/{objectId}", method = RequestMethod.GET)
+    public HttpEntity<byte[]> getObjectListAsDocx(@PathVariable int projectId, @PathVariable String type,
+                                              @PathVariable int objectId, Principal principal, Locale locale){
+        ProjectDom project = projectService.getProject(projectId);
+        UserDom user = userService.findUser(principal.getName());
+        List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
+        if (commonMethods.isAllowed(projectDomList, project)) {
+            File file = null;
+            try {
+                file = docsService.generateListDocx(project, type, objectId, locale);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ServerErrorException(Response.Status.INTERNAL_SERVER_ERROR);
+            }
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
+            header.set(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment;filename="+ file.getName());
+            //Converting file to bytearray
+            byte[] content = new byte[(int) file.length()];
+            convertFileToByteArray(file, content);
+            header.setContentLength(content.length);
+            HttpEntity<byte[]> response = new HttpEntity<>(content, header);
+            Path root = Paths.get(file.getPath());
+            boolean status = false;
+            try {
+                status = Files.deleteIfExists(root);
+            }
+            catch (Exception e){
+                LOGGER.log(Level.SEVERE, "System failed to delete file. File path: "+file.getPath());
+            }
+            if(!status){
+                LOGGER.log(Level.SEVERE, "System failed to delete file. File path: "+file.getPath());
+            }
+            return response;
+        }
+        LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document from project "
+                +projectId);
+        throw new AccessDeniedException("Not allowed");
+    }
+
     @RequestMapping(value = PDF_PATH_BASE+"{type}/{objectId}", method = RequestMethod.GET)
     public HttpEntity<byte[]> getObjectAsPdf(@PathVariable int projectId, @PathVariable String type,
                                               @PathVariable int objectId, Principal principal, Locale locale){

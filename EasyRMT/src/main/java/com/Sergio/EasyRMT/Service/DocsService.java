@@ -7,6 +7,7 @@ import org.docx4j.Docx4J;
 import org.docx4j.Docx4jProperties;
 import org.docx4j.XmlUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
+import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.wml.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class DocsService {
         this.requirementService = requirementService;
     }
 
-    public File generateDocx(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException {
+    public File generateDocx(ProjectDom project, String type, int objectId, Locale locale){
         FeatureDom feature;
         EpicDom epic;
         UseCaseDom useCase;
@@ -85,6 +86,62 @@ public class DocsService {
                 break;
             default:
                 throw new AccessDeniedException("Not allowed");
+        }
+        return exportFile;
+    }
+
+    public File generateListDocx(ProjectDom project, String type, int objectId, Locale locale) {
+        List<FeatureDom> features;
+        List<EpicDom> epics;
+        List<UseCaseDom> useCases;
+        List<UserStoryDom> userStories;
+        List<RequirementDom> requirements;
+        File exportFile = null;
+        if(objectId!=0){
+            switch (type){
+                case "usecase":
+                    FeatureDom feature = featureService.getFeature(objectId);
+                    useCases = feature.getUseCases();
+                    exportFile = new File(feature.getIdentifier()+"_"+feature.getName()+"UseCases.docx");
+                    generateDocument(project, null, null, useCases, null, null, exportFile, locale);
+                    break;
+                case "userstory":
+                    EpicDom epic = epicService.getEpic(objectId);
+                    userStories = epic.getUserStoryDoms();
+                    exportFile = new File(epic.getIdentifier()+"_"+epic.getName()+"UserStories.docx");
+                    generateDocument(project, null, null, null, userStories, null, exportFile, locale);
+                    break;
+            }
+        } else {
+            switch (type) {
+                case "feature":
+                    features = featureService.getFeatures(project.getIdProject());
+                    exportFile = new File(project.getName() + "_Feat_List.docx");
+                    generateDocument(project, features, null, null, null, null, exportFile, locale);
+                    break;
+                case "epic":
+                    epics = epicService.getEpics(project.getIdProject());
+                    exportFile = new File(project.getName() + "_Epic_List.docx");
+                    generateDocument(project, null, epics, null, null, null, exportFile, locale);
+                    break;
+                case "usecase":
+                    useCases = useCaseService.getByProjectID(project.getIdProject());
+                    exportFile = new File(project.getName() + "_UseCase_List.docx");
+                    generateDocument(project, null, null, useCases, null, null, exportFile, locale);
+                    break;
+                case "userstory":
+                    userStories = userStoryService.getByProjectID(project.getIdProject());
+                    exportFile = new File(project.getName() + "_UserStory_List.docx");
+                    generateDocument(project, null, null, null, userStories, null, exportFile, locale);
+                    break;
+                case "requirement":
+                    requirements = requirementService.getRequirements(project.getIdProject());
+                    exportFile = new File(project.getName() + "_Requirement_List.docx");
+                    generateDocument(project, null, null, null, null, requirements, exportFile, locale);
+                    break;
+                default:
+                    throw new AccessDeniedException("Not allowed");
+            }
         }
         return exportFile;
     }
@@ -144,23 +201,9 @@ public class DocsService {
 
     private WordprocessingMLPackage generateDocument(ProjectDom project, @Nullable FeatureDom feature, @Nullable EpicDom epic,
                                   @Nullable UseCaseDom useCase, @Nullable UserStoryDom userStory,
-                                  @Nullable RequirementDom requirement, File exportFile, Locale locale) throws Docx4JException {
+                                  @Nullable RequirementDom requirement, File exportFile, Locale locale) {
         int object = 0;
-        if(feature !=null){
-            object = 1;
-        }
-        else if(epic!=null){
-            object = 2;
-        }
-        else if (useCase !=null){
-            object = 3;
-        }
-        else if (userStory != null){
-            object = 4;
-        }
-        else if (requirement != null){
-            object = 5;
-        }
+        object = getObject(object, feature !=null, epic!=null, useCase !=null, userStory != null, requirement != null);
 
         Map<String,String> resourceBundle = getLanguageResource(locale);
         WordprocessingMLPackage wordPackage = null;
@@ -179,7 +222,7 @@ public class DocsService {
                     break;
                 case 3:
                     wordPackage = getTemplate("templates/docxFiles/useCaseTemplate.docx");
-                    placeholder = generateEpicPlaceholder();
+                    placeholder = generateUseCasePlaceholder();
                     replacePlaceholder(wordPackage,useCase, placeholder, project, resourceBundle);
                     break;
                 case 4:
@@ -198,6 +241,112 @@ public class DocsService {
             e.printStackTrace();
         }
         return wordPackage;
+    }
+
+    private WordprocessingMLPackage generateDocument(ProjectDom project, @Nullable List<FeatureDom>features, @Nullable List<EpicDom> epics,
+                                                     @Nullable List<UseCaseDom> useCases, @Nullable List<UserStoryDom> userStories,
+                                                     @Nullable List<RequirementDom> requirements, File exportFile, Locale locale) {
+        int object = 0;
+        object = getObject(object, features != null, epics != null, useCases != null, userStories != null, requirements != null);
+
+        Map<String,String> resourceBundle = getLanguageResource(locale);
+        WordprocessingMLPackage wordPackageTemp = null;
+        WordprocessingMLPackage wordPackage = null;
+        try {
+            wordPackage = WordprocessingMLPackage.createPackage();
+            List<String> placeholder;
+            switch (object){
+                case 1:
+                    placeholder = generateCommonPlaceholder();
+                    for(FeatureDom feature : features) {
+                        feature = featureService.getFeature(feature.getIdFeature());
+                        wordPackageTemp = getTemplate("templates/docxFiles/featureTemplate.docx");
+                        replacePlaceholder(wordPackageTemp, feature, placeholder, project, resourceBundle);
+                        copyToFinalFile(wordPackageTemp, wordPackage);
+                    }
+                    break;
+                case 2:
+                    placeholder = generateEpicPlaceholder();
+                    for(EpicDom epic : epics) {
+                        epic = epicService.getEpic(epic.getIdEpic());
+                        wordPackageTemp = getTemplate("templates/docxFiles/epicTemplate.docx");
+                        replacePlaceholder(wordPackageTemp, epic, placeholder, project, resourceBundle);
+                        copyToFinalFile(wordPackageTemp, wordPackage);
+                    }
+                    break;
+                case 3:
+                    placeholder = generateUseCasePlaceholder();
+                    for(UseCaseDom useCase : useCases) {
+                        useCase = useCaseService.getUseCase(useCase.getIdUseCase());
+                        wordPackageTemp = getTemplate("templates/docxFiles/useCaseTemplate.docx");
+                        replacePlaceholder(wordPackageTemp, useCase, placeholder, project, resourceBundle);
+                        copyToFinalFile(wordPackageTemp, wordPackage);
+                    }
+                    break;
+                case 4:
+                    placeholder = generateEpicPlaceholder();
+                    for(UserStoryDom userStory : userStories) {
+                        userStory = userStoryService.getUserStory(userStory.getIdUserStory());
+                        wordPackageTemp = getTemplate("templates/docxFiles/epicTemplate.docx");
+                        replacePlaceholder(wordPackageTemp, userStory, placeholder, project, resourceBundle);
+                        copyToFinalFile(wordPackageTemp, wordPackage);
+                    }
+                    break;
+                case 5:
+                    placeholder = generateCommonPlaceholder();
+                    for(RequirementDom requirement : requirements) {
+                        requirement = requirementService.getRequirement(requirement.getIdRequirement());
+                        wordPackageTemp = getTemplate("templates/docxFiles/reqTemplate.docx");
+                        replacePlaceholder(wordPackageTemp, requirement, placeholder, project, resourceBundle);
+                        copyToFinalFile(wordPackageTemp, wordPackage);
+                    }
+                    break;
+            }
+            wordPackage.save(exportFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return wordPackage;
+    }
+
+    private void copyToFinalFile(WordprocessingMLPackage wordPackageTemp, WordprocessingMLPackage wordPackage) {
+        List<Object> content = wordPackageTemp.getMainDocumentPart().getContent();
+        for(Object object : content) {
+            wordPackage.getMainDocumentPart().addObject(object);
+        }
+    }
+
+    private int getObject(int object, boolean b, boolean b2, boolean b3, boolean b4, boolean b5) {
+        if(b){
+            object = 1;
+        }
+        else if(b2){
+            object = 2;
+        }
+        else if (b3){
+            object = 3;
+        }
+        else if (b4){
+            object = 4;
+        }
+        else if (b5){
+            object = 5;
+        }
+        return object;
+    }
+
+    private List<String> generateUseCasePlaceholder() {
+        List<String> placeholder = generateCommonPlaceholder();
+        placeholder.add("UseCaseLabel");
+        placeholder.add("ActorsLabel");
+        placeholder.add("Actors");
+        placeholder.add("PreconditionsLabel");
+        placeholder.add("Preconditions");
+        placeholder.add("StepsLabel");
+        placeholder.add("Steps");
+        placeholder.add("PostconditionsLabel");
+        placeholder.add("Postconditions");
+        return placeholder;
     }
 
     private List<String> generateEpicPlaceholder() {
@@ -529,6 +678,16 @@ public class DocsService {
         information.put(placeholder.get(31), resourceBundle.get("epicsDashboard.Table.Thead.identifier"));
         information.put(placeholder.get(32), resourceBundle.get("epicsDashboard.Table.Thead.name"));
         information.put(placeholder.get(33), resourceBundle.get("reqsDashboard.Table.Thead.reqType"));
+        information.put(placeholder.get(34), resourceBundle.get("useCase.tab.useCase"));
+        information.put(placeholder.get(35), resourceBundle.get("createUc.form.actors"));
+        information.put(placeholder.get(36), useCase.getActors());
+        information.put(placeholder.get(37), resourceBundle.get("createUc.form.preconditions"));
+        information.put(placeholder.get(38), useCase.getPreconditions());
+        information.put(placeholder.get(39), resourceBundle.get("createUc.form.steps"));
+        information.put(placeholder.get(40), useCase.getSteps());
+        information.put(placeholder.get(41), resourceBundle.get("createUc.form.postconditions"));
+        information.put(placeholder.get(42), useCase.getPostconditions());
+
         for (Object text : texts) {
             Text textElement = (Text) text;
             if (information.containsKey(textElement.getValue())){
@@ -928,4 +1087,5 @@ public class DocsService {
         }
         return resourceMap;
     }
+
 }
