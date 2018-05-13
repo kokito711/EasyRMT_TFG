@@ -2,9 +2,9 @@ FROM openjdk:8-jre-slim
 
 ENV SPRING_PROFILES_ACTIVE "${SPRING_PROFILES_ACTIVE:-cloud,default,docker}"
 
-EXPOSE ${TCP_PORTS}
+EXPOSE 8080
 
-COPY "target/EasyRMT@project.version@.jar" /
+COPY ./target/easyrmt-0.6.0.jar /
 
-ENTRYPOINT java -jar "/EasyRMT@project.version@.jar" \
+ENTRYPOINT java -jar /easyrmt-0.6.0.jar \
 --spring.profiles.active="${SPRING_PROFILES_ACTIVE}"

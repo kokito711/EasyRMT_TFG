@@ -43,6 +43,7 @@ public class RequirementConverter {
                     requirement.getRequirementType().getIdType(),
                     requirement.getObject().getProject().getIdProject()
             );
+            requirementDom.setState(requirement.getState());
             requirementDomList.add(requirementDom);
         }
         return requirementDomList;

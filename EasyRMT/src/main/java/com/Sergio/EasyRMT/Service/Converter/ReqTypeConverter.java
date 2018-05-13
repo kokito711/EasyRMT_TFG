@@ -12,13 +12,18 @@ public class ReqTypeConverter {
     public List<RequirementTypeDom> toDomain(List<RequirementType> requirementTypeList){
         List<RequirementTypeDom> requirementTypeDomList = new ArrayList<>();
         for(RequirementType reqType : requirementTypeList){
-            RequirementTypeDom reqTypeDom = new RequirementTypeDom(
-                    reqType.getIdType(),
-                    reqType.getName(),
-                    reqType.getType()
-            );
+            RequirementTypeDom reqTypeDom = toDomain(reqType);
             requirementTypeDomList.add(reqTypeDom);
         }
         return  requirementTypeDomList;
+    }
+
+    public RequirementTypeDom toDomain(RequirementType requirementType){
+        RequirementTypeDom reqTypeDom = new RequirementTypeDom(
+                requirementType.getIdType(),
+                requirementType.getName(),
+                requirementType.getType()
+        );
+        return  reqTypeDom;
     }
 }

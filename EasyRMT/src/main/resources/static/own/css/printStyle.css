@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+ *                             All rights reserved
+ */
+@media print {
+
+    body{
+        margin-left: 20px;
+    }
+    @page {
+        size: A4;
+        margin: fill;
+    }
+    
+    td.print_title{
+        background-color: #9d9d9d;
+    }
+}
+
+
+

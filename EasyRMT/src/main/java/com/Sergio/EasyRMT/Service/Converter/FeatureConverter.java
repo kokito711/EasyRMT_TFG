@@ -49,6 +49,7 @@ public class FeatureConverter {
                     feature.getObject().getProject().getIdProject(),
                     useCaseDomList
             );
+            featureDom.setState(feature.getState());
             featureDomList.add(featureDom);
         }
         return featureDomList;

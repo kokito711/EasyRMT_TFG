@@ -112,13 +112,11 @@ public class RequirementController {
             modelAndView.addObject("traceObject", new TraceDom());
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,requirementId));
-            if(project.getType().name().equals("AGILE")){
-                modelAndView.addObject("agile", true);
+            if(project.getType().equals(ProjectType.AGILE)){
                 modelAndView.addObject("epicList", traceabilityService.getNotTracedEpics(projectId, requirementId));
                 modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,requirementId));
             }
             else {
-                modelAndView.addObject("agile", false);
                 modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, requirementId));
                 modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,requirementId));
             }

@@ -15,12 +15,10 @@ services:
 
   app:
       build:
-        context: ./src/main/java/com/Sergio
-        dockerfile: target/docker/dockerfile
-      image: EasyRMT
+        context: docker
+        dockerfile: Dockerfile
+      image: easyrmt
       depends_on:
         - db
       ports:
-        - 8650:80
-      environment:
-        - TCP_PORTS=80
+        - 8650:8080

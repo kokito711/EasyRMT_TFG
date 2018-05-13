@@ -42,6 +42,7 @@ public class UserStoryConverter {
               userStory.getObject().getProject().getIdProject(),
               userStory.getEpic().getIdEpic()
             );
+            userStoryDom.setState(userStory.getState());
             userStoryDomList.add(userStoryDom);
         }
         return userStoryDomList;

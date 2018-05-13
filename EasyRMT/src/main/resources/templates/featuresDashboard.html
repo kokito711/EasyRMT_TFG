@@ -96,17 +96,20 @@
                     <thead>
                     <tr>
                         <th colspan="6">
-                            <a href="#">
-                            <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
+                            <a th:href="@{'/file/pdf/'+${project.getIdProject()}+'/feature/list/0'}"
+                               class="tooltip-demo" target="_blank">
+                                    <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;" th:title="#{elements.getPdf}"
+                                          data-toggle="tooltip" data-placement="left"></span>
                             </a>
-                            <a href="#">
-                            <span class="fa fa-file-excel-o pull-right fa-2x" style="color: #2b542c;"></span>
+                            <a th:href="@{'/file/docx/'+${project.getIdProject()}+'/feature/list/0'}" class="tooltip-demo"
+                               target="_blank">
+                                <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"
+                                      th:title="#{elements.getWord}" data-toggle="tooltip" data-placement="left"></span>
                             </a>
-                            <a href="#">
-                            <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
-                            </a>
-                            <a href="#">
-                            <span class="fa fa-print pull-right fa-2x"></span>
+                            <a th:href="@{'/print/'+${project.getIdProject()}+'/feature/list/0'}" class="tooltip-demo"
+                               target="_blank">
+                                <span class="fa fa-print pull-right fa-2x" data-toggle="tooltip" data-placement="left"
+                                      th:title="#{elements.printButton}"></span>
                             </a>
                             <a th:href="'/project/'+${project.getIdProject()}+'/features/create'" class="tooltip-demo">
                             <span class="fa fa-plus-circle pull-right fa-2x" style="color: #5cb85c;"
