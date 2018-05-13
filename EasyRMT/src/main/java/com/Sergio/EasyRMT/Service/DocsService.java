@@ -9,6 +9,8 @@ import org.docx4j.XmlUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
+import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart;
 import org.docx4j.wml.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -199,6 +201,78 @@ public class DocsService {
         return result;
     }
 
+    public Pair<String,byte[]> generateListPdf(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException, IOException {
+        List<FeatureDom> features;
+        List<EpicDom> epics;
+        List<UseCaseDom> useCases;
+        List<UserStoryDom> userStories;
+        List<RequirementDom> requirements;
+        File exportFile = null;
+        WordprocessingMLPackage docxFile = null;
+        String path = "";
+        if(objectId!=0){
+            switch (type){
+                case "usecase":
+                    FeatureDom feature = featureService.getFeature(objectId);
+                    useCases = feature.getUseCases();
+                    exportFile = new File(feature.getIdentifier()+"_"+feature.getName()+"UseCases.pdf");
+                    path = exportFile.getPath();
+                    docxFile = generateDocument(project, null, null, useCases, null, null, exportFile, locale);
+                    break;
+                case "userstory":
+                    EpicDom epic = epicService.getEpic(objectId);
+                    userStories = epic.getUserStoryDoms();
+                    exportFile = new File(epic.getIdentifier()+"_"+epic.getName()+"UserStories.pdf");
+                    path = exportFile.getPath();
+                    docxFile = generateDocument(project, null, null, null, userStories, null, exportFile, locale);
+                    break;
+            }
+        } else {
+            switch (type) {
+                case "feature":
+                    features = featureService.getFeatures(project.getIdProject());
+                    exportFile = new File(project.getName() + "_Feat_List.pdf");
+                    path = exportFile.getPath();
+                    docxFile = generateDocument(project, features, null, null, null, null, exportFile, locale);
+                    break;
+                case "epic":
+                    epics = epicService.getEpics(project.getIdProject());
+                    exportFile = new File(project.getName() + "_Epic_List.pdf");
+                    path = exportFile.getPath();
+                    docxFile = generateDocument(project, null, epics, null, null, null, exportFile, locale);
+                    break;
+                case "usecase":
+                    useCases = useCaseService.getByProjectID(project.getIdProject());
+                    exportFile = new File(project.getName() + "_UseCase_List.pdf");
+                    path = exportFile.getPath();
+                    docxFile = generateDocument(project, null, null, useCases, null, null, exportFile, locale);
+                    break;
+                case "userstory":
+                    userStories = userStoryService.getByProjectID(project.getIdProject());
+                    exportFile = new File(project.getName() + "_UserStory_List.pdf");
+                    path = exportFile.getPath();
+                    docxFile = generateDocument(project, null, null, null, userStories, null, exportFile, locale);
+                    break;
+                case "requirement":
+                    requirements = requirementService.getRequirements(project.getIdProject());
+                    exportFile = new File(project.getName() + "_Requirement_List.pdf");
+                    path = exportFile.getPath();
+                    docxFile = generateDocument(project, null, null, null, null, requirements, exportFile, locale);
+                    break;
+                default:
+                    throw new AccessDeniedException("Not allowed");
+            }
+        }
+        Docx4jProperties.setProperty(
+                "com.plutext.converter.URL",
+                "http://127.0.0.1:9016/v1/00000000-0000-0000-0000-000000000000/convert");
+        Docx4J.toPDF(docxFile, new FileOutputStream(path));
+        Path root = Paths.get(path);
+        byte[] file = Files.readAllBytes(root);
+        Pair<String, byte[]> result = new Pair<>(path,file);
+        return result;
+    }
+
     private WordprocessingMLPackage generateDocument(ProjectDom project, @Nullable FeatureDom feature, @Nullable EpicDom epic,
                                   @Nullable UseCaseDom useCase, @Nullable UserStoryDom userStory,
                                   @Nullable RequirementDom requirement, File exportFile, Locale locale) {
@@ -310,6 +384,10 @@ public class DocsService {
     }
 
     private void copyToFinalFile(WordprocessingMLPackage wordPackageTemp, WordprocessingMLPackage wordPackage) {
+        MainDocumentPart tempDocPart = wordPackageTemp.getMainDocumentPart();
+        StyleDefinitionsPart sdp = tempDocPart.getStyleDefinitionsPart();
+        Styles tempStyle = sdp.getJaxbElement();
+        wordPackage.getMainDocumentPart().getStyleDefinitionsPart().setJaxbElement(tempStyle);
         List<Object> content = wordPackageTemp.getMainDocumentPart().getContent();
         for(Object object : content) {
             wordPackage.getMainDocumentPart().addObject(object);

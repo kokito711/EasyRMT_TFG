@@ -96,11 +96,15 @@
                     <thead>
                     <tr>
                         <th colspan="6">
-                            <a href="#">
-                            <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;"></span>
+                            <a th:href="@{'/file/pdf/'+${project.getIdProject()}+'/feature/list/0'}"
+                               class="tooltip-demo" target="_blank">
+                                    <span class="fa fa-file-pdf-o pull-right fa-2x" style="color: #b52b27;" th:title="#{elements.getPdf}"
+                                          data-toggle="tooltip" data-placement="left"></span>
                             </a>
-                            <a href="#">
-                            <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"></span>
+                            <a th:href="@{'/file/docx/'+${project.getIdProject()}+'/feature/list/0'}" class="tooltip-demo"
+                               target="_blank">
+                                <span class="fa fa-file-word-o pull-right fa-2x" style="color: #204d74;"
+                                      th:title="#{elements.getWord}" data-toggle="tooltip" data-placement="left"></span>
                             </a>
                             <a th:href="@{'/print/'+${project.getIdProject()}+'/feature/list/0'}" class="tooltip-demo"
                                target="_blank">
