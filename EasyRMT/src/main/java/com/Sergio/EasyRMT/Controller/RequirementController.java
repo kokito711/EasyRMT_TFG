@@ -102,6 +102,7 @@ public class RequirementController {
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(requirementId);
             List<CommentDom> comments = commentService.getComments(requirementId);
+            CommentDom comment = new CommentDom();
             modelAndView.setViewName("requirement");
             modelAndView.addObject("requirement", requirementService.getRequirement(requirementId));
             modelAndView.addObject("project", project);
@@ -124,6 +125,7 @@ public class RequirementController {
                 modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,requirementId));
             }
             modelAndView.addObject("comments", comments);
+            modelAndView.addObject("comment", comment);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a list of requirements" +

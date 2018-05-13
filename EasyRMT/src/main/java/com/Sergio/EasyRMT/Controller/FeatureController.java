@@ -101,6 +101,7 @@ public class FeatureController {
             TraceDom traceability = traceabilityService.getTraceability(featureId);
             TraceDom extension = new TraceDom();
             List<CommentDom> comments = commentService.getComments(featureId);
+            CommentDom comment = new CommentDom();
             modelAndView.setViewName("feature");
             modelAndView.addObject("feature",featureService.getFeature(featureId));
             modelAndView.addObject("project", project);
@@ -116,6 +117,7 @@ public class FeatureController {
             modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, featureId));
             modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,featureId));
             modelAndView.addObject("comments", comments);
+            modelAndView.addObject("comment", comment);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a feature from project "+projectId);

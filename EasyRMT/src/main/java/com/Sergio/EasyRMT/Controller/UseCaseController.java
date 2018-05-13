@@ -137,6 +137,7 @@ public class UseCaseController {
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(useCaseId);
             List<CommentDom> comments = commentService.getComments(useCaseId);
+            CommentDom comment = new CommentDom();
             modelAndView.setViewName("useCase");
             modelAndView.addObject("useCase", useCaseService.getUseCase(useCaseId));
             modelAndView.addObject("project", project);
@@ -154,6 +155,7 @@ public class UseCaseController {
             modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, useCaseId));
             modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,useCaseId));
             modelAndView.addObject("comments", comments);
+            modelAndView.addObject("comment", comment);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a use case from project "+projectId);

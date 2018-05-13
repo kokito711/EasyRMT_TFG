@@ -99,6 +99,7 @@ public class EpicController {
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(epicId);
             List<CommentDom> comments = commentService.getComments(epicId);
+            CommentDom comment = new CommentDom();
             modelAndView.setViewName("epic");
             modelAndView.addObject("epic", epicService.getEpic(epicId));
             modelAndView.addObject("project", project);
@@ -114,6 +115,7 @@ public class EpicController {
             modelAndView.addObject("epicList", traceabilityService.getNotTracedEpics(projectId, epicId));
             modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,epicId));
             modelAndView.addObject("comments", comments);
+            modelAndView.addObject("comment", comment);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain an epic from project "+projectId);
