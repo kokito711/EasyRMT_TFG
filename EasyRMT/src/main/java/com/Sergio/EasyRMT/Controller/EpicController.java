@@ -5,10 +5,7 @@
 
 package com.Sergio.EasyRMT.Controller;
 
-import com.Sergio.EasyRMT.Domain.EpicDom;
-import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Domain.TraceDom;
-import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.types.*;
 import com.Sergio.EasyRMT.Service.*;
@@ -38,16 +35,19 @@ public class EpicController {
     CommonMethods commonMethods;
     UserService userService;
     TraceabilityService traceabilityService;
+    CommentService commentService;
 
     @Autowired
-     public EpicController(ProjectService projectService, EpicService epicService, DocumentService documentService,
-                          CommonMethods commonMethods, UserService userService, TraceabilityService traceabilityService) {
+    public EpicController(ProjectService projectService, EpicService epicService, DocumentService documentService,
+                          CommonMethods commonMethods, UserService userService, TraceabilityService traceabilityService,
+                          CommentService commentService) {
         this.projectService = projectService;
         this.epicService = epicService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
         this.traceabilityService = traceabilityService;
+        this.commentService = commentService;
     }
 
     /**
@@ -98,6 +98,7 @@ public class EpicController {
             boolean isPm = commonMethods.isPM(user,principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(epicId);
+            List<CommentDom> comments = commentService.getComments(epicId);
             modelAndView.setViewName("epic");
             modelAndView.addObject("epic", epicService.getEpic(epicId));
             modelAndView.addObject("project", project);
@@ -112,6 +113,7 @@ public class EpicController {
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,epicId));
             modelAndView.addObject("epicList", traceabilityService.getNotTracedEpics(projectId, epicId));
             modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,epicId));
+            modelAndView.addObject("comments", comments);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain an epic from project "+projectId);

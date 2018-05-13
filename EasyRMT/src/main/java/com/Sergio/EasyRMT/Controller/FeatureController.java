@@ -5,10 +5,7 @@
 
 package com.Sergio.EasyRMT.Controller;
 
-import com.Sergio.EasyRMT.Domain.FeatureDom;
-import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Domain.TraceDom;
-import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.types.*;
@@ -39,16 +36,19 @@ public class FeatureController {
     CommonMethods commonMethods;
     UserService userService;
     TraceabilityService traceabilityService;
+    CommentService commentService;
 
     @Autowired
     public FeatureController(ProjectService projectService, FeatureService featureService, DocumentService documentService,
-                             CommonMethods commonMethods, UserService userService, TraceabilityService traceabilityService) {
+                             CommonMethods commonMethods, UserService userService, TraceabilityService traceabilityService,
+                             CommentService commentService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
         this.traceabilityService = traceabilityService;
+        this.commentService = commentService;
     }
 
     /**
@@ -100,6 +100,7 @@ public class FeatureController {
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(featureId);
             TraceDom extension = new TraceDom();
+            List<CommentDom> comments = commentService.getComments(featureId);
             modelAndView.setViewName("feature");
             modelAndView.addObject("feature",featureService.getFeature(featureId));
             modelAndView.addObject("project", project);
@@ -114,6 +115,7 @@ public class FeatureController {
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,featureId));
             modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, featureId));
             modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,featureId));
+            modelAndView.addObject("comments", comments);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a feature from project "+projectId);

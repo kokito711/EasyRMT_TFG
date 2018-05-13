@@ -35,17 +35,19 @@ public class RequirementController {
     CommonMethods commonMethods;
     UserService userService;
     TraceabilityService traceabilityService;
+    CommentService commentService;
 
     @Autowired
-    public RequirementController(ProjectService projectService, RequirementService requirementService,
-                                 DocumentService documentService, CommonMethods commonMethods, UserService userService,
-                                 TraceabilityService traceabilityService) {
+    public RequirementController(ProjectService projectService, RequirementService requirementService, DocumentService documentService,
+                                 CommonMethods commonMethods, UserService userService, TraceabilityService traceabilityService,
+                                 CommentService commentService) {
         this.projectService = projectService;
         this.requirementService = requirementService;
         this.documentService = documentService;
         this.commonMethods = commonMethods;
         this.userService = userService;
         this.traceabilityService = traceabilityService;
+        this.commentService = commentService;
     }
 
     /**
@@ -99,6 +101,7 @@ public class RequirementController {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(requirementId);
+            List<CommentDom> comments = commentService.getComments(requirementId);
             modelAndView.setViewName("requirement");
             modelAndView.addObject("requirement", requirementService.getRequirement(requirementId));
             modelAndView.addObject("project", project);
@@ -120,6 +123,7 @@ public class RequirementController {
                 modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, requirementId));
                 modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,requirementId));
             }
+            modelAndView.addObject("comments", comments);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a list of requirements" +

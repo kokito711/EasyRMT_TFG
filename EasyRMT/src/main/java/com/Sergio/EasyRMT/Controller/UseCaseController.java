@@ -36,11 +36,12 @@ public class UseCaseController {
     CommonMethods commonMethods;
     UserService userService;
     TraceabilityService traceabilityService;
+    CommentService commentService;
 
     @Autowired
-    public UseCaseController(ProjectService projectService, FeatureService featureService, UseCaseService useCaseService,
+     public UseCaseController(ProjectService projectService, FeatureService featureService, UseCaseService useCaseService,
                              DocumentService documentService, CommonMethods commonMethods, UserService userService,
-                             TraceabilityService traceabilityService) {
+                             TraceabilityService traceabilityService, CommentService commentService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.useCaseService = useCaseService;
@@ -48,6 +49,7 @@ public class UseCaseController {
         this.commonMethods = commonMethods;
         this.userService = userService;
         this.traceabilityService = traceabilityService;
+        this.commentService = commentService;
     }
 
     /**
@@ -134,6 +136,7 @@ public class UseCaseController {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(useCaseId);
+            List<CommentDom> comments = commentService.getComments(useCaseId);
             modelAndView.setViewName("useCase");
             modelAndView.addObject("useCase", useCaseService.getUseCase(useCaseId));
             modelAndView.addObject("project", project);
@@ -150,6 +153,7 @@ public class UseCaseController {
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,useCaseId));
             modelAndView.addObject("featureList", traceabilityService.getNotTracedFeatures(projectId, useCaseId));
             modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,useCaseId));
+            modelAndView.addObject("comments", comments);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a use case from project "+projectId);

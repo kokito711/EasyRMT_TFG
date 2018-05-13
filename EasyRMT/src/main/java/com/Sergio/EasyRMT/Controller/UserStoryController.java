@@ -36,11 +36,12 @@ public class UserStoryController {
     CommonMethods commonMethods;
     UserService userService;
     TraceabilityService traceabilityService;
+    CommentService commentService;
 
     @Autowired
     public UserStoryController(ProjectService projectService, EpicService epicService, UserStoryService userStoryService,
                                DocumentService documentService, CommonMethods commonMethods, UserService userService,
-                               TraceabilityService traceabilityService) {
+                               TraceabilityService traceabilityService, CommentService commentService) {
         this.projectService = projectService;
         this.epicService = epicService;
         this.userStoryService = userStoryService;
@@ -48,6 +49,7 @@ public class UserStoryController {
         this.commonMethods = commonMethods;
         this.userService = userService;
         this.traceabilityService = traceabilityService;
+        this.commentService = commentService;
     }
 
     /**
@@ -135,6 +137,7 @@ public class UserStoryController {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(userStoryId);
+            List<CommentDom> comments = commentService.getComments(userStoryId);
             modelAndView.setViewName("userStory");
             modelAndView.addObject("userStory", userStoryService.getUserStory(userStoryId));
             modelAndView.addObject("project", project);
@@ -151,6 +154,7 @@ public class UserStoryController {
             modelAndView.addObject("reqsNotTraced", traceabilityService.getNotTracedReqs(projectId,userStoryId));
             modelAndView.addObject("epicList", traceabilityService.getNotTracedEpics(projectId, userStoryId));
             modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,userStoryId));
+            modelAndView.addObject("comments", comments);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a user story from project "+projectId);
