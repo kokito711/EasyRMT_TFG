@@ -67,6 +67,9 @@
                 <li>
                     <a href="#traceability" data-toggle="tab" th:text="#{requirement.tab.traceability}"></a>
                 </li>
+                <li>
+                    <a href="#comments" data-toggle="tab" th:text="#{comments.comments}"></a>
+                </li>
                 <li><a href="#fileTab" data-toggle="tab" th:text="#{fileTab.page_header}"></a></li>
             </ul>
             <!-- Tab panes -->
@@ -251,6 +254,8 @@
                 objectId=${userStory.getIdUserStory()}, requirementList=${reqsNotTraced}, traceDom=${traceObject}, reqTypes=${reqTypes},
                 projectId = ${project.getIdProject()}, featureList= null, epicList = ${epicList}, useCaseList= null,
                 userStoryList= ${userStoryList})"></div>
+                <div th:replace="fragments/comments :: commentsFragment(comments = ${comments}, newComment=${comment}, isStakeholder=${isStakeholder},
+                    projectId = ${project.getIdProject()}, objectId=${userStory.getIdUserStory()})"></div>
                 <div class="tab-pane fade" id="fileTab"
                      th:replace="fragments/fileTab :: fileTabFragment(path='/project/'+${project.getIdProject()}+'/object/'+
                      ${userStory.getIdUserStory()},fileList = ${fileList})">

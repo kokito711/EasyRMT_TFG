@@ -163,7 +163,42 @@ function sendForm(groupId) {
             $("#failUpdate").modal('show');
         }
     });
-    e.preventDefault(); // avoid to execute the actual submit of the form.
+}
+
+function sendForm(projectId, objectId) {
+    $.ajax({
+        type: "POST",
+        url: '/'+projectId+'/'+objectId+'/addComment',
+        data: $("#CreateCommentForm").serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            $("#createCommentModal").modal('hide');
+            $("#successCreationComment").modal('show');
+        },
+        error: function () {
+            $("#createCommentModal").modal('hide');
+            $("#failCreationComment").modal('show');
+        }
+    });
+}
+
+function deleteComment() {
+    var button = document.getElementById("delete_comment_button");
+    var projectId = button.getAttribute("value");
+    var objectId = button.getAttribute("value1");
+    var commentId = button.getAttribute("value2");
+    $.ajax({
+        url: '/'+projectId+'/'+objectId+'/delete/'+commentId,
+        type: 'DELETE',
+        success: function() {
+            $("#deleteCommentModal").modal('hide');
+            $("#deleteCommentModalOk").modal('show');
+        },
+        error: function () {
+            $("#deleteCommentModal").modal('hide');
+            $("#deleteCommentModalFail").modal('show');
+        }
+    });
 }
 
 function modalValue(id){
@@ -172,6 +207,8 @@ function modalValue(id){
     att.value = id;
     button.setAttributeNode(att);
 }
+
+
 function modalValueExtended(id1, id2){
     var button = document.getElementById("delete_button");
     var dismiss = document.getElementById("modal_dismiss")
@@ -185,6 +222,19 @@ function modalValueExtended(id1, id2){
     button.setAttributeNode(att2);
     dismiss.setAttributeNode(att3);
 }
+function modalValueExtended(id1, id2, id3){
+    var button = document.getElementById("delete_comment_button");
+    var att1 = document.createAttribute("value");
+    att1.value = id1;
+    var att2 = document.createAttribute("value1");
+    att2.value = id2;
+    var att3 = document.createAttribute("value2");
+    att3.value = id3;
+    button.setAttributeNode(att1);
+    button.setAttributeNode(att2);
+    button.setAttributeNode(att3);
+}
+
 
 function startTable() {
     var locale = navigator.language;

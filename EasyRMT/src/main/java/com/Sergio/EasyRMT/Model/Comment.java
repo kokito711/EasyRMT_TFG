@@ -44,10 +44,12 @@ public class Comment implements Serializable {
     private Date lastModified;
 
     @NotNull
+    @ManyToOne
     @JoinColumn(name = "objectId", referencedColumnName = "idobject")
     private ObjectEntity object;
 
     @NotNull
+    @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "user_id")
     private User user;
 }

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) $today.year.Sergio López Jiménez and Universidad de Valladolid
+  ~                             All rights reserved
+  -->
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="tab-pane fade" id="comments" th:fragment="commentsFragment(comments, newComment, isStakeholder, projectId, objectId)">
+    <br/>
+    <!-- CreateCommentModal-->
+    <div class="modal fade" id="createCommentModal" tabindex="-1" role="dialog"
+         aria-labelledby="createCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="createCommentModalLabel" th:text="#{comments.createModal}"></h4>
+                </div>
+                <div class="modal-body" >
+                    <form autocomplete="off" action="#" th:object="${newComment}" method="post" class="form-horizontal"
+                          role="form" id="CreateCommentForm">
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <textarea id="comment" class="form-control" rows="5" name="comment"
+                                          th:placeholder="#{comments.createModalAddComment}" value=""></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <button type="button" class="btn btn-primary btn-block"
+                                        th:onclick="'sendForm('+${projectId}+','+${objectId}+')'"
+                                        th:text="#{comments.createModal}"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ./CreateCommentModal-->
+    <!-- modal successCreateComment-->
+    <div class="modal fade" id="successCreationComment" tabindex="-1" role="dialog"
+         aria-labelledby="successCreationCommentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="successCreationCommentCommentLabel" th:text="#{comments.createModalsuccess}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{comments.createModalsuccess}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{createUser.modalButton}" onclick="location.reload()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal successCreateComment -->
+    <!-- failCreationComment modal-->
+    <div class="modal fade" id="failCreationComment" tabindex="-1" role="dialog"
+         aria-labelledby="failCreationCommentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="failCreationCommentLabel" th:text="#{comments.createModalfail}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{comments.createModalfail}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{createUser.modalButton}"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- failCreationComment end-->
+    <!-- UpdateCommentModal-->
+    <div>
+
+    </div>
+    <!-- ./UpdateCommentModal-->
+    <!-- DeleteCommentModal-->
+    <div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog"
+        aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteCommentModalLabel" th:text="#{comments.deleteModal}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{comments.deleteModalText}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{epicsDashboard.deleteModal.cancelButton}"></button>
+                    <button type="button" class="btn btn-danger" id="delete_comment_button"
+                            th:onclick="'deleteComment()'"
+                            th:text="#{epicsDashboard.deleteModal.deleteButton}" ></button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- ./DeleteCommentModal-->
+    <!-- Deletion Ok Modal -->
+    <div class="modal fade" id="deleteCommentModalOk" tabindex="-1" role="dialog"
+         aria-labelledby="deleteCommentModalOkLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteCommentModalOkLabel" th:text="#{comments.deleteModal}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{comments.deleteModalOktext}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                            onclick="location.reload()"
+                            th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /. Deletion Ok Modal -->
+    <!-- Deletion fail Modal -->
+    <div class="modal fade" id="deleteCommentModalFail" tabindex="-1" role="dialog"
+         aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="deleteCommentModalFailLabel" th:text="#{comments.deleteModal}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{comments.deleteModalFailtext}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /. deletion fail modal -->
+    <div class="panel-body">
+        <ul class="timeline">
+            <li>
+                <div class="timeline-badge success tooltip-demo" data-toggle="modal" data-target="#createCommentModal">
+                    <i class="fa fa-plus" data-toggle="tooltip" data-placement="top" th:title="#{comments.create}"
+                    style="color:white;">
+                    </i>
+                </div>
+            </li>
+            <br/>
+            <br/>
+            <li th:unless="${#lists.isEmpty(comments)}" th:each="comment : ${comments}"
+                th:classappend="${isStakeholder} ? 'timeline-inverted' : ''">
+                <div class="timeline-badge">
+                    <i class="fa" th:classappend="${isStakeholder} ? 'fa-group' : 'fa-user'">
+                    </i>
+                </div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title"
+                            th:text="${comment.getUser().getUsername()}+' '+#{comments.h4Label}"></h4>
+                        <p class="text-muted">
+                            <i class="fa fa-clock-o"></i>
+                            <small th:text="#{comments.created}+' '+${#dates.format(comment.getCreated(), 'dd-MM-yyyy HH:mm:ss')}">
+                            </small>
+                            <br />
+                            <i class="fa fa-clock-o" th:if="${comment.getCreated()} != ${comment.getLastModified()}"></i>
+                            <small  th:if="${comment.getCreated()} != ${comment.getLastModified()}"
+                                    th:text="#{comments.updated}+' '+${#dates.format(comment.getLastModified(), 'dd-MM-yyyy HH:mm:ss')}">
+                            </small>
+                        </p>
+                    </div>
+                    <div class="timeline-body">
+                        <p th:text="${comment.getComment()}" th:id="${comment.getIdComment()}"></p>
+                        <hr th:if="${#httpServletRequest.getUserPrincipal().getName()}==${comment.getUser().getUsername()}"/>
+                        <div class="btn-group"
+                             th:if="${#httpServletRequest.getUserPrincipal().getName()}==${comment.getUser().getUsername()}">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-gear"></i> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="" th:text="#{comments.modify}" data-toggle="modal"
+                                       data-target="#createCommentModal"></a>
+                                </li>
+                                <li>
+                                    <a href="" th:text="#{comments.delete}" data-toggle="modal"
+                                       data-target="#deleteCommentModal"
+                                       th:onclick="'modalValueExtended('+${projectId}+','+${objectId}+','+${comment.getIdComment()}+')'">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

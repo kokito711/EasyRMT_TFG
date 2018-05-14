@@ -99,6 +99,7 @@ public class RequirementController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user, principal.getName());
+            boolean isStakeholder = commonMethods.isStakeholder(user, principal.getName(), project);
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(requirementId);
             List<CommentDom> comments = commentService.getComments(requirementId);
@@ -126,6 +127,7 @@ public class RequirementController {
             }
             modelAndView.addObject("comments", comments);
             modelAndView.addObject("comment", comment);
+            modelAndView.addObject("isStakeholder", isStakeholder);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a list of requirements" +

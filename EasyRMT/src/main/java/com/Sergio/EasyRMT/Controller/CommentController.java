@@ -71,7 +71,7 @@ public class CommentController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             comment.setIdComment(commentId);
-            boolean updated = commentService.updateComment(comment);
+            boolean updated = commentService.updateComment(comment, user);
             if (!updated){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
             }
@@ -88,7 +88,7 @@ public class CommentController {
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
-            boolean updated = commentService.deleteComment(commentId);
+            boolean updated = commentService.deleteComment(commentId, user);
             if (!updated){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
             }

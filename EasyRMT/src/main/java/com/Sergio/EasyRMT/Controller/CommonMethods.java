@@ -43,4 +43,21 @@ public class CommonMethods {
     public boolean isAllowed(List<ProjectDom> projectDomList, ProjectDom projectDom){
         return projectDomList.contains(projectDom);
     }
+
+    public boolean isStakeholder(UserDom user, String name, ProjectDom project) {
+        for(Group_user groupDom : user.getGroups()){
+            int  groupId = groupDom.getPrimaryKey().getGroup().getGroup_id();
+            List<ProjectDom> projectDoms = projectService.getProjects(groupId);
+            for(ProjectDom projectDom : projectDoms){
+                if (projectDom.equals(project)){
+                    if (groupDom.getPrimaryKey().getUser().getUsername().equals(name) && groupDom.isStakeholder()){
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            return false;
+        }
+        return false;
+    }
 }

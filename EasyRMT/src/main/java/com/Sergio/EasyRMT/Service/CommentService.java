@@ -6,6 +6,7 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.CommentDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Comment;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.User;
@@ -53,7 +54,7 @@ public class CommentService {
      * @param commentDom new comment to be persisted
      * @return True if comment has been saved or false if it does not.
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public boolean createComment(CommentDom commentDom){
         Date timestamp = new Date();
         commentDom.setCreated(timestamp);
@@ -63,40 +64,42 @@ public class CommentService {
         comment.setUser(user);
         ObjectEntity objectEntity = objectRepository.findOne(commentDom.getObject().getIdobject());
         comment.setObject(objectEntity);
-
-        comment = commentRepository.save(comment);
-        if(comment==null){
-            return false;
-        }
-        return true;
+        return save_comment(comment);
     }
 
     /**
      * This method updates an existing comment.
      * @param commentDom comment to be updated
+     * @param user
      * @return True if comment has been updated or false if it does not.
      */
-    @Transactional(rollbackFor = Exception.class)
-    public boolean updateComment(CommentDom commentDom){
+    @Transactional
+    public boolean updateComment(CommentDom commentDom, UserDom user){
         Date timestamp = new Date();
         Comment comment = commentRepository.findOne(commentDom.getIdComment());
+        if(comment.getUser().getUserId()!= user.getUserId()){
+            return false;
+        }
         comment.setLastModified(timestamp);
         comment.setComment(commentDom.getComment());
         comment = commentRepository.save(comment);
-        if(comment==null){
-            return false;
-        }
-        return true;
+        return save_comment(comment);
     }
+
 
     /**
      * This method will delete an existing comment.
      * @param commentId id of comment to be deleted
+     * @param user
      * @return True if comment has been deleted or false if it does not.
      */
     @Transactional(rollbackFor = Exception.class)
-    public boolean deleteComment(int commentId){
+    public boolean deleteComment(int commentId, UserDom user){
         if(commentRepository.exists(commentId)){
+            Comment comment = commentRepository.findOne(commentId);
+            if(comment.getUser().getUserId()!= user.getUserId()){
+                return false;
+            }
             commentRepository.delete(commentId);
             if(commentRepository.exists(commentId)){
                 return false;
@@ -104,5 +107,16 @@ public class CommentService {
             return true;
         }
         return false;
+    }
+
+    private boolean save_comment(Comment comment) {
+        try {
+            commentRepository.save(comment);
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

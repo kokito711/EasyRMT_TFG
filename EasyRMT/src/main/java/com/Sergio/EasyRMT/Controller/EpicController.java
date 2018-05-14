@@ -96,6 +96,7 @@ public class EpicController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user,principal.getName());
+            boolean isStakeholder = commonMethods.isStakeholder(user, principal.getName(), project);
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(epicId);
             List<CommentDom> comments = commentService.getComments(epicId);
@@ -116,6 +117,7 @@ public class EpicController {
             modelAndView.addObject("userStoryList", traceabilityService.getNotTracedUserStories(projectId,epicId));
             modelAndView.addObject("comments", comments);
             modelAndView.addObject("comment", comment);
+            modelAndView.addObject("isStakeholder", isStakeholder);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain an epic from project "+projectId);

@@ -97,6 +97,7 @@ public class FeatureController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean isPm = commonMethods.isPM(user, principal.getName());
+            boolean isStakeholder = commonMethods.isStakeholder(user, principal.getName(), project);
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom traceability = traceabilityService.getTraceability(featureId);
             TraceDom extension = new TraceDom();
@@ -118,6 +119,7 @@ public class FeatureController {
             modelAndView.addObject("useCaseList", traceabilityService.getNotTracedUseCases(projectId,featureId));
             modelAndView.addObject("comments", comments);
             modelAndView.addObject("comment", comment);
+            modelAndView.addObject("isStakeholder", isStakeholder);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to obtain a feature from project "+projectId);

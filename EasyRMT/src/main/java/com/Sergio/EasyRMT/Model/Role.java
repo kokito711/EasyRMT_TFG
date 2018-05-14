@@ -12,13 +12,14 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "role")
 @EqualsAndHashCode
 @Getter
 @Setter
-public class Role {
+public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
