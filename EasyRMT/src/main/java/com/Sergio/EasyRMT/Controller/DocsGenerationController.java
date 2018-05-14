@@ -5,6 +5,7 @@
 
 package com.Sergio.EasyRMT.Controller;
 
+import com.Sergio.EasyRMT.Domain.CommentDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
@@ -43,9 +44,9 @@ public class DocsGenerationController {
 
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
-    final String PRINTER_PATH_BASE = "/print/{projectId}/";
-    final String DOCX_PATH_BASE = "/file/docx/{projectId}/";
-    final String PDF_PATH_BASE = "/file/pdf/{projectId}/";
+    private final String PRINTER_PATH_BASE = "/print/{projectId}/";
+    private final String DOCX_PATH_BASE = "/file/docx/{projectId}/";
+    private final String PDF_PATH_BASE = "/file/pdf/{projectId}/";
     private ProjectService projectService;
     private FeatureService featureService;
     private EpicService epicService;
@@ -56,12 +57,13 @@ public class DocsGenerationController {
     private UserStoryService userStoryService;
     private RequirementService requirementService;
     private DocsService docsService;
+    private CommentService commentService;
 
     @Autowired
     public DocsGenerationController(ProjectService projectService, FeatureService featureService, EpicService epicService,
                                     CommonMethods commonMethods, UserService userService, UseCaseService useCaseService,
                                     TraceabilityService traceabilityService, UserStoryService userStoryService,
-                                    RequirementService requirementService, DocsService docsService) {
+                                    RequirementService requirementService, DocsService docsService, CommentService commentService) {
         this.projectService = projectService;
         this.featureService = featureService;
         this.epicService = epicService;
@@ -72,6 +74,7 @@ public class DocsGenerationController {
         this.userStoryService = userStoryService;
         this.requirementService = requirementService;
         this.docsService = docsService;
+        this.commentService = commentService;
     }
 
     /**
@@ -94,6 +97,7 @@ public class DocsGenerationController {
             List<Group_user> group = project.getGroup().getUsers();
             TraceDom extension = new TraceDom();
             TraceDom traceability= traceabilityService.getTraceability(objectId);
+            List<CommentDom> comments = commentService.getComments(objectId);
             populateModelAndView(type, objectId, modelAndView);
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
@@ -103,6 +107,7 @@ public class DocsGenerationController {
             modelAndView.addObject("traceability", traceability);
             modelAndView.addObject("traceObject",extension );
             modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            modelAndView.addObject("comments", comments);
             return modelAndView;
         }
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to get a document to print from project "

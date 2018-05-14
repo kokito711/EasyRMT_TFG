@@ -201,76 +201,98 @@
         </tr>
         <tr>
             <td colspan="6" class="print_title">
-                <strong th:text="#{requirement.tab.traceability}"></strong>
+                <h3 th:text="#{requirement.tab.traceability}"></h3>
             </td>
         </tr>
-        <tr>
-            <tr  th:unless="${#lists.isEmpty(traceability.getFeatures())}">
-                <td colspan="6" th:text="#{project.notAgile}">
-                </td>
-            </tr>
-            <tr th:unless="${#lists.isEmpty(traceability.getFeatures())}">
-                <td  colspan="6" th:each="feature : ${traceability.getFeatures()}">
-                    <p th:text="${feature.getIdentifier()}+' '+${feature.getName()}"></p>
-                </td>
-            </tr>
-            <tr  th:unless="${#lists.isEmpty(traceability.getUseCases())}">
-                <td colspan="6" th:text="#{project.useCase}">
-                </td>
-            </tr>
-            <tr th:unless="${#lists.isEmpty(traceability.getUseCases())}">
-                <td  colspan="6" th:each="usecase : ${traceability.getUseCases()}">
-                    <p th:text="${usecase.getIdentifier()}+' '+${usecase.getName()}"></p>
-                </td>
-            </tr>
-            <tr  th:unless="${#lists.isEmpty(traceability.getEpics())}">
-                <td colspan="6" th:text="#{project.agile}">
-                </td>
-            </tr>
-            <tr th:unless="${#lists.isEmpty(traceability.getEpics())}">
-                <td  colspan="6" th:each="epic : ${traceability.getEpics()}">
-                    <p th:text="${epic.getIdentifier()}+' '+${epic.getName()}"></p>
-                </td>
-            </tr>
-            <tr  th:unless="${#lists.isEmpty(traceability.getUserStories())}">
-                <td colspan="6" th:text="#{project.userStory}">
-                </td>
-            </tr>
-            <tr th:unless="${#lists.isEmpty(traceability.getUserStories())}">
-                <td  colspan="6" th:each="userStory : ${traceability.getUserStories()}">
-                    <p th:text="${userStory.getIdentifier()}+' '+${userStory.getName()}"></p>
-                </td>
-            </tr>
-            <tr  th:unless="${#lists.isEmpty(traceability.getScope())} and ${#lists.isEmpty(traceability.getEngineering())}
-                and ${#lists.isEmpty(traceability.getQuality())} and ${#lists.isEmpty(traceability.getUserExp())}">
-                <td colspan="6" th:text="#{project.requirements}">
-                </td>
-            </tr>
-            <tr th:unless="${#lists.isEmpty(traceability.getScope())} and ${#lists.isEmpty(traceability.getEngineering())}
-                and ${#lists.isEmpty(traceability.getQuality())} and ${#lists.isEmpty(traceability.getUserExp())}">
-                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getScope())}"
-                     th:each="req : ${traceability.getScope()}">
-                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
-                </td>
-                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getEngineering())}"
-                     th:each="req : ${traceability.getEngineering()}">
-                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
-                </td>
-                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getQuality())}"
-                     th:each="req : ${traceability.getQuality()}">
-                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
-                </td>
-                <td  colspan="6" th:unless="${#lists.isEmpty(traceability.getUserExp())}"
-                     th:each="req : ${traceability.getUserExp()}">
-                    <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
-                </td>
-            </tr>
-            <td th:if="${#lists.isEmpty(traceability.getScope())} and ${#lists.isEmpty(traceability.getEngineering())}
-                and ${#lists.isEmpty(traceability.getQuality())} and ${#lists.isEmpty(traceability.getUserExp())}"
-                th:text="#{objectPrintable.empty}" colspan="6">
+        <tr  th:unless="${#lists.isEmpty(traceability.getFeatures())}">
+            <td colspan="6" >
+                <strong th:text="#{project.notAgile}"></strong>
             </td>
         </tr>
-
+        <tr th:unless="${#lists.isEmpty(traceability.getFeatures())}" th:each="feature : ${traceability.getFeatures()}">
+            <td  colspan="6" >
+                <p th:text="${feature.getIdentifier()}+' '+${feature.getName()}"></p>
+            </td>
+        </tr>
+        <tr  th:unless="${#lists.isEmpty(traceability.getUseCases())}">
+            <td colspan="6">
+                <strong th:text="#{project.useCase}"></strong>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(traceability.getUseCases())}" th:each="usecase : ${traceability.getUseCases()}">
+            <td  colspan="6">
+                <p th:text="${usecase.getIdentifier()}+' '+${usecase.getName()}"></p>
+            </td>
+        </tr>
+        <tr  th:unless="${#lists.isEmpty(traceability.getEpics())}">
+            <td colspan="6">
+                <strong  th:text="#{project.agile}"></strong>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(traceability.getEpics())}" th:each="epic : ${traceability.getEpics()}">
+            <td  colspan="6">
+                <p th:text="${epic.getIdentifier()}+' '+${epic.getName()}"></p>
+            </td>
+        </tr>
+        <tr  th:unless="${#lists.isEmpty(traceability.getUserStories())}">
+            <td colspan="6">
+                <strong  th:text="#{project.userStory}"></strong>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(traceability.getUserStories())}" th:each="userStory : ${traceability.getUserStories()}">
+            <td  colspan="6" >
+                <p th:text="${userStory.getIdentifier()}+' '+${userStory.getName()}"></p>
+            </td>
+        </tr>
+        <tr  th:unless="${#lists.isEmpty(traceability.getScope())} and ${#lists.isEmpty(traceability.getEngineering())}
+            and ${#lists.isEmpty(traceability.getQuality())} and ${#lists.isEmpty(traceability.getUserExp())}">
+            <td colspan="6" >
+                <strong th:text="#{project.requirements}"></strong>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(traceability.getScope())}" th:each="req : ${traceability.getScope()}">
+            <td  colspan="6">
+                <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(traceability.getEngineering())}" th:each="req : ${traceability.getEngineering()}">
+            <td  colspan="6">
+                <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(traceability.getQuality())}" th:each="req : ${traceability.getQuality()}">
+            <td  colspan="6">
+                <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(traceability.getUserExp())}" th:each="req : ${traceability.getUserExp()}">
+            <td  colspan="6">
+                <p th:text="${req.getIdentifier()}+' '+${req.getName()}"></p>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(comments)}">
+            <td th:colspan="6">
+                <h3 th:text="#{comments.comments}"></h3>
+            </td>
+        </tr>
+        <tr th:unless="${#lists.isEmpty(comments)}" th:each="comment : ${comments}">
+            <td th:colspan="6">
+                <h4 style="text-align: center"
+                    th:text="${comment.getUser().getUsername()}+' '+#{comments.h4Label}">
+                </h4>
+                <p class="text-muted">
+                    <i class="fa fa-clock-o"></i>
+                    <small th:text="#{comments.created}+' '+${#dates.format(comment.getCreated(), 'dd-MM-yyyy HH:mm:ss')}">
+                    </small>
+                    <br />
+                    <i class="fa fa-clock-o" th:if="${comment.getCreated()} != ${comment.getLastModified()}"></i>
+                    <small  th:if="${comment.getCreated()} != ${comment.getLastModified()}"
+                            th:text="#{comments.updated}+' '+${#dates.format(comment.getLastModified(), 'dd-MM-yyyy HH:mm:ss')}">
+                    </small>
+                </p>
+                <p th:text="${comment.getComment()}" th:id="'comment_'+${comment.getIdComment()}"></p>
+            </td>
+        </tr>
     </table>
 </body>
 </html>
