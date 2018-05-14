@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 public class CommentConverter {
-    UserConverter userConverter;
+    private UserConverter userConverter;
 
     @Autowired
     public CommentConverter(UserConverter userConverter) {
