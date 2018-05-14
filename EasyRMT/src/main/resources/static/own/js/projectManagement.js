@@ -181,6 +181,26 @@ function sendForm(projectId, objectId) {
         }
     });
 }
+function updateForm() {
+    var button = document.getElementById("update_comment_button");
+    var projectId = button.getAttribute("value");
+    var objectId = button.getAttribute("value1");
+    var commentId = button.getAttribute("value2");
+    $.ajax({
+        type: "POST",
+        url: '/'+projectId+'/'+objectId+'/update/'+commentId,
+        data: $("#updateCommentForm").serialize(), // serializes the form's elements.
+        success: function(data)
+        {
+            $("#updateCommentModal").modal('hide');
+            $("#successUpdateComment").modal('show');
+        },
+        error: function () {
+            $("#updateCommentModal").modal('hide');
+            $("#failUpdateComment").modal('show');
+        }
+    });
+}
 
 function deleteComment() {
     var button = document.getElementById("delete_comment_button");
@@ -233,6 +253,22 @@ function modalValueExtended(id1, id2, id3){
     button.setAttributeNode(att1);
     button.setAttributeNode(att2);
     button.setAttributeNode(att3);
+}
+
+function editComment(id1, id2, id3){
+    var button = document.getElementById("update_comment_button");
+    var att1 = document.createAttribute("value");
+    att1.value = id1;
+    var att2 = document.createAttribute("value1");
+    att2.value = id2;
+    var att3 = document.createAttribute("value2");
+    att3.value = id3;
+    button.setAttributeNode(att1);
+    button.setAttributeNode(att2);
+    button.setAttributeNode(att3);
+    var textArea = document.getElementById("commentUpdate");
+    var comment = document.getElementById("comment_"+id3);
+    textArea.innerText = comment.innerText;
 }
 
 

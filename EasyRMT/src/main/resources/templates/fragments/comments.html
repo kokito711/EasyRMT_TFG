@@ -79,10 +79,74 @@
     </div>
     <!-- failCreationComment end-->
     <!-- UpdateCommentModal-->
-    <div>
-
+    <div class="modal fade" id="updateCommentModal" tabindex="-1" role="dialog"
+         aria-labelledby="updateCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="updateCommentModalLabel" th:text="#{comments.updateModal}"></h4>
+                </div>
+                <div class="modal-body" >
+                    <form autocomplete="off" action="#" method="post" class="form-horizontal"
+                          role="form" id="updateCommentForm">
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <textarea id="commentUpdate" class="form-control" rows="5" name="comment"
+                                          th:placeholder="#{comments.createModalAddComment}" value=""></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <button type="button" class="btn btn-primary btn-block" id="update_comment_button"
+                                        onclick="updateForm()"
+                                        th:text="#{comments.updateModal}"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- ./UpdateCommentModal-->
+    <!-- modal SUCCESS updateModal-->
+    <div class="modal fade" id="successUpdateComment" tabindex="-1" role="dialog"
+         aria-labelledby="successUpdateCommentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="successUpdateCommentLabel" th:text="#{comments.updateModalsuccess}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{comments.updateModalsuccess}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{createUser.modalButton}" onclick="location.reload()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal successCreateComment -->
+    <!-- failCreationComment modal-->
+    <div class="modal fade" id="failUpdateComment" tabindex="-1" role="dialog"
+         aria-labelledby="failUpdateCommentLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h4 class="modal-title" id="failUpdateCommentLabel" th:text="#{comments.updateModalfail}"></h4>
+                </div>
+                <div class="modal-body" th:text="#{comments.updateModalfail}">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            th:text="#{createUser.modalButton}"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- failCreationComment end-->
     <!-- DeleteCommentModal-->
     <div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog"
         aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
@@ -180,7 +244,7 @@
                         </p>
                     </div>
                     <div class="timeline-body">
-                        <p th:text="${comment.getComment()}" th:id="${comment.getIdComment()}"></p>
+                        <p th:text="${comment.getComment()}" th:id="'comment_'+${comment.getIdComment()}"></p>
                         <hr th:if="${#httpServletRequest.getUserPrincipal().getName()}==${comment.getUser().getUsername()}"/>
                         <div class="btn-group"
                              th:if="${#httpServletRequest.getUserPrincipal().getName()}==${comment.getUser().getUsername()}">
@@ -188,8 +252,10 @@
                                 <i class="fa fa-gear"></i> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="" th:text="#{comments.modify}" data-toggle="modal"
-                                       data-target="#createCommentModal"></a>
+                                <li>
+                                    <a href="" th:text="#{comments.modify}" data-toggle="modal" data-target="#updateCommentModal"
+                                       th:onclick="'editComment('+${projectId}+','+${objectId}+','+${comment.getIdComment()}+')'">
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="" th:text="#{comments.delete}" data-toggle="modal"
