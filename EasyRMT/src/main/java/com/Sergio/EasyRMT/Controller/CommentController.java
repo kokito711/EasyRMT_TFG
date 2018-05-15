@@ -42,6 +42,24 @@ public class CommentController {
         this.projectService = projectService;
     }
 
+    /**
+     * Exception handler which is thrown when any exception occurs
+     * @return BAD REQUEST response
+     */
+    @ExceptionHandler(value ={Exception.class})
+    protected ResponseEntity handle(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
+    }
+
+    /**
+     * This method adds a comment into one object.
+     * @param projectId id of project in which is attached the object
+     * @param objectId id of object in which will be attached the comment
+     * @param comment Mesasge to be persisted
+     * @param principal Session info
+     * @return {@link ResponseEntity} 200,OK if comment has been saved, 400,BAD_REQUEST if comment has not.
+     * @throws AccessDeniedException if user has no rights to delete a comment
+     */
     @RequestMapping(value = PATH_BASE+"addComment", method = RequestMethod.POST)
     public ResponseEntity addComment(@PathVariable int projectId, @PathVariable int objectId, @ModelAttribute CommentDom comment,
                                      Principal principal){
@@ -55,7 +73,7 @@ public class CommentController {
             comment.setObject(objectEntity);
             boolean created = commentService.createComment(comment);
             if (!created){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
             }
             return ResponseEntity.status(HttpStatus.OK).body("");
         }
@@ -63,6 +81,16 @@ public class CommentController {
         throw new AccessDeniedException("Not allowed");
     }
 
+    /**
+     * This method updates an existing comment
+     * @param projectId id of project in which is attached the object
+     * @param objectId id of object in which will be attached the comment
+     * @param comment Mesasge to be persisted
+     * @param principal Session info
+     * @param commentId id of comment to be updated
+     * @return {@link ResponseEntity} 200,OK if comment has been updated, 400,BAD_REQUEST if comment has not.
+     * @throws AccessDeniedException if user has no rights to delete a comment
+     */
     @RequestMapping(value = PATH_BASE+"update/{commentId}", method = RequestMethod.POST)
     public ResponseEntity updateComment(@PathVariable int projectId, @PathVariable int objectId, @ModelAttribute CommentDom comment,
                                      @PathVariable int commentId, Principal principal){
@@ -73,7 +101,7 @@ public class CommentController {
             comment.setIdComment(commentId);
             boolean updated = commentService.updateComment(comment, user);
             if (!updated){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
             }
             return ResponseEntity.status(HttpStatus.OK).body("");
         }
@@ -81,6 +109,15 @@ public class CommentController {
         throw new AccessDeniedException("Not allowed");
     }
 
+    /**
+     * This method deletes an existing comment.
+     * @param projectId id of project in which is attached the object
+     * @param objectId id of object in which will be attached the comment
+     * @param principal Session info
+     * @param commentId id of comment to be updated
+     * @return {@link ResponseEntity} 200,OK if comment has been deleted, 400,BAD_REQUEST if comment has not.
+     * @throws AccessDeniedException if user has no rights to delete a comment
+     */
     @RequestMapping(value = PATH_BASE+"delete/{commentId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteComment(@PathVariable int projectId, @PathVariable int objectId,
                                         @PathVariable int commentId, Principal principal){
@@ -90,7 +127,7 @@ public class CommentController {
         if (commonMethods.isAllowed(projectDomList, project)) {
             boolean updated = commentService.deleteComment(commentId, user);
             if (!updated){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
             }
             return ResponseEntity.status(HttpStatus.OK).body("");
         }
