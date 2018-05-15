@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 public class DocumentationConverter {
-    ProjectConverter projectConverter;
+    private ProjectConverter projectConverter;
 
     @Autowired
     public DocumentationConverter(ProjectConverter projectConverter) {

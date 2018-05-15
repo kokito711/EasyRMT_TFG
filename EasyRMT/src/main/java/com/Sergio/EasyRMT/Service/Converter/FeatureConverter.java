@@ -10,7 +10,6 @@ import com.Sergio.EasyRMT.Domain.UseCaseDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,8 @@ import java.util.List;
 @Component
 public class FeatureConverter {
 
-    UseCaseConverter useCaseConverter;
-    UserConverter userConverter;
+    private UseCaseConverter useCaseConverter;
+    private UserConverter userConverter;
 
     @Autowired
     public FeatureConverter(UseCaseConverter useCaseConverter, UserConverter userConverter) {

@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 public class UserStoryConverter {
-    UserConverter userConverter;
+    private UserConverter userConverter;
     @Autowired
     public UserStoryConverter(UserConverter userConverter) {
         this.userConverter = userConverter;

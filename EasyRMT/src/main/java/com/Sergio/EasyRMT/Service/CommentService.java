@@ -23,10 +23,10 @@ import java.util.List;
 
 @Service
 public class CommentService {
-    UserRepository userRepository;
-    ObjectRepository objectRepository;
-    CommentConverter commentConverter;
-    CommentRepository commentRepository;
+    private UserRepository userRepository;
+    private ObjectRepository objectRepository;
+    private CommentConverter commentConverter;
+    private CommentRepository commentRepository;
 
     @Autowired
     public CommentService(UserRepository userRepository, ObjectRepository objectRepository, CommentConverter commentConverter,
@@ -82,7 +82,6 @@ public class CommentService {
         }
         comment.setLastModified(timestamp);
         comment.setComment(commentDom.getComment());
-        comment = commentRepository.save(comment);
         return save_comment(comment);
     }
 
