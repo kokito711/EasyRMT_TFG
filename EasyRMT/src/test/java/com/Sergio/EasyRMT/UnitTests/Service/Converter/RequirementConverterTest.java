@@ -13,9 +13,9 @@ import com.Sergio.EasyRMT.Service.Converter.RequirementConverter;
 import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class RequirementConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a list of Requirements and returns a list of RequirementDom")
+    @DisplayName("Method toDomain receives a list of Requirements and returns a list of RequirementDom")
     public void toDomain_RequirementListProvided_RequirementDomListReturned(){
         Requirement requirement = createRequirement(true);
         requirement.setAssignedTo(null);
@@ -76,7 +76,7 @@ public class RequirementConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a Requirement with all attributes and returns a RequirementDom")
+    @DisplayName("Method toDomain receives a Requirement with all attributes and returns a RequirementDom")
     public void toDomain_RequirementAllAttsProvided_RequirementDomReturned(){
         Requirement requirement = createRequirement(true);
         RequirementDom expected = createRequirementDom(true);
@@ -98,7 +98,7 @@ public class RequirementConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a Requirement without assignedTo, estimated hours and storypoints" +
+    @DisplayName("Method toDomain receives a Requirement without assignedTo, estimated hours and storypoints" +
             " attributes and returns a  RequirementDom")
     public void toDomain_RequirementNotAllAttsProvided_RequirementDomReturned(){
         Requirement requirement = createRequirement(false);
@@ -121,7 +121,7 @@ public class RequirementConverterTest {
     }
 
     @Test
-    @Description("Method toModel receives a RequirementDom with attributes and returns a Requirement")
+    @DisplayName("Method toModel receives a RequirementDom with attributes and returns a Requirement")
     public void toModel_RequirementAllAttsProvided_RequirementReturned(){
         Requirement expected = createRequirement(true);
         expected.setIdRequirement(0);

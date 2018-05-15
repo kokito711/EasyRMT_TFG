@@ -16,10 +16,10 @@ import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -28,9 +28,7 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,7 +45,7 @@ public class FeatureConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a list of Features and returns a list of FeatureDoms")
+    @DisplayName("Method toDomain receives a list of Features and returns a list of FeatureDoms")
     public void toDomain_FeatureListProvided_FeatureDomListReturned(){
         Project project = new Project();
         project.setIdProject(1);
@@ -89,7 +87,7 @@ public class FeatureConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a feature and returns an FeatureDom")
+    @DisplayName("Method toDomain receives a feature and returns an FeatureDom")
     public void toDomain_FeatureProvided_FeatureDomReturned() {
         Feature feature = new Feature();
         UserDom userDom = mock(UserDom.class);
@@ -157,7 +155,7 @@ public class FeatureConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a FeatureDom and returns a Feature")
+    @DisplayName("Method toDomain receives a FeatureDom and returns a Feature")
     public void toModel_FeatureDomProvided_FeatureReturned() {
         FeatureDom featureDom = new FeatureDom();
         featureDom.setIdFeature(1);

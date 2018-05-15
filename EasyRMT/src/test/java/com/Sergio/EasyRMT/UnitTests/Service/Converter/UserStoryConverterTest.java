@@ -1,11 +1,11 @@
 package com.Sergio.EasyRMT.UnitTests.Service.Converter;
 
-import com.Sergio.EasyRMT.Domain.UseCaseDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.*;
 import com.Sergio.EasyRMT.Model.types.*;
-import com.Sergio.EasyRMT.Service.Converter.UseCaseConverter;
 import com.Sergio.EasyRMT.Service.Converter.UserConverter;
+import com.Sergio.EasyRMT.Service.Converter.UserStoryConverter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class UseCaseConverterTest {
+public class UserStoryConverterTest {
     @Mock
     private UserConverter userConverter;
 
@@ -33,31 +33,31 @@ public class UseCaseConverterTest {
     }
 
     @Test
-    @DisplayName("Method toDomain receives a list of UseCase and returns a list of UseCaseDom")
-    public void toDomain_UseCaseListProvided_UseCaseDomListReturned(){
+    @DisplayName("Method toDomain receives a list of UserStory and returns a list of UserStoryDom")
+    public void toDomain_UserStoryListProvided_UserStoryDomListReturned(){
         Project project = new Project();
         project.setIdProject(1);
         ObjectEntity objectEntity = new ObjectEntity();
         objectEntity.setProject(project);
         objectEntity.setIdobject(1);
-        Feature feature = mock(Feature.class);
+        Epic epic = mock(Epic.class);
         UserDom userDom = mock(UserDom.class);
         User user = mock(User.class);
-        when(feature.getIdFeature()).thenReturn(1);
+        when(epic.getIdEpic()).thenReturn(1);
         when(userConverter.toDomain(user)).thenReturn(userDom);
 
-        UseCase useCase = new UseCase();
-        useCase.setIdUseCase(1);
+        UserStory useCase = new UserStory();
+        useCase.setIdUserStory(1);
         useCase.setName("UseCaseTest");
         useCase.setIdentifier("1234");
         useCase.setAuthor(user);
         useCase.setAssignedTo(user);
         useCase.setObject(objectEntity);
-        useCase.setFeature(feature);
+        useCase.setEpic(epic);
         useCase.setState(State.DRAFT);
 
-        List<UseCaseDom> expected = new ArrayList<>();
-        UseCaseDom useCaseDom = new UseCaseDom(
+        List<UserStoryDom> expected = new ArrayList<>();
+        UserStoryDom userStoryDom = new UserStoryDom(
                 1,
                 "UseCaseTest",
                 "1234",
@@ -66,15 +66,15 @@ public class UseCaseConverterTest {
                 1,
                 1
         );
-        useCaseDom.setState(State.DRAFT);
-        expected.add(useCaseDom);
+        userStoryDom.setState(State.DRAFT);
+        expected.add(userStoryDom);
 
-        List<UseCase> useCaseList = new ArrayList<>();
-        useCaseList.add(useCase);
+        List<UserStory> userStoryList = new ArrayList<>();
+        userStoryList.add(useCase);
 
-        UseCaseConverter useCaseConverter = createUseCaseConverter();
+        UserStoryConverter userStoryConverter = createUserStoryConverter();
 
-        List<UseCaseDom> obtained = useCaseConverter.toDomain(useCaseList);
+        List<UserStoryDom> obtained = userStoryConverter.toDomain(userStoryList);
 
         //TestConditions
         assertNotNull(obtained);
@@ -87,57 +87,55 @@ public class UseCaseConverterTest {
     }
 
     @Test
-    @DisplayName("Method toDomain receives a UseCase and returns a UseCaseDom")
-    public void toDomain_UseCaseProvided_UseCaseDomReturned() {
+    @DisplayName("Method toDomain receives a UserStory and returns a UserStoryDom")
+    public void toDomain_UserStoryProvided_UserStoryDomReturned() {
         Date date = new Date();
-        UseCase useCase = new UseCase();
+        UserStory userStory = new UserStory();
         UserDom userDom = mock(UserDom.class);
         User user = mock(User.class);
         ObjectEntity objectEntity = new ObjectEntity();
         Project project = mock(Project.class);
-        Feature feature = mock(Feature.class);
+        Epic epic = mock(Epic.class);
 
-        useCase.setIdUseCase(1);
-        useCase.setName("UseCase");
-        useCase.setIdentifier("1234");
-        useCase.setDescription("Description");
-        useCase.setPriority(Priority.NORMAL);
-        useCase.setComplexity(Complexity.NORMAL);
-        useCase.setState(State.DRAFT);
-        useCase.setCost(null);
-        useCase.setEstimatedHours(null);
-        useCase.setStoryPoints(null);
-        useCase.setSource("Source");
-        useCase.setScope(Scope.PROJECT);
-        useCase.setRisk(Risk.HIGH);
-        useCase.setCreated(date);
-        useCase.setLastUpdated(date);
-        useCase.setVersion("001");
-        useCase.setValidationMethod("ValidationMethod");
-        useCase.setJustification("Justification");
-        useCase.setTestCases("TestCases");
-        useCase.setAuthor(user);
-        useCase.setAssignedTo(user);
-        useCase.setObject(objectEntity);
-        useCase.setActors("Actors");
-        useCase.setPreconditions("Preconditions");
-        useCase.setPostconditions("Postconditions");
-        useCase.setSteps("Steps");
-        useCase.setObject(objectEntity);
-        useCase.setFeature(feature);
+        userStory.setIdUserStory(1);
+        userStory.setName("UseCase");
+        userStory.setIdentifier("1234");
+        userStory.setDescription("Description");
+        userStory.setDefinitionOfDone("DoD");
+        userStory.setPriority(Priority.NORMAL);
+        userStory.setComplexity(Complexity.NORMAL);
+        userStory.setState(State.DRAFT);
+        userStory.setCost(null);
+        userStory.setEstimatedHours(null);
+        userStory.setStoryPoints(null);
+        userStory.setSource("Source");
+        userStory.setScope(Scope.PROJECT);
+        userStory.setRisk(Risk.HIGH);
+        userStory.setCreated(date);
+        userStory.setLastUpdated(date);
+        userStory.setVersion("001");
+        userStory.setValidationMethod("ValidationMethod");
+        userStory.setJustification("Justification");
+        userStory.setTestCases("TestCases");
+        userStory.setAuthor(user);
+        userStory.setAssignedTo(user);
+        userStory.setObject(objectEntity);
+        userStory.setObject(objectEntity);
+        userStory.setEpic(epic);
 
         objectEntity.setIdobject(1);
         objectEntity.setProject(project);
 
         when(project.getIdProject()).thenReturn(1);
-        when(feature.getIdFeature()).thenReturn(1);
+        when(epic.getIdEpic()).thenReturn(1);
         when(userConverter.toDomain(user)).thenReturn(userDom);
 
-        UseCaseDom expected = new UseCaseDom(
+        UserStoryDom expected = new UserStoryDom(
                 1,
                 "UseCase",
                 "1234",
                 "Description",
+                "DoD",
                 Priority.NORMAL,
                 Complexity.NORMAL,
                 State.DRAFT,
@@ -155,17 +153,13 @@ public class UseCaseConverterTest {
                 userDom,
                 "Justification",
                 "TestCases",
-                "Actors",
-                "Preconditions",
-                "Postconditions",
-                "Steps",
                 1,
                 1
         );
 
-        UseCaseConverter useCaseConverter = createUseCaseConverter();
+        UserStoryConverter userStoryConverter = createUserStoryConverter();
 
-        UseCaseDom obtained = useCaseConverter.toDomain(useCase);
+        UserStoryDom obtained = userStoryConverter.toDomain(userStory);
 
         Assert.assertNotNull(obtained);
         assertEquals(obtained, expected);
@@ -174,19 +168,20 @@ public class UseCaseConverterTest {
     }
 
     @Test
-    @DisplayName("Method toModel receives a UseCaseDom and returns a UseCase")
+    @DisplayName("Method toModel receives a UserStoryDom and returns a UserStory")
     public void toModel_EpicDomProvided_EpicReturned() {
-        UseCaseDom useCaseDom = new UseCaseDom();
+        UserStoryDom useCaseDom = new UserStoryDom();
         Date date = new Date();
-        UseCase expected = new UseCase();
+        UserStory expected = new UserStory();
         ObjectEntity objectEntity = new ObjectEntity();
         objectEntity.setIdobject(1);
 
 
-        useCaseDom.setIdUseCase(1);
+        useCaseDom.setIdUserStory(1);
         useCaseDom.setName("UseCase");
         useCaseDom.setIdentifier("1234");
         useCaseDom.setDescription("Description");
+        useCaseDom.setDefinitionOfDone("DoD");
         useCaseDom.setPriority(Priority.NORMAL);
         useCaseDom.setComplexity(Complexity.NORMAL);
         useCaseDom.setState(State.DRAFT);
@@ -202,15 +197,12 @@ public class UseCaseConverterTest {
         useCaseDom.setValidationMethod("ValidationMethod");
         useCaseDom.setJustification("Justification");
         useCaseDom.setTestCases("TestCases");
-        useCaseDom.setActors("Actors");
-        useCaseDom.setPreconditions("Preconditions");
-        useCaseDom.setPostconditions("Postconditions");
-        useCaseDom.setSteps("Steps");
 
-        expected.setIdUseCase(1);
+        expected.setIdUserStory(1);
         expected.setName("UseCase");
         expected.setIdentifier("1234");
         expected.setDescription("Description");
+        expected.setDefinitionOfDone("DoD");
         expected.setPriority(Priority.NORMAL);
         expected.setComplexity(Complexity.NORMAL);
         expected.setState(State.DRAFT);
@@ -226,16 +218,12 @@ public class UseCaseConverterTest {
         expected.setValidationMethod("ValidationMethod");
         expected.setJustification("Justification");
         expected.setTestCases("TestCases");
-        expected.setActors("Actors");
-        expected.setPreconditions("Preconditions");
-        expected.setPostconditions("Postconditions");
-        expected.setSteps("Steps");
         expected.setObject(objectEntity);
 
 
-        UseCaseConverter useCaseConverter = createUseCaseConverter();
+        UserStoryConverter userStoryConverter = createUserStoryConverter();
 
-        UseCase obtained = useCaseConverter.toModel(useCaseDom);
+        UserStory obtained = userStoryConverter.toModel(useCaseDom);
 
         //asserts
         Assert.assertNotNull(obtained);
@@ -246,8 +234,8 @@ public class UseCaseConverterTest {
         assertEquals(expected,obtained);
     }
 
-    private UseCaseConverter createUseCaseConverter(){
-        return new UseCaseConverter(userConverter);
-    }
 
+    private UserStoryConverter createUserStoryConverter(){
+        return new UserStoryConverter(userConverter);
+    }
 }

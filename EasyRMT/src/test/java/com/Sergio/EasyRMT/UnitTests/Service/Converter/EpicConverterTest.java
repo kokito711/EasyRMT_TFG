@@ -15,9 +15,9 @@ import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import com.Sergio.EasyRMT.Service.Converter.UserStoryConverter;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class EpicConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a list of Epic and returns a list of EpicDom")
+    @DisplayName("Method toDomain receives a list of Epic and returns a list of EpicDom")
     public void toDomain_EpicListProvided_EpicDomListReturned(){
         Project project = new Project();
         project.setIdProject(1);
@@ -84,7 +84,7 @@ public class EpicConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives an Epic and returns an EpicDom")
+    @DisplayName("Method toDomain receives an Epic and returns an EpicDom")
     public void toDomain_EpicProvided_EpicDomReturned() {
         Epic epic = new Epic();
         UserDom userDom = mock(UserDom.class);
@@ -154,7 +154,7 @@ public class EpicConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives an EpicDom and returns an Epic")
+    @DisplayName("Method toModel receives an EpicDom and returns an Epic")
     public void toModel_EpicDomProvided_EpicReturned() {
         EpicDom epicDom = new EpicDom();
         epicDom.setIdEpic(1);
