@@ -10,7 +10,6 @@ import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Domain.UserStoryDom;
 import com.Sergio.EasyRMT.Model.Epic;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.UserStory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +20,8 @@ import java.util.List;
 public class EpicConverter {
 
 
-    UserStoryConverter userStoryConverter;
-    UserConverter userConverter;
+    private UserStoryConverter userStoryConverter;
+    private UserConverter userConverter;
 
     @Autowired
     public EpicConverter(UserStoryConverter userStoryConverter, UserConverter userConverter) {

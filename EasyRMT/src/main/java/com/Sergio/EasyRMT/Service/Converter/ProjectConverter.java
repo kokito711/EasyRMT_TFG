@@ -16,8 +16,8 @@ import java.util.Optional;
 @Component
 public class ProjectConverter {
 
-    ReqTypeRepository reqTypeRepository;
-    GroupConverter groupConverter;
+    private ReqTypeRepository reqTypeRepository;
+    private GroupConverter groupConverter;
 
     @Autowired
     public ProjectConverter(ReqTypeRepository reqTypeRepository, GroupConverter groupConverter) {

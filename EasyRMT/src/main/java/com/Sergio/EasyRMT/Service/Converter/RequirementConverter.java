@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 public class RequirementConverter {
-    UserConverter userConverter;
+    private UserConverter userConverter;
 
     @Autowired
     public RequirementConverter(UserConverter userConverter) {
