@@ -1,11 +1,15 @@
 package com.Sergio.EasyRMT.UnitTests.Service.Converter;
 
+import com.Sergio.EasyRMT.Domain.GroupDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
+import com.Sergio.EasyRMT.Model.Group;
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Model.types.ProjectType;
+import com.Sergio.EasyRMT.Model.types.Requirement_Type;
 import com.Sergio.EasyRMT.Repository.ReqTypeRepository;
+import com.Sergio.EasyRMT.Service.Converter.GroupConverter;
 import com.Sergio.EasyRMT.Service.Converter.ProjectConverter;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,19 +23,21 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ProjectConverterTest {
 
-   /* @Mock
+    @Mock
     private ReqTypeRepository reqTypeRepository;
+    @Mock
+    private GroupConverter groupConverter;
 
 
     @BeforeEach
     public void initMocks(){
         reqTypeRepository = mock(ReqTypeRepository.class);
+        groupConverter = mock(GroupConverter.class);
     }
 
     @Test
@@ -73,37 +79,44 @@ public class ProjectConverterTest {
     @Test
     @DisplayName("Method toDomain receives a Project and returns a  ProjectDom")
     public void toDomain_ProjectProvided_ProjectDomReturned(){
-        *//*RequirementType requirementType = new RequirementType();
+        RequirementType requirementType = new RequirementType();
         requirementType.setIdType(1);
         requirementType.setName("reqType");
+        requirementType.setType(Requirement_Type.SCOPE);
         ArrayList<RequirementType> listReqType = new ArrayList<>();
         listReqType.add(requirementType);
+        Group group = mock(Group.class);
+        GroupDom groupDom = mock(GroupDom.class);
 
         Project project1 = new Project();
         project1.setIdProject(1);
-        project1.setDescription("Description");
+        project1.setDescription(null);
         project1.setType(ProjectType.AGILE);
         project1.setName("Project 1");
         project1.setRequirementTypes(listReqType);
+        project1.setGroup(group);
 
-        RequirementTypeDom requirementTypeDom = new RequirementTypeDom(1,"reqType");
+        when(groupConverter.toDomain(group)).thenReturn(groupDom);
+
+        RequirementTypeDom requirementTypeDom = new RequirementTypeDom(1,"reqType", Requirement_Type.SCOPE);
         ArrayList<RequirementTypeDom> listReqTypeDom = new ArrayList<>();
         listReqTypeDom.add(requirementTypeDom);
 
         ProjectDom projectDomExpected = new ProjectDom(1,"Project 1",
-                "Description",ProjectType.AGILE,listReqTypeDom);
+                "",ProjectType.AGILE,listReqTypeDom,groupDom);
 
         ProjectConverter projectConverter = createProjectConverter();
 
         ProjectDom projectDom = projectConverter.toDomain(project1);
         //Test conditions
         assertNotNull(projectDom);
-        assertEquals(projectDomExpected,projectDom);*//*
+        assertEquals(projectDomExpected,projectDom);
+        verify(groupConverter,times(1)).toDomain(group);
     }
 
     @Test
     @DisplayName("Method toModel receives a ProjectDom and returns a Project")
-    public void toDomain_ProjectDomProvided_ProjectReturned(){
+    public void toModel_ProjectDomProvided_ProjectReturned(){
         RequirementType requirementType = mock(RequirementType.class);
         ArrayList<RequirementType> listReqType = new ArrayList<>();
         listReqType.add(requirementType);
@@ -114,7 +127,7 @@ public class ProjectConverterTest {
         projectExpected.setName("Project 1");
         projectExpected.setRequirementTypes(listReqType);
 
-        RequirementTypeDom requirementTypeDom = new RequirementTypeDom(1,"reqType");
+        RequirementTypeDom requirementTypeDom = new RequirementTypeDom(1,"reqType", Requirement_Type.SCOPE);
         ArrayList<RequirementTypeDom> listReqTypeDom = new ArrayList<>();
         listReqTypeDom.add(requirementTypeDom);
 
@@ -134,6 +147,6 @@ public class ProjectConverterTest {
     }
 
     private ProjectConverter createProjectConverter(){
-        return new ProjectConverter(reqTypeRepository);
-    }*/
+        return new ProjectConverter(reqTypeRepository,groupConverter);
+    }
 }

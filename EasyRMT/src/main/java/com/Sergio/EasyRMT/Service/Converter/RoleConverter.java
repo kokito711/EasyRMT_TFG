@@ -35,7 +35,7 @@ public class RoleConverter {
 
     public Role toModel(RoleDom roleDom){
         Role role = new Role();
-        role.setRole(role.getRole());
+        role.setRole(roleDom.getRole());
         return role;
     }
 

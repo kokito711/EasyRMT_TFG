@@ -5,14 +5,12 @@
 
 package com.Sergio.EasyRMT.UnitTests.Service.Converter;
 
-import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.RequirementDom;
-import com.Sergio.EasyRMT.Domain.UserStoryDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.*;
 import com.Sergio.EasyRMT.Model.types.*;
-import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
 import com.Sergio.EasyRMT.Service.Converter.RequirementConverter;
-import com.Sergio.EasyRMT.Service.Converter.UserStoryConverter;
+import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
@@ -29,9 +27,12 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RequirementConverterTest {
-  /*  private Date date;
+    @Mock
+    private UserConverter userConverter;
+    private Date date;
     @BeforeEach
     public void initDate(){
+        userConverter = mock(UserConverter.class);
         date = new Date();
     }
 
@@ -42,15 +43,22 @@ public class RequirementConverterTest {
         requirement.setAssignedTo(null);
         List<Requirement> requirementList = new ArrayList<>();
         List<RequirementDom> expected = new ArrayList<>();
+        User user = mock(User.class);
+        UserDom userDom = mock(UserDom.class);
+        requirement.setAuthor(user);
+        requirement.setAssignedTo(user);
+
+        when(userConverter.toDomain(any(User.class))).thenReturn(userDom);
 
         RequirementDom requirementDom = new RequirementDom();
         requirementDom.setIdRequirement(1);
         requirementDom.setName("Test");
         requirementDom.setIdentifier("1234");
-        requirementDom.setAuthor(0);
-        requirementDom.setAssignedTo(0);
+        requirementDom.setAuthor(userDom);
+        requirementDom.setAssignedTo(userDom);
         requirementDom.setRequirementTypeId(1);
         requirementDom.setProjectId(1);
+        requirementDom.setState(State.DRAFT);
 
         requirementList.add(requirement);
         expected.add(requirementDom);
@@ -61,9 +69,10 @@ public class RequirementConverterTest {
 
         //TestConditions
         assertNotNull(obtained);
-        assertTrue(obtained.toArray().length==1);
+        assertEquals(1,obtained.size());
         assertFalse(obtained.isEmpty());
         assertEquals(obtained,expected);
+        verify(userConverter, times(2)).toDomain(any(User.class));
     }
 
     @Test
@@ -71,6 +80,13 @@ public class RequirementConverterTest {
     public void toDomain_RequirementAllAttsProvided_RequirementDomReturned(){
         Requirement requirement = createRequirement(true);
         RequirementDom expected = createRequirementDom(true);
+        User user = mock(User.class);
+        UserDom userDom = mock(UserDom.class);
+        requirement.setAuthor(user);
+        requirement.setAssignedTo(user);
+        expected.setAuthor(userDom);
+        expected.setAssignedTo(userDom);
+        when(userConverter.toDomain(any(User.class))).thenReturn(userDom);
 
         RequirementConverter requirementConverter = createRequirementConverter();
 
@@ -87,6 +103,13 @@ public class RequirementConverterTest {
     public void toDomain_RequirementNotAllAttsProvided_RequirementDomReturned(){
         Requirement requirement = createRequirement(false);
         RequirementDom expected = createRequirementDom(false);
+        User user = mock(User.class);
+        UserDom userDom = mock(UserDom.class);
+        requirement.setAuthor(user);
+        requirement.setAssignedTo(user);
+        expected.setAuthor(userDom);
+        expected.setAssignedTo(userDom);
+        when(userConverter.toDomain(any(User.class))).thenReturn(userDom);
 
         RequirementConverter requirementConverter = createRequirementConverter();
 
@@ -117,7 +140,7 @@ public class RequirementConverterTest {
 
 
     private RequirementConverter createRequirementConverter(){
-        return new RequirementConverter();
+        return new RequirementConverter(userConverter);
     }
 
     private Requirement createRequirement(boolean attributes) {
@@ -154,10 +177,6 @@ public class RequirementConverterTest {
         requirement.setLastUpdated(date);
         requirement.setVersion("version");
         requirement.setValidationMethod("validation");
-        requirement.setAuthor(0);
-        if(attributes){
-            requirement.setAssignedTo(27);
-        }
         requirement.setJustification("justification");
         requirement.setTestCases("test cases");
         requirement.setObject(objectEntity);
@@ -194,18 +213,11 @@ public class RequirementConverterTest {
         requirement.setLastUpdated(date);
         requirement.setVersion("version");
         requirement.setValidationMethod("validation");
-        requirement.setAuthor(0);
-        if(attributes){
-            requirement.setAssignedTo(27);
-        }
-        else{
-            requirement.setAssignedTo(0);
-        }
         requirement.setJustification("justification");
         requirement.setTestCases("test cases");
         requirement.setRequirementTypeId(1);
         requirement.setProjectId(1);
         return requirement;
-    }*/
+    }
 
 }
