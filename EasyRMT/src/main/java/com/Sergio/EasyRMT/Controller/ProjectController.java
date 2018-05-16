@@ -6,7 +6,6 @@
 
 package com.Sergio.EasyRMT.Controller;
 
-import com.Sergio.EasyRMT.Domain.ObjectDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
@@ -21,13 +20,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -197,6 +194,7 @@ public class ProjectController {
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if(commonMethods.isAllowed(projectDomList,projectDom)) {
+            Map<String, Integer> stats = projectService.getStats(id);
             ModelAndView modelAndView = new ModelAndView("project");
             projectDom.setGroupId(projectDom.getGroup().getGroupId());
             modelAndView.addObject("project", projectDom);
@@ -205,6 +203,8 @@ public class ProjectController {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("isPM", isPm);
+            modelAndView.addObject("tracedReqs", stats.get("tracedReqs"));
+            modelAndView.addObject("notTracedReqs", stats.get("notTracedReqs"));
             return modelAndView;
         }
         else {

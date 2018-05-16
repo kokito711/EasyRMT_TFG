@@ -79,13 +79,6 @@
             <h1 id="project-name" class="page-header" th:text="${project.getName()}"></h1>
         </div>
         <div class="row col-lg-12">
-            <p class="-align-justify" th:if="${project.getDescription()}!= null" th:text="${project.getDescription()}">
-
-            </p>
-            <br/>
-            <br/>
-        </div>
-        <div class="row col-lg-12">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -217,7 +210,17 @@
                         <h1 id="project-info" class="page-header" th:text="#{project.projectInformationLabel}"></h1>
                     </div>
                     <div class="row">
-                        <!--here goes all the reporting information-->
+                        <div class="row col-lg-12">
+                            <h3 th:text="#{createProject.descriptionLabel}"></h3>
+                            <p class="-align-justify" th:if="${project.getDescription()}!= null" th:text="${project.getDescription()}">
+                            </p>
+                            <br/>
+                            <br/>
+                            <div class="col-md-6">
+                                <div id="tracedReqs" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="fileTab"
@@ -304,6 +307,62 @@
         selector: "[data-toggle=tooltip]",
         container: "body"
     });
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function () {
+        Highcharts.setOptions({
+            lang: {
+                decimalPoint: '.',
+                thousandsSep: ','
+            },
+            colors: ['#ca428b', '#8bca42'],
+        });
+        drawTracedReqs();
+    });
+    function drawTracedReqs() {
+        Highcharts.chart('tracedReqs', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: [[#{tracedReqs.title}]]
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: [[#{tracedReqs.percentage}]],
+                colorByPoint: true,
+                data: [{
+                    name: [[#{tracedReqs.notTraced}]],
+                    y: [[${notTracedReqs}]]
+                }, {
+                    name: [[#{tracedReqs.title}]],
+                    y: [[${tracedReqs}]],
+                    sliced: true,
+                    selected: true
+                }]
+            }]
+        });
+    }
+    /*]]>*/
 </script>
 </body>
 </html>

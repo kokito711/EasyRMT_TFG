@@ -1,8 +1,8 @@
 package com.Sergio.EasyRMT.Service;
 
-import com.Sergio.EasyRMT.Domain.*;
+import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
 import com.Sergio.EasyRMT.Model.Group;
-import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.Project;
 import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Repository.GroupRepository;
@@ -15,8 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -195,6 +196,29 @@ public class ProjectService {
         return requirementTypeDomList;
     }
 
+
+    /**
+     * This method returns a requirement type existing in db
+     * @return {@link RequirementTypeDom} with RequirementTypeDom related with {@link ProjectDom}
+     */
+    @Transactional(readOnly = true)
+    public RequirementTypeDom getReqType(int reqTypeId){
+        Optional<RequirementType> requirementTypeList = reqTypeRepository.findByIdType(reqTypeId);
+        RequirementTypeDom requirementTypeDomList = reqTypeConverter.toDomain(requirementTypeList.get());
+        return requirementTypeDomList;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String,Integer> getStats(int idProject){
+        Map<String, Integer> stats = new HashMap<>();
+        Integer tracedReqs = projectRepository.getTracedObjects(idProject);
+        Integer notTracedReqs = projectRepository.getNotTracedObjects(idProject);
+        stats.put("tracedReqs", tracedReqs);
+        stats.put("notTracedReqs", notTracedReqs);
+
+        return stats;
+    }
+
     /*private void getObjectDomList(List<ObjectEntity> objects, List<ObjectDom> objectDomList) {
         for (ObjectEntity objectEntity : objects){
             ObjectDom object = new ObjectDom();
@@ -233,15 +257,5 @@ public class ProjectService {
             objectDomList.add(object);
         }
     }*/
-    /**
-     * This method returns a requirement type existing in db
-     * @return {@link RequirementTypeDom} with RequirementTypeDom related with {@link ProjectDom}
-     */
-    @Transactional(readOnly = true)
-    public RequirementTypeDom getReqType(int reqTypeId){
-        Optional<RequirementType> requirementTypeList = reqTypeRepository.findByIdType(reqTypeId);
-        RequirementTypeDom requirementTypeDomList = reqTypeConverter.toDomain(requirementTypeList.get());
-        return requirementTypeDomList;
-    }
 
 }

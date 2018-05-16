@@ -21,4 +21,15 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     @Query(value = "DELETE FROM easyrmt.project WHERE idproject=?1", nativeQuery = true)
     void deleteProjectByIdProject(int id);
     boolean existsByIdProject(int id);
+
+
+   @Query(value = "SELECT count(object.idobject) FROM (easyrmt.object inner join easyrmt.Traceability on " +
+           "object.idobject = Traceability.Object1) inner join easyrmt.project on project_idproject = project.idproject " +
+           "and project.idproject = ?1", nativeQuery = true)
+   int getTracedObjects(int projectId);
+   @Query(value = "SELECT count(object.idobject) FROM easyrmt.object inner join easyrmt.project on" +
+           " project_idproject = project.idproject and project.idproject = ?1 where not exists " +
+           "(select Traceability.Object1 from easyrmt.Traceability where object.idobject = Traceability.Object1)",
+           nativeQuery = true)
+    int getNotTracedObjects(int projectId);
 }
