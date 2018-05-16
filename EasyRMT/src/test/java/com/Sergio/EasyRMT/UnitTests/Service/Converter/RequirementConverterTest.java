@@ -5,19 +5,17 @@
 
 package com.Sergio.EasyRMT.UnitTests.Service.Converter;
 
-import com.Sergio.EasyRMT.Domain.EpicDom;
 import com.Sergio.EasyRMT.Domain.RequirementDom;
-import com.Sergio.EasyRMT.Domain.UserStoryDom;
+import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.*;
 import com.Sergio.EasyRMT.Model.types.*;
-import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
 import com.Sergio.EasyRMT.Service.Converter.RequirementConverter;
-import com.Sergio.EasyRMT.Service.Converter.UserStoryConverter;
+import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.springframework.context.annotation.Description;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
@@ -29,28 +27,38 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RequirementConverterTest {
-  /*  private Date date;
+    @Mock
+    private UserConverter userConverter;
+    private Date date;
     @BeforeEach
     public void initDate(){
+        userConverter = mock(UserConverter.class);
         date = new Date();
     }
 
     @Test
-    @Description("Method toDomain receives a list of Requirements and returns a list of RequirementDom")
+    @DisplayName("Method toDomain receives a list of Requirements and returns a list of RequirementDom")
     public void toDomain_RequirementListProvided_RequirementDomListReturned(){
         Requirement requirement = createRequirement(true);
         requirement.setAssignedTo(null);
         List<Requirement> requirementList = new ArrayList<>();
         List<RequirementDom> expected = new ArrayList<>();
+        User user = mock(User.class);
+        UserDom userDom = mock(UserDom.class);
+        requirement.setAuthor(user);
+        requirement.setAssignedTo(user);
+
+        when(userConverter.toDomain(any(User.class))).thenReturn(userDom);
 
         RequirementDom requirementDom = new RequirementDom();
         requirementDom.setIdRequirement(1);
         requirementDom.setName("Test");
         requirementDom.setIdentifier("1234");
-        requirementDom.setAuthor(0);
-        requirementDom.setAssignedTo(0);
+        requirementDom.setAuthor(userDom);
+        requirementDom.setAssignedTo(userDom);
         requirementDom.setRequirementTypeId(1);
         requirementDom.setProjectId(1);
+        requirementDom.setState(State.DRAFT);
 
         requirementList.add(requirement);
         expected.add(requirementDom);
@@ -61,16 +69,24 @@ public class RequirementConverterTest {
 
         //TestConditions
         assertNotNull(obtained);
-        assertTrue(obtained.toArray().length==1);
+        assertEquals(1,obtained.size());
         assertFalse(obtained.isEmpty());
         assertEquals(obtained,expected);
+        verify(userConverter, times(2)).toDomain(any(User.class));
     }
 
     @Test
-    @Description("Method toDomain receives a Requirement with all attributes and returns a RequirementDom")
+    @DisplayName("Method toDomain receives a Requirement with all attributes and returns a RequirementDom")
     public void toDomain_RequirementAllAttsProvided_RequirementDomReturned(){
         Requirement requirement = createRequirement(true);
         RequirementDom expected = createRequirementDom(true);
+        User user = mock(User.class);
+        UserDom userDom = mock(UserDom.class);
+        requirement.setAuthor(user);
+        requirement.setAssignedTo(user);
+        expected.setAuthor(userDom);
+        expected.setAssignedTo(userDom);
+        when(userConverter.toDomain(any(User.class))).thenReturn(userDom);
 
         RequirementConverter requirementConverter = createRequirementConverter();
 
@@ -82,11 +98,18 @@ public class RequirementConverterTest {
     }
 
     @Test
-    @Description("Method toDomain receives a Requirement without assignedTo, estimated hours and storypoints" +
+    @DisplayName("Method toDomain receives a Requirement without assignedTo, estimated hours and storypoints" +
             " attributes and returns a  RequirementDom")
     public void toDomain_RequirementNotAllAttsProvided_RequirementDomReturned(){
         Requirement requirement = createRequirement(false);
         RequirementDom expected = createRequirementDom(false);
+        User user = mock(User.class);
+        UserDom userDom = mock(UserDom.class);
+        requirement.setAuthor(user);
+        requirement.setAssignedTo(user);
+        expected.setAuthor(userDom);
+        expected.setAssignedTo(userDom);
+        when(userConverter.toDomain(any(User.class))).thenReturn(userDom);
 
         RequirementConverter requirementConverter = createRequirementConverter();
 
@@ -98,7 +121,7 @@ public class RequirementConverterTest {
     }
 
     @Test
-    @Description("Method toModel receives a RequirementDom with attributes and returns a Requirement")
+    @DisplayName("Method toModel receives a RequirementDom with attributes and returns a Requirement")
     public void toModel_RequirementAllAttsProvided_RequirementReturned(){
         Requirement expected = createRequirement(true);
         expected.setIdRequirement(0);
@@ -117,7 +140,7 @@ public class RequirementConverterTest {
 
 
     private RequirementConverter createRequirementConverter(){
-        return new RequirementConverter();
+        return new RequirementConverter(userConverter);
     }
 
     private Requirement createRequirement(boolean attributes) {
@@ -154,10 +177,6 @@ public class RequirementConverterTest {
         requirement.setLastUpdated(date);
         requirement.setVersion("version");
         requirement.setValidationMethod("validation");
-        requirement.setAuthor(0);
-        if(attributes){
-            requirement.setAssignedTo(27);
-        }
         requirement.setJustification("justification");
         requirement.setTestCases("test cases");
         requirement.setObject(objectEntity);
@@ -194,18 +213,11 @@ public class RequirementConverterTest {
         requirement.setLastUpdated(date);
         requirement.setVersion("version");
         requirement.setValidationMethod("validation");
-        requirement.setAuthor(0);
-        if(attributes){
-            requirement.setAssignedTo(27);
-        }
-        else{
-            requirement.setAssignedTo(0);
-        }
         requirement.setJustification("justification");
         requirement.setTestCases("test cases");
         requirement.setRequirementTypeId(1);
         requirement.setProjectId(1);
         return requirement;
-    }*/
+    }
 
 }

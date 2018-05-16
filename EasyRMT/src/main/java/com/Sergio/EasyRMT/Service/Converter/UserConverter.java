@@ -89,17 +89,4 @@ public class UserConverter {
         }
         return user;
     }
-
-    /**
-     * This method converts a list of {@link UserDom} (Domain) to a list of {@link User} (DB)
-     * @param userDoms {@link List<UserDom>}
-     * @return {@link List<User>}
-     */
-    public List<User> toModel(List<UserDom> userDoms){
-        List<User> users = new ArrayList<>();
-        for (UserDom userDom :userDoms){
-            users.add(toModel(userDom));
-        }
-        return users;
-    }
 }

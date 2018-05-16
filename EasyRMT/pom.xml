@@ -5,7 +5,7 @@
 
 	<groupId>com.Sergio</groupId>
 	<artifactId>easyrmt</artifactId>
-	<version>0.8.0</version>
+	<version>0.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>EasyRMT</name>
