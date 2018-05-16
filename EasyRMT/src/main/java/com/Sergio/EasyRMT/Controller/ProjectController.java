@@ -194,7 +194,8 @@ public class ProjectController {
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if(commonMethods.isAllowed(projectDomList,projectDom)) {
-            Map<String, Integer> stats = projectService.getStats(id);
+            Map<String, Integer> tracedStats = projectService.getTracedStats(id);
+            Map<String, List> stateStats = projectService.getStateStats(id);
             ModelAndView modelAndView = new ModelAndView("project");
             projectDom.setGroupId(projectDom.getGroup().getGroupId());
             modelAndView.addObject("project", projectDom);
@@ -203,8 +204,11 @@ public class ProjectController {
             boolean isPm = commonMethods.isPM(user, principal.getName());
             modelAndView.addObject("projectList", projectDomList);
             modelAndView.addObject("isPM", isPm);
-            modelAndView.addObject("tracedReqs", stats.get("tracedReqs"));
-            modelAndView.addObject("notTracedReqs", stats.get("notTracedReqs"));
+            modelAndView.addObject("tracedReqs", tracedStats.get("tracedReqs"));
+            modelAndView.addObject("notTracedReqs", tracedStats.get("notTracedReqs"));
+            modelAndView.addObject("objectLvl1Serie", stateStats.get("objectLvl1Serie"));
+            modelAndView.addObject("objectLvl2Serie", stateStats.get("objectLvl2Serie"));
+            modelAndView.addObject("requirements", stateStats.get("requirements"));
             return modelAndView;
         }
         else {

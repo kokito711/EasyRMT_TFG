@@ -75,10 +75,10 @@
     </div>
     <!-- /. deletion fail modal -->
     <div id="page-wrapper">
-        <div class="row col-lg-12">
+        <div class="row">
             <h1 id="project-name" class="page-header" th:text="${project.getName()}"></h1>
         </div>
-        <div class="row col-lg-12">
+        <div class="row ">
             <div class="col-lg-3 col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -196,7 +196,7 @@
                 </div>
             </div>-->
         </div>
-        <div class="row col-lg-12">
+        <div class="row ">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#generalInfo" data-toggle="tab" th:text="#{epic.tab.generalInfo}"></a>
                 </li>
@@ -206,21 +206,21 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="generalInfo">
-                    <div class="col-lg-12">
-                        <h1 id="project-info" class="page-header" th:text="#{project.projectInformationLabel}"></h1>
+                    <div class="row">
+                        <h1 id="project-info" class="page-header" style="margin-left: 50px"
+                            th:text="#{project.projectInformationLabel}"></h1>
+                    </div>
+                    <div class="row ">
+                        <h3 class="col-sm-offset-1" th:text="#{createProject.descriptionLabel}"></h3>
+                        <p class="col-sm-offset-1" style="text-justify: distribute-all-lines"
+                           th:if="${project.getDescription()}!= null" th:text="${project.getDescription()}">
+                        </p>
+                        <br/>
+                        <br/>
                     </div>
                     <div class="row">
-                        <div class="row col-lg-12">
-                            <h3 th:text="#{createProject.descriptionLabel}"></h3>
-                            <p class="-align-justify" th:if="${project.getDescription()}!= null" th:text="${project.getDescription()}">
-                            </p>
-                            <br/>
-                            <br/>
-                            <div class="col-md-6">
-                                <div id="tracedReqs" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-                            </div>
-
-                        </div>
+                        <span class="col-md-6" id="tracedReqs" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></span>
+                        <span class="col-md-6 col-sm-offset-2" id="reqsState" style="min-width: 310px; height: 400px; max-width: 600px;"></span>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="fileTab"
@@ -316,7 +316,7 @@
                 decimalPoint: '.',
                 thousandsSep: ','
             },
-            colors: ['#ca428b', '#8bca42'],
+            colors: ['#ca428b', '#8bca42']
         });
         drawTracedReqs();
     });
@@ -362,6 +362,83 @@
             }]
         });
     }
+    /*]]>*/
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(function () {
+        Highcharts.setOptions({
+            lang: {
+                decimalPoint: '.',
+                thousandsSep: ','
+            },
+            colors: ['#ca8142', '#8bca42','#cac542']
+        });
+        drawreqsState();
+    });
+
+    function drawreqsState(){
+        var projectType = /*[[${project.getType().name()}]]*/;
+        var objectLvl1Label;
+        var objectLvl2Label;
+        if (projectType == "AGILE"){
+            objectLvl1Label = [[#{epic.Breadcrumb.epiclistLabel}]];
+            objectLvl2Label = [[#{userStory.breadcrumb}]];
+        }
+        else {
+            objectLvl1Label=  [[#{feature.Breadcrumb.featurelistLabel}]];
+            objectLvl2Label=   [[#{ucDash.UcListLabel}]]
+        }
+        Highcharts.chart('reqsState', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: [[#{reqsState.title}]]
+            },
+            xAxis: {
+                categories: [
+                    [[#{objectPrintable.state.draft}]],
+                    [[#{objectPrintable.state.approved}]],
+                    [[#{objectPrintable.state.working}]],
+                    [[#{objectPrintable.state.testing}]],
+                    [[#{objectPrintable.state.implemented}]],
+                    [[#{objectPrintable.state.rejected}]]
+                ],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: [[#{reqsState.numberOfReqs}]]
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: objectLvl1Label,
+                data: /*[[${objectLvl1Serie}]]*/ []
+            }, {
+                name:  objectLvl2Label,
+                data: /*[[${objectLvl2Serie}]]*/ []
+            }, {
+                name: [[#{reqsState.requirements}]],
+                data: /*[[${requirements}]] */[]
+            }]
+        })
+    };
     /*]]>*/
 </script>
 </body>

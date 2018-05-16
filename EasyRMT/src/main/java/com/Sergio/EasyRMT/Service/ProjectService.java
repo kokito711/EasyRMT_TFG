@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProjectService {
@@ -209,13 +206,36 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String,Integer> getStats(int idProject){
+    public Map<String,Integer> getTracedStats(int idProject){
         Map<String, Integer> stats = new HashMap<>();
         Integer tracedReqs = projectRepository.getTracedObjects(idProject);
         Integer notTracedReqs = projectRepository.getNotTracedObjects(idProject);
         stats.put("tracedReqs", tracedReqs);
         stats.put("notTracedReqs", notTracedReqs);
 
+        return stats;
+    }
+
+    public Map<String, List> getStateStats(int idProject) {
+        List<Integer> requirementsList = new ArrayList<>();
+        List<Integer> objectLvl1Serie= new ArrayList<>();
+        List<Integer> objectLvl2Serie= new ArrayList<>();
+        Map<String,List> stats = new HashMap<>();
+        Project project = projectRepository.findByIdProject(idProject).get();
+        switch (project.getType()){
+            case AGILE:
+                objectLvl1Serie = projectRepository.getEpicsState(idProject);
+                objectLvl2Serie = projectRepository.getUserStoriesState(idProject);
+                break;
+            case NOT_AGILE:
+                objectLvl1Serie = projectRepository.getFeaturesState(idProject);
+                objectLvl2Serie = projectRepository.getUseCasesState(idProject);
+                break;
+        }
+        stats.put("objectLvl1Serie", objectLvl1Serie);
+        stats.put("objectLvl2Serie", objectLvl2Serie);
+        requirementsList = projectRepository.getRequirementsState(idProject);
+        stats.put("requirements", requirementsList);
         return stats;
     }
 
