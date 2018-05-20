@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 public class UseCaseConverter {
-    UserConverter userConverter;
+    private UserConverter userConverter;
 
     @Autowired
     public UseCaseConverter(UserConverter userConverter) {
