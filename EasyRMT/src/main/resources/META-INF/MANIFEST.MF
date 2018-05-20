@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Implementation-Title: EasyRMT
+Implementation-Version: 0.1.0
+Archiver-Version: Plexus Archiver
+Built-By: sergio
+Implementation-Vendor-Id: com.Sergio
+Spring-Boot-Version: 2.0.1.RELEASE
+Implementation-Vendor: Pivotal Software, Inc.
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: com.Sergio.EasyRMT.EasyRmtApplication
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+Created-By: Apache Maven 3.3.9
+Build-Jdk: 1.8.0_171
+Implementation-URL: http://projects.spring.io/spring-boot/easyrmt/
