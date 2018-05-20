@@ -2,12 +2,11 @@ package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.types.*;
-import javafx.util.Pair;
+import com.Sergio.EasyRMT.configuration.Tuple;
 import org.docx4j.Docx4J;
 import org.docx4j.Docx4jProperties;
 import org.docx4j.XmlUtils;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
-import org.docx4j.openpackaging.exceptions.InvalidFormatException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 import org.docx4j.openpackaging.parts.WordprocessingML.StyleDefinitionsPart;
@@ -148,7 +147,7 @@ public class DocsService {
         return exportFile;
     }
 
-    public Pair<String,byte[]> generatePdf(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException, IOException {
+    public Tuple<String,byte[]> generatePdf(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException, IOException {
         FeatureDom feature;
         EpicDom epic;
         UseCaseDom useCase;
@@ -197,11 +196,11 @@ public class DocsService {
         Docx4J.toPDF(docxFile, new FileOutputStream(path));
         Path root = Paths.get(path);
         byte[] file = Files.readAllBytes(root);
-        Pair<String, byte[]> result = new Pair<>(path,file);
+        Tuple<String, byte[]> result = new Tuple<String, byte[]>(path,file);
         return result;
     }
 
-    public Pair<String,byte[]> generateListPdf(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException, IOException {
+    public Tuple<String,byte[]> generateListPdf(ProjectDom project, String type, int objectId, Locale locale) throws Docx4JException, IOException {
         List<FeatureDom> features;
         List<EpicDom> epics;
         List<UseCaseDom> useCases;
@@ -269,7 +268,7 @@ public class DocsService {
         Docx4J.toPDF(docxFile, new FileOutputStream(path));
         Path root = Paths.get(path);
         byte[] file = Files.readAllBytes(root);
-        Pair<String, byte[]> result = new Pair<>(path,file);
+        Tuple<String, byte[]> result = new Tuple<>(path,file);
         return result;
     }
 

@@ -8,7 +8,6 @@ package com.Sergio.EasyRMT.Controller;
 import com.Sergio.EasyRMT.Domain.GroupDom;
 import com.Sergio.EasyRMT.Domain.RoleDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
-import com.Sergio.EasyRMT.Model.Group;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.Converter.UserConverter;
 import com.Sergio.EasyRMT.Service.GroupService;
@@ -24,13 +23,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Nullable;
 import javax.validation.Valid;
-import javax.ws.rs.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 @RestController
 public class AdminController {
@@ -52,7 +48,7 @@ public class AdminController {
      */
     @RequestMapping(value = BASE_PATH+"dashboard", method = RequestMethod.GET)
     public ModelAndView dashboard(){
-        return new ModelAndView("/admin/dashboard");
+        return new ModelAndView("admin/dashboard");
     }
 
     /**
@@ -62,7 +58,7 @@ public class AdminController {
     @RequestMapping(value = USER_BASE_PATH+"/create", method = RequestMethod.GET)
     public ModelAndView createUser() {
         UserDom userDom = new UserDom();
-        ModelAndView modelAndView = new ModelAndView("/admin/createUser");
+        ModelAndView modelAndView = new ModelAndView("admin/createUser");
         modelAndView.addObject("user", userDom);
         return modelAndView;
     }
@@ -93,7 +89,7 @@ public class AdminController {
             modelAndView.addObject("success", false);
         }
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("/admin/createUser");
+            modelAndView.setViewName("admin/createUser");
             for(FieldError error : bindingResult.getFieldErrors()){
                 switch (error.getField()){
                     case "username":
@@ -124,7 +120,7 @@ public class AdminController {
             userService.createUser(user);
             modelAndView.addObject("success", true);
             modelAndView.addObject("user", new UserDom());
-            modelAndView.setViewName("/admin/createUser");
+            modelAndView.setViewName("admin/createUser");
         }
         return modelAndView;
     }
@@ -136,7 +132,7 @@ public class AdminController {
     @RequestMapping(value = USER_BASE_PATH, method = RequestMethod.GET)
     public ModelAndView getUserList(){
         List<UserDom> users = userService.getUsers();
-        ModelAndView modelAndView = new ModelAndView(USER_BASE_PATH);
+        ModelAndView modelAndView = new ModelAndView("admin/users");
         modelAndView.addObject("userList",users);
         return modelAndView;
     }
@@ -149,7 +145,7 @@ public class AdminController {
     @RequestMapping(value = USER_BASE_PATH+"/user/{userId}")
     public ModelAndView getUser(@PathVariable int userId){
         UserDom user = userService.findUserById(userId);
-        ModelAndView modelAndView = new ModelAndView("/admin/userProfile");
+        ModelAndView modelAndView = new ModelAndView("admin/userProfile");
         modelAndView.addObject("userProf", user);
         return modelAndView;
     }
@@ -169,20 +165,6 @@ public class AdminController {
         }
     }
 
-/*    *//**
-     * This method request a view of an specific user. Controller will call service to get user information and then
-     * it will return this info.
-     * @param userId user to get the info
-     * @return Model And View with user information
-     *//*
-    @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.GET)
-    public ModelAndView getEditUser(@PathVariable int userId){
-        UserDom user = userService.findUserById(userId);
-        ModelAndView modelAndView = new ModelAndView("/admin/userProfile");
-        modelAndView.addObject("user",user);
-        return modelAndView;
-    }*/
-
     /**
      * This method calls user service to update user, and returns a view with user updated
      * @param userId id of user to be updated
@@ -192,7 +174,7 @@ public class AdminController {
     @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.POST)
     public ModelAndView editUser(@PathVariable int userId, @Valid UserDom user, BindingResult result){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/admin/userProfile");
+        modelAndView.setViewName("admin/userProfile");
         UserDom userDom = userService.modifyUser(userId,null,user);
         modelAndView.addObject("success", true);
         modelAndView.addObject("userProf", userDom);
@@ -205,7 +187,7 @@ public class AdminController {
      */
     @RequestMapping(value = GROUP_BASE_PATH, method = RequestMethod.GET)
     public ModelAndView getGroupList(){
-        ModelAndView modelAndView = new ModelAndView("/admin/groups");
+        ModelAndView modelAndView = new ModelAndView("admin/groups");
         List<GroupDom> groups = groupService.findAll();
         modelAndView.addObject("groupList", groups);
         return modelAndView;
@@ -217,7 +199,7 @@ public class AdminController {
      */
     @RequestMapping(value = GROUP_BASE_PATH+"/create", method = RequestMethod.GET)
     public ModelAndView getCreateGroup(){
-        ModelAndView modelAndView = new ModelAndView("/admin/createGroup");
+        ModelAndView modelAndView = new ModelAndView("admin/createGroup");
         List<UserDom> users = userService.getNoAdminUsers();
         modelAndView.addObject("userList", users);
         modelAndView.addObject("group", new GroupDom());
@@ -231,7 +213,7 @@ public class AdminController {
      */
     @RequestMapping(value = GROUP_BASE_PATH+"/create", method = RequestMethod.POST)
     public ModelAndView createGroup(@Valid GroupDom group, BindingResult bindingResult){
-        ModelAndView modelAndView = new ModelAndView("/admin/createGroup");
+        ModelAndView modelAndView = new ModelAndView("admin/createGroup");
         List<UserDom> users = userService.getNoAdminUsers();
         modelAndView.addObject("userList", users);
         for(String userS: group.getStringUsers()){
@@ -289,7 +271,7 @@ public class AdminController {
      */
     @RequestMapping(value = {GROUP_BASE_PATH+"/group/{groupId}" }, method = RequestMethod.GET)
     public ModelAndView getGroup(@PathVariable int groupId){
-        ModelAndView modelAndView = new ModelAndView("/admin/group");
+        ModelAndView modelAndView = new ModelAndView("admin/group");
         GroupDom groupDom = groupService.findGroup(groupId);
         List<UserDom> users = userService.getNoAdminUsers();
         List<UserDom> analysts = generateList("ANALYST", users, groupDom);
@@ -312,7 +294,7 @@ public class AdminController {
     public ResponseEntity modifyGroup(@PathVariable int groupId, @PathVariable int modificationType,
                                          @Valid GroupDom groupDom, BindingResult bindingResult){
         boolean wrongRequest = false;
-        ModelAndView modelAndView = new ModelAndView("/admin/group");
+        ModelAndView modelAndView = new ModelAndView("admin/group");
         GroupDom groupUpdated;
         switch (modificationType){
             case 1:

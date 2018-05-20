@@ -11,9 +11,8 @@ import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.*;
-import javafx.util.Pair;
+import com.Sergio.EasyRMT.configuration.Tuple;
 import javassist.bytecode.stackmap.TypeData;
-import org.docx4j.Docx4J;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,8 +36,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static java.nio.file.Files.deleteIfExists;
 
 @RestController
 public class DocsGenerationController {
@@ -238,7 +236,7 @@ public class DocsGenerationController {
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
-            Pair<String,byte[]> file = null;
+            Tuple<String,byte[]> file = null;
             try {
                 file = docsService.generatePdf(project, type, objectId, locale);
             } catch (Exception e) {
@@ -250,7 +248,7 @@ public class DocsGenerationController {
             header.set(HttpHeaders.CONTENT_DISPOSITION,
                     "attachment;filename="+ file.getKey());
             //Converting file to bytearray
-            byte[] content = file.getValue();
+            byte[] content = file.getContent();
             header.setContentLength(content.length);
             HttpEntity<byte[]> response = new HttpEntity<>(content, header);
             Path root = Paths.get(file.getKey());
@@ -278,7 +276,7 @@ public class DocsGenerationController {
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
-            Pair<String,byte[]> file = null;
+            Tuple<String,byte[]> file = null;
             try {
                 file = docsService.generateListPdf(project, type, objectId, locale);
             } catch (Exception e) {
@@ -290,7 +288,7 @@ public class DocsGenerationController {
             header.set(HttpHeaders.CONTENT_DISPOSITION,
                     "attachment;filename="+ file.getKey());
             //Converting file to bytearray
-            byte[] content = file.getValue();
+            byte[] content = file.getContent();
             header.setContentLength(content.length);
             HttpEntity<byte[]> response = new HttpEntity<>(content, header);
             Path root = Paths.get(file.getKey());
