@@ -165,20 +165,6 @@ public class AdminController {
         }
     }
 
-/*    *//**
-     * This method request a view of an specific user. Controller will call service to get user information and then
-     * it will return this info.
-     * @param userId user to get the info
-     * @return Model And View with user information
-     *//*
-    @RequestMapping(value = USER_BASE_PATH+"/{userId}", method = RequestMethod.GET)
-    public ModelAndView getEditUser(@PathVariable int userId){
-        UserDom user = userService.findUserById(userId);
-        ModelAndView modelAndView = new ModelAndView("/admin/userProfile");
-        modelAndView.addObject("user",user);
-        return modelAndView;
-    }*/
-
     /**
      * This method calls user service to update user, and returns a view with user updated
      * @param userId id of user to be updated

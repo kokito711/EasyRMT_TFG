@@ -118,8 +118,20 @@
                             <td th:text="${user.getName()}"></td>
                             <td th:text="${user.getLastName()}"></td>
                             <td th:text="${user.getPhone()}"></td>
-                            <td th:text="${user.getRoles().toArray()[0].getRole()}"></td>
-                            <td th:if="${user.getRoles().size()}>1" th:text="${user.getRoles().toArray()[1].getRole()}"></td>
+                            <td th:if="${user.getRoles().get(0).getRoleId()==1}"
+                               th:text="#{createUser.role.admin}"></td>
+                            <td th:if="${user.getRoles().get(0).getRoleId()==2}"
+                               th:text="#{createUser.role.pm}"></td>
+                            <td th:if="${user.getRoles().get(0).getRoleId()==3}"
+                               th:text="#{createUser.role.analyst}"></td>
+                            <td th:if="${user.getRoles().get(0).getRoleId()==4}"
+                               th:text="#{createUser.role.stakeholder}"></td>
+                            <td th:if="${user.getRoles().size()>1 and user.getRoles().get(1).getRoleId()==2}"
+                               th:text="#{createUser.role.pm}"></td>
+                            <td th:if="${user.getRoles().size()>1 and user.getRoles().get(1).getRoleId()==3}"
+                               th:text="#{createUser.role.analyst}"></td>
+                            <td th:if="${user.getRoles().size()>1 and user.getRoles().get(1).getRoleId()==4}"
+                               th:text="#{createUser.role.stakeholder}"></td>
                             <td th:unless="${user.getRoles().size()}>1" th:text="#{admin.users.Table.Tbody.unassigned}"></td>
                             <td>
                                 <a th:href="@{'/admin/users/user/'+${user.getUserId()}}" class="tooltip-demo">
