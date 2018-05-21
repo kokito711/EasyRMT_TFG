@@ -306,7 +306,6 @@ public class CommentControllerTest {
     public void deleteComment_CredentialsNotOk_AccessDeniedExceptionThrown(){
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
-        CommentDom commentDom = mock(CommentDom.class);
         List<ProjectDom> projectDomList = new ArrayList<>();
         projectDomList.add(projectDom);
 

@@ -19,13 +19,13 @@ import java.util.Optional;
 
 @Service
 public class RequirementService {
-    ObjectRepository objectRepository;
-    RequirementConverter requirementConverter;
-    ProjectRepository projectRepository;
-    RequirementRepository requirementRepository;
-    ReqTypeRepository reqTypeRepository;
-    DocumentService documentService;
-    UserRepository userRepository;
+    private ObjectRepository objectRepository;
+    private RequirementConverter requirementConverter;
+    private ProjectRepository projectRepository;
+    private RequirementRepository requirementRepository;
+    private ReqTypeRepository reqTypeRepository;
+    private DocumentService documentService;
+    private UserRepository userRepository;
 
     @Autowired
     public RequirementService(ObjectRepository objectRepository, RequirementConverter requirementConverter,
