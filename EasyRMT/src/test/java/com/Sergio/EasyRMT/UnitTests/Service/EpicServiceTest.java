@@ -247,8 +247,8 @@ public class EpicServiceTest {
         when(epicRepository.save(any(Epic.class))).thenReturn(epic);
         when(epicConverter.toDomain(any(Epic.class))).thenReturn(epicDom);
 
-        EpicService requirementService = createEpicService();
-        EpicDom obtained = requirementService.update(epicDom,1,1);
+        EpicService epicService = createEpicService();
+        EpicDom obtained = epicService.update(epicDom,1,1);
 
         assertEquals(obtained,epicDom);
         assertNotNull(obtained);
