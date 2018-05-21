@@ -164,7 +164,7 @@ public class RequirementServiceTest {
 
     @Test
     @DisplayName("DeleteRequirement fails to delete a Requirement")
-    public void deleteRequirement_IdObjectProvided_DeleteionFailed(){
+    public void deleteRequirement_IdObjectProvided_DeletionFailed(){
         Requirement requirement = mock(Requirement.class);
         ObjectEntity objectEntity = new ObjectEntity();
         Project project = new Project();
@@ -189,7 +189,7 @@ public class RequirementServiceTest {
     }
 
     @Test
-    @DisplayName("Delete Requirement fails when epic does not exists in DB")
+    @DisplayName("Delete Requirement fails when req does not exists in DB")
     public void deleteRequirement_IdObjectNotExist_ReturnFalse(){
         doReturn(false).when(objectRepository).exists(anyInt());
 
