@@ -244,6 +244,7 @@ public class UserServiceTest {
         userDom.setName("Name1");
         userDom.setLastName("LastName1");
         userDom.setPhone("Phone1");
+        userDom.setEmail("Email1");
         List<String> stringRoles = new ArrayList<>();
         stringRoles.add("ROLE1");
         stringRoles.add("ROLE2");
@@ -260,6 +261,7 @@ public class UserServiceTest {
         user.setName("Name");
         user.setLastName("LastName");
         user.setPhone("Phone");
+        user.setEmail("Email");
         List<Role> roles = new ArrayList<>();
         Role role = new Role();
         role.setRole("ROLE");

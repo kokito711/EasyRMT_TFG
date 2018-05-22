@@ -160,6 +160,7 @@ public class GroupService {
         for (String userS : stringUsers){
             User user = userRepository.findByUsername(userS);
             Group_user group_user = new Group_user(user, group, false,false);
+            group_users.add(group_user);
         }
     }
 
@@ -167,6 +168,7 @@ public class GroupService {
         for (String userS : stakeholders){
             User user = userRepository.findByUsername(userS);
             Group_user group_user = new Group_user(user, group, false,true);
+            group_users.add(group_user);
         }
     }
 }
