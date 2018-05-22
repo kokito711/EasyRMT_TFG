@@ -19,13 +19,13 @@ import java.util.Optional;
 
 @Service
 public class UseCaseService {
-    ObjectRepository objectRepository;
-    FeatureRepository featureRepository;
-    ProjectRepository projectRepository;
-    UseCaseRepository useCaseRepository;
-    UseCaseConverter useCaseConverter;
-    DocumentService documentService;
-    UserRepository userRepository;
+    private ObjectRepository objectRepository;
+    private FeatureRepository featureRepository;
+    private ProjectRepository projectRepository;
+    private UseCaseRepository useCaseRepository;
+    private UseCaseConverter useCaseConverter;
+    private DocumentService documentService;
+    private UserRepository userRepository;
 
     @Autowired
     public UseCaseService(ObjectRepository objectRepository, FeatureRepository featureRepository, ProjectRepository projectRepository,

@@ -203,7 +203,7 @@ public class UserStoryServiceTest {
 
     @Test
     @DisplayName("Delete userStory fails when userStory does not exists in DB")
-    public void deleteRequirement_IdObjectNotExist_ReturnFalse(){
+    public void deleteUserStory_IdObjectNotExist_ReturnFalse(){
         doReturn(false).when(objectRepository).exists(anyInt());
 
         UserStoryService userStoryService = createUserStoryService();
@@ -218,8 +218,8 @@ public class UserStoryServiceTest {
     }
 
     @Test
-    @DisplayName("Update Requirement persist infomation")
-    public void updateRequirement_RequirementModified_RequirementUpdated(){
+    @DisplayName("Update UserStory persist infomation")
+    public void updateUserStory_UserStoryModified_UserStoryUpdated(){
         UserStoryDom userStoryDom = new UserStoryDom();
         UserDom userDom2 = mock(UserDom.class);
         userStoryDom.setIdUserStory(1);
