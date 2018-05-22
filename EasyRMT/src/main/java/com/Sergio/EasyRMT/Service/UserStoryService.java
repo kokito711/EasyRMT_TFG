@@ -19,13 +19,13 @@ import java.util.Optional;
 
 @Service
 public class UserStoryService {
-    ObjectRepository objectRepository;
-    EpicRepository epicRepository;
-    ProjectRepository projectRepository;
-    UserStoryRepository userStoryRepository;
-    UserStoryConverter userStoryConverter;
-    DocumentService documentService;
-    UserRepository userRepository;
+    private ObjectRepository objectRepository;
+    private EpicRepository epicRepository;
+    private ProjectRepository projectRepository;
+    private UserStoryRepository userStoryRepository;
+    private UserStoryConverter userStoryConverter;
+    private DocumentService documentService;
+    private UserRepository userRepository;
 
     @Autowired
     public UserStoryService(ObjectRepository objectRepository, EpicRepository epicRepository, ProjectRepository projectRepository,
