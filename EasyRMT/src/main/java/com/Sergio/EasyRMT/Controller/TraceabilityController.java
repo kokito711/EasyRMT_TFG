@@ -5,7 +5,6 @@
 
 package com.Sergio.EasyRMT.Controller;
 
-import com.Sergio.EasyRMT.Domain.ObjectDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Service.ProjectService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.List;
@@ -32,10 +30,10 @@ public class TraceabilityController {
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
     private final String PATH_BASE = "/traceability/";
-    TraceabilityService traceabilityService;
-    UserService userService;
-    ProjectService projectService;
-    CommonMethods commonMethods;
+    private TraceabilityService traceabilityService;
+    private UserService userService;
+    private ProjectService projectService;
+    private CommonMethods commonMethods;
 
     @Autowired
     public TraceabilityController(TraceabilityService traceabilityService, UserService userService,
