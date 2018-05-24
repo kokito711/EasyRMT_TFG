@@ -7,11 +7,8 @@
 package com.Sergio.EasyRMT.Controller;
 
 
-import com.Sergio.EasyRMT.Domain.GroupDom;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
-import com.Sergio.EasyRMT.Model.Group;
-import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class MainController {
-    ProjectService projectService;
-    UserService userService;
-    CommonMethods commonMethods;
+    private ProjectService projectService;
+    private UserService userService;
+    private CommonMethods commonMethods;
 
     @Autowired
     public MainController(ProjectService projectService, UserService userService, CommonMethods commonMethods) {
