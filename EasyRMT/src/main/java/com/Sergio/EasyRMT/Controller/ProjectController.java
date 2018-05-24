@@ -33,10 +33,10 @@ public class ProjectController {
 
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
-    ProjectService projectService;
-    DocumentService documentService;
-    CommonMethods commonMethods;
-    UserService userService;
+    private ProjectService projectService;
+    private DocumentService documentService;
+    private CommonMethods commonMethods;
+    private UserService userService;
 
     @Autowired
     public ProjectController(ProjectService projectService, DocumentService documentService, CommonMethods commonMethods, UserService userService) {
