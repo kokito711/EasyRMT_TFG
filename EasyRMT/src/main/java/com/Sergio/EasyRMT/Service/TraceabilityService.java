@@ -6,7 +6,6 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.*;
-import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
@@ -159,7 +158,7 @@ public class TraceabilityService {
                 }
             }
             for(ObjectEntity object : object2.getTraced()){
-                if(object.equals(object2)){
+                if(object.equals(object1)){
                     int index = object2.getTraced().indexOf(object);
                     object2.getTraced().remove(index);
                     break;
