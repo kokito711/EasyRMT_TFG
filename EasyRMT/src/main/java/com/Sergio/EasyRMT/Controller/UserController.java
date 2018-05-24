@@ -61,7 +61,7 @@ public class UserController {
     }
 
     /**
-     * This metod receives a request to update an user. then calls the userService to update user.
+     * This method receives a request to update an user. then calls the userService to update user.
      * @param username username to be updated
      * @param userInfo user information to be updated
      * @return View with updated user
