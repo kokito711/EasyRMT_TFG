@@ -2,9 +2,7 @@ package com.Sergio.EasyRMT.UnitTests.Controller;
 
 import com.Sergio.EasyRMT.Controller.CommonMethods;
 import com.Sergio.EasyRMT.Controller.ProjectController;
-import com.Sergio.EasyRMT.Domain.ProjectDom;
-import com.Sergio.EasyRMT.Domain.RequirementTypeDom;
-import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Domain.*;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.ProjectService;
@@ -24,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -40,9 +39,9 @@ public class ProjectContollerTest {
     @Mock
     private UserService userService;
     @Mock
-    Principal principal;
+    private Principal principal;
     @Mock
-    BindingResult result;
+    private BindingResult result;
 
     @BeforeEach
     public void initMocks(){
@@ -417,36 +416,118 @@ public class ProjectContollerTest {
         verify(projectService,times(0)).deleteProject(1);
     }
 
-    /*@Test
+    @Test
     @DisplayName("getProject method returns a modelAndView object")
     public void getProject_idProjectProvided_ReturnsMAV(){
-        *//*ProjectDom p1 = mock(ProjectDom.class);
+        ProjectDom p1 = mock(ProjectDom.class);
         ProjectDom p2 = mock(ProjectDom.class);
         List<ProjectDom> projectDomList = new ArrayList<>();
         projectDomList.add(p1);
         projectDomList.add(p2);
         ProjectDom projectDom = mock(ProjectDom.class);
-
+        UserDom user = mock(UserDom.class);
+        Map<String, Integer> tracedStats = mock(Map.class);
+        Map<String, List> stateStats = mock(Map.class);
+        GroupDom group = mock(GroupDom.class);
+        List<DocumentationDom> fileList = mock(List.class);
+        List<FeatureDom> objectLvl1 = mock(List.class);
+        List<UseCaseDom> objectLvl2 = mock(List.class);
+        List<RequirementDom> requirementDoms = mock(List.class);
         ModelAndView expected = new ModelAndView("project");
-        expected.addObject("projectList", projectDomList);
         expected.addObject("project", projectDom);
-        when(projectService.getProjects()).thenReturn(projectDomList);
-        when(projectService.getProject(7)).thenReturn(projectDom);
+        expected.addObject("fileList", fileList);
+        expected.addObject("user", "user");
+        expected.addObject("projectList", projectDomList);
+        expected.addObject("isPM", true);
+        expected.addObject("tracedReqs", 1);
+        expected.addObject("notTracedReqs", 1);
+        expected.addObject("objectLvl1Serie", objectLvl1);
+        expected.addObject("objectLvl2Serie", objectLvl2);
+        expected.addObject("requirements", requirementDoms);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(true);
+        when(commonMethods.isPM(user, "user")).thenReturn(true);
+        when(projectDom.getGroup()).thenReturn(group);
+        when(group.getGroupId()).thenReturn(1);
+        when(projectService.getTracedStats(1)).thenReturn(tracedStats);
+        when(projectService.getStateStats(1)).thenReturn(stateStats);
+        when(documentService.getFileList(1, null)).thenReturn(fileList);
+        when(tracedStats.get("tracedReqs")).thenReturn(1);
+        when(tracedStats.get("notTracedReqs")).thenReturn(1);
+        when(stateStats.get("objectLvl1Serie")).thenReturn(objectLvl1);
+        when(stateStats.get("objectLvl2Serie")).thenReturn(objectLvl2);
+        when(stateStats.get("requirements")).thenReturn(requirementDoms);
 
         ProjectController projectController = createProjectController();
 
-        ModelAndView obtained = projectController.getProject(7);
+        ModelAndView obtained = projectController.getProject(1, principal);
 
         //Test conditions
         assertEquals(expected.getView(),obtained.getView());
         assertFalse(obtained.getModel().isEmpty());
-        assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
-        assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
-        //Verify project service has been called
-        verify(projectService,times(1)).getProjects();
-        //Verify update project is called
-        verify(projectService,times(1)).getProject(7);*//*
-    }*/
+        assertEquals(obtained.getModel().get("project"), expected.getModel().get("project"));
+        assertEquals(obtained.getModel().get("projectList"), expected.getModel().get("projectList"));
+        assertEquals(obtained.getModel().get("project"), expected.getModel().get("project"));
+        assertEquals(obtained.getModel().get("fileList"), expected.getModel().get("fileList"));
+        assertEquals(obtained.getModel().get("user"), expected.getModel().get("user"));
+        assertEquals(obtained.getModel().get("isPM"), expected.getModel().get("isPM"));
+        assertEquals(obtained.getModel().get("tracedReqs"), expected.getModel().get("tracedReqs"));
+        assertEquals(obtained.getModel().get("notTracedReqs"), expected.getModel().get("notTracedReqs"));
+        assertEquals(obtained.getModel().get("objectLvl1Serie"), expected.getModel().get("objectLvl1Serie"));
+        assertEquals(obtained.getModel().get("objectLvl2Serie"), expected.getModel().get("objectLvl2Serie"));
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(commonMethods, times(1)).isPM(user, "user");
+        verify(projectDom, times(1)).getGroup();
+        verify(group, times(1)).getGroupId();
+        verify(projectService, times(1)).getTracedStats(1);
+        verify(projectService, times(1)).getStateStats(1);
+        verify(documentService, times(1)).getFileList(1,null);
+        verify(principal, times(3)).getName();
+    }
+
+    @Test
+    @DisplayName("getProject method not allowed throws Access denied exception")
+    public void getProject_idProjectProvided_ThrowsException(){
+        ProjectDom p1 = mock(ProjectDom.class);
+        ProjectDom p2 = mock(ProjectDom.class);
+        List<ProjectDom> projectDomList = new ArrayList<>();
+        projectDomList.add(p1);
+        projectDomList.add(p2);
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(false);
+
+        ProjectController projectController = createProjectController();
+        try {
+            projectController.getProject(1, principal);
+            fail();
+        }
+            catch (AccessDeniedException e){
+            assertEquals(e.getMessage(), "Not allowed");
+        }
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(commonMethods, times(0)).isPM(user, "user");
+        verify(projectDom, times(0)).getGroup();
+        verify(projectService, times(0)).getTracedStats(1);
+        verify(projectService, times(0)).getStateStats(1);
+        verify(documentService, times(0)).getFileList(1,null);
+        verify(principal, times(2)).getName();
+    }
+
+
     private ProjectController createProjectController(){
         return new ProjectController(projectService, documentService, commonMethods, userService);
     }
