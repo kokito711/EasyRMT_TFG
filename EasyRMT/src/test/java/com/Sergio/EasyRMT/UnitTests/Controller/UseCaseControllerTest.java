@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.validation.BindingResult;
@@ -816,7 +818,6 @@ public class UseCaseControllerTest {
         List<ProjectDom> projectDomList = new ArrayList<>();
         projectDomList.add(projectDom);
         BindingResult result = mock(BindingResult.class);
-        FeatureDom featureDom = mock(FeatureDom.class);
         UseCaseDom useCase = mock(UseCaseDom.class);
         when(projectService.getProject(1)).thenReturn(projectDom);
         when(principal.getName()).thenReturn("user");
@@ -843,36 +844,88 @@ public class UseCaseControllerTest {
         verify(useCaseService, times(0)).update(1,1,1,useCase);
     }
 
-/*    @Test
+    @Test
     @DisplayName("deleteUseCase method returns an http.ok when UseCase is deleted")
     public void deleteUseCase_idProjectAndFeatureIdAndUseCaseIdProvided_UseCaseDeleted_ReturnsOk(){
-        when(useCaseService.deleteUseCase(anyInt())).thenReturn(true);
-        ResponseEntity expected = new ResponseEntity(HttpStatus.OK);
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        List<ProjectDom> projectDomList = new ArrayList<>();
+        projectDomList.add(projectDom);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(true);
+        when(useCaseService.deleteUseCase(1)).thenReturn(true);
 
         UseCaseController useCaseController = createUseCaseController();
-
-        ResponseEntity obtained = useCaseController.deleteUseCase(7,1,1);
+        ResponseEntity obtained = useCaseController.deleteUseCase(1,1, principal,1);
 
         //Test conditions
-        assertEquals(expected.getStatusCode(),obtained.getStatusCode());
-        //Verify project service has been called
+        assertEquals(HttpStatus.OK,obtained.getStatusCode());
+        assertEquals("", obtained.getBody());
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(principal, times(1)).getName();
         verify(useCaseService,times(1)).deleteUseCase(1);
     }
     @Test
     @DisplayName("deleteUseCase method returns an http.Internal_Server_Error when UseCase is not deleted")
     public void deleteUseCase_idProjectAndFeatureIdAndUseCaseIdProvided_UseCaseNotDeleted_ReturnsInternalServerError(){
-        when(useCaseService.deleteUseCase(anyInt())).thenReturn(false);
-        ResponseEntity expected = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        List<ProjectDom> projectDomList = new ArrayList<>();
+        projectDomList.add(projectDom);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(true);
+        when(useCaseService.deleteUseCase(1)).thenReturn(false);
 
         UseCaseController useCaseController = createUseCaseController();
-
-        ResponseEntity obtained = useCaseController.deleteUseCase(7,1,1);
+        ResponseEntity obtained = useCaseController.deleteUseCase(1,1, principal,1);
 
         //Test conditions
-        assertEquals(expected.getStatusCode(),obtained.getStatusCode());
-        //Verify project service has been called
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR,obtained.getStatusCode());
+        assertEquals("", obtained.getBody());
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(principal, times(1)).getName();
         verify(useCaseService,times(1)).deleteUseCase(1);
-    }*/
+    }
+
+    @Test
+    @DisplayName("deleteUseCase method throws exception when UseCase is not deleted")
+    public void deleteUseCase_idProjectAndFeatureIdAndUseCaseIdProvided_UseCaseNotDeleted_AccessDeniedExceptionThrown(){
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        List<ProjectDom> projectDomList = new ArrayList<>();
+        projectDomList.add(projectDom);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(false);
+
+        UseCaseController useCaseController = createUseCaseController();
+        try {
+            useCaseController.deleteUseCase(1,1, principal,1);
+            fail();
+        }catch (AccessDeniedException exception){
+            assertEquals("Not allowed",exception.getMessage());
+        }
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(principal, times(2)).getName();
+        verify(featureService,times(0)).deleteFeature(1);
+    }
 
     private UseCaseController createUseCaseController(){
         return new UseCaseController(projectService, featureService, useCaseService, documentService, commonMethods,
