@@ -643,7 +643,8 @@ public class UseCaseControllerTest {
         expected.addObject("projectList", projectDomList);
         expected.addObject("useCase", useCase);
         expected.addObject("featureId", 1);
-        expected.addObject("featureName", "feature");        expected.addObject("user", "user");
+        expected.addObject("featureName", "feature");
+        expected.addObject("user", "user");
         expected.addObject("group", users);
         expected.addObject("isPM", true);
 
@@ -671,53 +672,178 @@ public class UseCaseControllerTest {
         verify(featureService, times(1)).getFeature(1);
         verify(useCaseService, times(0)).create(useCase,1,1);
     }
-/*
-    @Test
-    @DisplayName("updateUseCase method returns a modelAndView object")
-    public void updateUseCase_ProjectIdAndFeatureIdAndUseCaseIdAndUseCaseDomProvided_ReturnsMAV(){
-       *//* List<ProjectDom> projectDomList = mock(List.class);
-        FeatureDom featureDom = mock(FeatureDom.class);
-        ProjectDom project = mock(ProjectDom.class);
-        UseCaseDom useCaseDom = mock(UseCaseDom.class);
-        when(projectService.getProjects()).thenReturn(projectDomList);
-        when(projectService.getProject(anyInt())).thenReturn(project);
-        when(useCaseService.update(19,1, 1,useCaseDom)).thenReturn(useCaseDom);
-        when(featureService.getFeature(1)).thenReturn(featureDom);
-        doReturn("featureName").when(featureDom).getName();
-        doReturn(1).when(featureDom).getIdFeature();
 
-        ModelAndView expected = new ModelAndView("useCase");
-        expected.addObject("project", project);
-        expected.addObject("useCase", useCaseDom);
-        expected.addObject("projectList", projectDomList);
-        expected.addObject("featureId",1);
-        expected.addObject("featureName", "featureName");
+    @Test
+    @DisplayName("createFeature method returns not allowed")
+    public void createFeature_ProjectIdAndEpicDomProvided_AccessDeniedExceptionThrown(){
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        List<ProjectDom> projectDomList = new ArrayList<>();
+        projectDomList.add(projectDom);
+        BindingResult result = mock(BindingResult.class);
+        UseCaseDom useCaseDom = mock(UseCaseDom.class);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(false);
 
         UseCaseController useCaseController = createUseCaseController();
-
-        ModelAndView obtained = useCaseController.updateUseCase(19,1,1, useCaseDom);
-
-        //TestConditions
-        assertEquals(expected.getView(),obtained.getView());
-        assertFalse(obtained.getModel().isEmpty());
-        assertTrue(obtained.getModel().get("useCase").equals(expected.getModel().get("useCase")));
-        assertTrue(obtained.getModel().get("projectList").equals(expected.getModel().get("projectList")));
-        assertTrue(obtained.getModel().get("project").equals(expected.getModel().get("project")));
-        assertTrue(obtained.getModel().get("featureId").equals(expected.getModel().get("featureId")));
-        assertTrue(obtained.getModel().get("featureName").equals(expected.getModel().get("featureName")));
-        //Verify project service has been called
-        verify(projectService,times(1)).getProjects();
-        verify(projectService,times(1)).getProject(19);
-        //verify userStory is called 1 time
-        verify(useCaseService,times(1)).update(19,1,1,useCaseDom);
-        //verify epic service has been called
-        verify(featureService, times(1)).getFeature(1);
-        //verify featureDom has been called
-        verify(featureDom, times(1)).getIdFeature();
-        verify(featureDom, times(1)).getName();*//*
+        try {
+            useCaseController.createUseCase(1,1,principal,useCaseDom,result);
+            fail();
+        }catch (AccessDeniedException exception){
+            assertEquals("Not allowed",exception.getMessage());
+        }
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(commonMethods, times(0)).isPM(user, "user");
+        verify(projectDom, times(0)).getGroup();
+        verify(principal, times(2)).getName();
+        verify(featureService, times(0)).getFeature(1);
+        verify(useCaseService, times(0)).create(useCaseDom,1,1);
     }
 
     @Test
+    @DisplayName("updateUseCase method returns a modelAndView object")
+    public void updateUseCase_ProjectIdAndFeatureIdAndUseCaseIdAndUseCaseDomProvided_ReturnsMAV(){
+        List<ProjectDom> projectDomList = mock(List.class);
+        FeatureDom featureDom = mock(FeatureDom.class);
+        UseCaseDom useCaseDom = mock(UseCaseDom.class);
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        BindingResult result = mock(BindingResult.class);
+        projectDomList.add(projectDom);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(true);
+        when(result.hasErrors()).thenReturn(false);
+        when(featureService.getFeature(1)).thenReturn(featureDom);
+        when(featureDom.getIdFeature()).thenReturn(1);
+        when(featureDom.getName()).thenReturn("feature");
+        when(useCaseService.update(1,1,1,useCaseDom)).thenReturn(useCaseDom);
+
+        UseCaseController useCaseController = createUseCaseController();
+
+        ModelAndView expected = new ModelAndView("redirect: /project/1/feature/1/usecase/1");
+        ModelAndView obtained = useCaseController.updateUseCase(1,1, principal,1,useCaseDom, result);
+
+        //Test conditions
+        assertEquals(expected.getView(),obtained.getView());
+        assertTrue(obtained.getModel().isEmpty());
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(commonMethods, times(0)).isPM(user, "user");
+        verify(projectDom, times(0)).getGroup();
+        verify(principal, times(1)).getName();
+        verify(featureService, times(0)).getFeature(1);
+        verify(useCaseService, times(1)).update(1,1,1,useCaseDom);
+    }
+
+    @Test
+    @DisplayName("updateUseCase method returns a modelAndView object")
+    public void updateUseCase_ProjectIdAndUseCaseIdAndUseCaseDomProvided_ReturnsMAV(){
+        FeatureDom featureDom = mock(FeatureDom.class);
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        UseCaseDom useCase = mock(UseCaseDom.class);
+        BindingResult result = mock(BindingResult.class);
+        List<ProjectDom> projectDomList = new ArrayList<>();
+        projectDomList.add(projectDom);
+        GroupDom group = mock(GroupDom.class);
+        List<Group_user> users = mock(List.class);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(true);
+        when(result.hasErrors()).thenReturn(true);
+        when(commonMethods.isPM(user, "user")).thenReturn(true);
+        when(projectDom.getGroup()).thenReturn(group);
+        when(group.getUsers()).thenReturn(users);
+        when(featureService.getFeature(1)).thenReturn(featureDom);
+        when(featureDom.getIdFeature()).thenReturn(1);
+        when(featureDom.getName()).thenReturn("feature");
+
+        UseCaseController useCaseController = createUseCaseController();
+
+        ModelAndView expected = new ModelAndView("updateFeature");
+        expected.addObject("project", projectDom);
+        expected.addObject("projectList", projectDomList);
+        expected.addObject("useCase", useCase);
+        expected.addObject("featureId", 1);
+        expected.addObject("featureName", "feature");
+        expected.addObject("user", "user");
+        expected.addObject("group", users);
+        expected.addObject("isPM", true);
+
+        ModelAndView obtained = useCaseController.updateUseCase(1,1, principal,1,useCase, result);
+
+        //Test conditions
+        assertEquals(expected.getView(),obtained.getView());
+        assertFalse(obtained.getModel().isEmpty());
+        assertEquals(obtained.getModel().get("projectList"), expected.getModel().get("projectList"));
+        assertEquals(obtained.getModel().get("project"), expected.getModel().get("project"));
+        assertEquals(obtained.getModel().get("useCase"), expected.getModel().get("useCase"));
+        assertEquals(obtained.getModel().get("featureId"), expected.getModel().get("featureId"));
+        assertEquals(obtained.getModel().get("featureName"), expected.getModel().get("featureName"));
+        assertEquals(obtained.getModel().get("user"),expected.getModel().get("user"));
+        assertEquals(obtained.getModel().get("group"),expected.getModel().get("group"));
+        assertEquals(obtained.getModel().get("reqTypes"),expected.getModel().get("reqTypes"));
+        assertEquals(obtained.getModel().get("isPM"),expected.getModel().get("isPM"));
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(commonMethods, times(1)).isPM(user, "user");
+        verify(projectDom, times(1)).getGroup();
+        verify(principal, times(3)).getName();
+        verify(featureService, times(1)).getFeature(1);
+        verify(useCaseService, times(0)).update(1,1,1,useCase);
+    }
+
+    @Test
+    @DisplayName("updateUseCase method returns not allowed")
+    public void updateUseCase_ProjectIdAndUseCaseDomProvided_AccessDeniedExceptionThrown(){
+        ProjectDom projectDom = mock(ProjectDom.class);
+        UserDom user = mock(UserDom.class);
+        List<ProjectDom> projectDomList = new ArrayList<>();
+        projectDomList.add(projectDom);
+        BindingResult result = mock(BindingResult.class);
+        FeatureDom featureDom = mock(FeatureDom.class);
+        UseCaseDom useCase = mock(UseCaseDom.class);
+        when(projectService.getProject(1)).thenReturn(projectDom);
+        when(principal.getName()).thenReturn("user");
+        when(userService.findUser("user")).thenReturn(user);
+        when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
+        when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(false);
+
+        UseCaseController useCaseController = createUseCaseController();
+
+        try {
+            useCaseController.updateUseCase(1,1, principal,1,useCase, result);
+            fail();
+        }catch (AccessDeniedException exception){
+            assertEquals("Not allowed",exception.getMessage());
+        }
+        verify(projectService,times(1)).getProject(1);
+        verify(userService,times(1)).findUser("user");
+        verify(commonMethods, times(1)).getProjectsFromGroup(user);
+        verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
+        verify(commonMethods, times(0)).isPM(user, "user");
+        verify(projectDom, times(0)).getGroup();
+        verify(principal, times(2)).getName();
+        verify(featureService, times(0)).getFeature(1);
+        verify(useCaseService, times(0)).update(1,1,1,useCase);
+    }
+
+/*    @Test
     @DisplayName("deleteUseCase method returns an http.ok when UseCase is deleted")
     public void deleteUseCase_idProjectAndFeatureIdAndUseCaseIdProvided_UseCaseDeleted_ReturnsOk(){
         when(useCaseService.deleteUseCase(anyInt())).thenReturn(true);
