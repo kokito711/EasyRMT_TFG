@@ -28,15 +28,15 @@ import java.util.logging.Logger;
 public class UserStoryController {
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
-    final String PATH_BASE = "/project/{projectId}/epic/{epicId}/";
-    ProjectService projectService;
-    EpicService epicService;
-    UserStoryService userStoryService;
-    DocumentService documentService;
-    CommonMethods commonMethods;
-    UserService userService;
-    TraceabilityService traceabilityService;
-    CommentService commentService;
+    private final String PATH_BASE = "/project/{projectId}/epic/{epicId}/";
+    private ProjectService projectService;
+    private EpicService epicService;
+    private UserStoryService userStoryService;
+    private DocumentService documentService;
+    private CommonMethods commonMethods;
+    private UserService userService;
+    private TraceabilityService traceabilityService;
+    private CommentService commentService;
 
     @Autowired
     public UserStoryController(ProjectService projectService, EpicService epicService, UserStoryService userStoryService,
@@ -51,6 +51,8 @@ public class UserStoryController {
         this.traceabilityService = traceabilityService;
         this.commentService = commentService;
     }
+
+    //TODO handler exception
 
     /**
      * This rest controller receives a request to get an user stories list related with an epic
@@ -311,15 +313,17 @@ public class UserStoryController {
                 EpicDom epic = epicService.getEpic(epicId);
                 boolean isPm = commonMethods.isPM(user, principal.getName());
                 List<Group_user> group = project.getGroup().getUsers();
-                ModelAndView mav = new ModelAndView();
-                mav.setViewName("userStory");
-                mav.addObject("userStory", userStoryDom);
-                mav.addObject("project", project);
-                mav.addObject("projectList", projectDomList);
-                mav.addObject("epicId", epic.getIdEpic());
-                mav.addObject("epicName", epic.getName());
-                mav.addObject("user", principal.getName());
-                return mav;
+                ModelAndView modelAndView = new ModelAndView();
+                modelAndView.setViewName("userStory");
+                modelAndView.addObject("userStory", userStoryDom);
+                modelAndView.addObject("project", project);
+                modelAndView.addObject("projectList", projectDomList);
+                modelAndView.addObject("epicId", epic.getIdEpic());
+                modelAndView.addObject("epicName", epic.getName());
+                modelAndView.addObject("user", principal.getName());
+                modelAndView.addObject("isPM", isPm);
+                modelAndView.addObject("group", group);
+                return modelAndView;
             }
             UserStoryDom persistedUserStory = userStoryService.update(projectId, epicId, userStoryId, userStoryDom);
             String path = "/project/" + projectId + "/epic/" + epicId + "/userstory/" + persistedUserStory.getIdUserStory();

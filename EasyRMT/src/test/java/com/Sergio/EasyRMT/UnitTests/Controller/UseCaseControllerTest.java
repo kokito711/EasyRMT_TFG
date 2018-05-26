@@ -616,7 +616,7 @@ public class UseCaseControllerTest {
 
     @Test
     @DisplayName("createFeature method returns a modelAndView object")
-    public void createFeature_ProjectIdAndFeatureDomProvided_ReturnsErrorMAV(){
+    public void createUseCase_ProjectIdAndFeatureIdAndUseCaseDomProvided_ReturnsErrorMAV(){
         FeatureDom featureDom = mock(FeatureDom.class);
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
@@ -676,8 +676,8 @@ public class UseCaseControllerTest {
     }
 
     @Test
-    @DisplayName("createFeature method returns not allowed")
-    public void createFeature_ProjectIdAndEpicDomProvided_AccessDeniedExceptionThrown(){
+    @DisplayName("createUseCase method returns not allowed")
+    public void createUseCase_ProjectIdAndFeatureIdAndUseCaseDomProvided_AccessDeniedExceptionThrown(){
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
         List<ProjectDom> projectDomList = new ArrayList<>();
@@ -924,7 +924,7 @@ public class UseCaseControllerTest {
         verify(commonMethods, times(1)).getProjectsFromGroup(user);
         verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
         verify(principal, times(2)).getName();
-        verify(featureService,times(0)).deleteFeature(1);
+        verify(useCaseService,times(0)).deleteUseCase(1);
     }
 
     private UseCaseController createUseCaseController(){
