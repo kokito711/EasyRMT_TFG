@@ -151,7 +151,8 @@ public class EpicControllerTest {
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
         List<ProjectDom> projectDomList = new ArrayList<>();
-        projectDomList.add(projectDom);        EpicDom epic = mock(EpicDom.class);
+        projectDomList.add(projectDom);
+        EpicDom epic = mock(EpicDom.class);
         TraceDom traceability = mock(TraceDom.class);
         List<CommentDom> comments = mock(List.class);
         List<DocumentationDom> fileList = mock(List.class);
@@ -581,6 +582,7 @@ public class EpicControllerTest {
         verify(principal, times(2)).getName();
         verify(epicService, times(0)).create(epicDom, 1);
     }
+
     @Test
     @DisplayName("updateEpic method returns a modelAndView redirect")
     public void updateEpic_ProjectIdAndEpicIdAndEpicDomProvided_ReturnsRedirect(){
@@ -640,7 +642,7 @@ public class EpicControllerTest {
 
         EpicController epicController = createEpicController();
 
-        ModelAndView expected = new ModelAndView("requirement");
+        ModelAndView expected = new ModelAndView("updateEpic");
         expected.addObject("project", projectDom);
         expected.addObject("projectList", projectDomList);
         expected.addObject("epic", epicDom);
@@ -760,8 +762,8 @@ public class EpicControllerTest {
     }
 
     @Test
-    @DisplayName("deleteRequirement method throws exception when requirement is not deleted")
-    public void deleteReq_idProjectAndRequirementIdProvided_RequirementNotDeleted_AccessDeniedExceptionThrown(){
+    @DisplayName("deleteEpic method throws exception when Epic is not deleted")
+    public void deleteEpic_idProjectAndEpicIdProvided_EpicNotDeleted_AccessDeniedExceptionThrown(){
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
         List<ProjectDom> projectDomList = new ArrayList<>();
