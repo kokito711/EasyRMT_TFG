@@ -6,7 +6,6 @@
 package com.Sergio.EasyRMT.Controller;
 
 import com.Sergio.EasyRMT.Domain.*;
-import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.Group_user;
 import com.Sergio.EasyRMT.Model.types.*;
 import com.Sergio.EasyRMT.Service.*;
@@ -29,14 +28,14 @@ import java.util.logging.Logger;
 public class FeatureController {
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
-    final String PATH_BASE = "/project/{projectId}/";
-    ProjectService projectService;
-    FeatureService featureService;
-    DocumentService documentService;
-    CommonMethods commonMethods;
-    UserService userService;
-    TraceabilityService traceabilityService;
-    CommentService commentService;
+    private final String PATH_BASE = "/project/{projectId}/";
+    private ProjectService projectService;
+    private FeatureService featureService;
+    private DocumentService documentService;
+    private CommonMethods commonMethods;
+    private UserService userService;
+    private TraceabilityService traceabilityService;
+    private CommentService commentService;
 
     @Autowired
     public FeatureController(ProjectService projectService, FeatureService featureService, DocumentService documentService,
