@@ -75,7 +75,7 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView();
         UserDom userExists = userService.findUser(user.getUsername());
         if (userExists != null) {
-            if(locale.getLanguage().equals("es_ES")){
+            if(locale.getLanguage().equals("es_es")){
                 bindingResult
                         .rejectValue("username", "error.user",
                                 "Ya existe un usuario con ese nombre");
@@ -294,8 +294,6 @@ public class AdminController {
     public ResponseEntity modifyGroup(@PathVariable int groupId, @PathVariable int modificationType,
                                          @Valid GroupDom groupDom, BindingResult bindingResult){
         boolean wrongRequest = false;
-        ModelAndView modelAndView = new ModelAndView("admin/group");
-        GroupDom groupUpdated;
         switch (modificationType){
             case 1:
                 groupService.update(groupId, groupDom, 1);
@@ -307,27 +305,13 @@ public class AdminController {
                 groupService.update(groupId, groupDom,3);
                 break;
             default:
-                groupUpdated = groupService.findGroup(groupId);
                 wrongRequest = true;
                 break;
         }
-        /*groupUpdated = groupService.findGroup(groupId);
-        List<UserDom> users = userService.getNoAdminUsers();
-        List<UserDom> analysts = generateList("ANALYST", users, groupUpdated);
-        List<UserDom> stakeholders = generateList("STAKEHOLDER", users, groupUpdated);
-        modelAndView.addObject("analystList", analysts);
-        modelAndView.addObject("stakeholderList", stakeholders);
-        modelAndView.addObject("userList", users);
-        modelAndView.addObject("group", groupUpdated);*/
-
         if(wrongRequest){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("");
-            /*modelAndView.addObject("success",false);
-            return modelAndView;*/
         }
         else {
-            /*modelAndView.addObject("success",true);
-            return modelAndView;*/
             return ResponseEntity.status(HttpStatus.OK).body("");
         }
     }
