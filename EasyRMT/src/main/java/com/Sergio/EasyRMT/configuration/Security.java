@@ -56,7 +56,7 @@ public class Security extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login")
                 .successHandler(new SimpleUrlAuthenticationSuccessHandler())
-                .failureUrl("/login?error=true")
+                .failureUrl("/login_error")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/");

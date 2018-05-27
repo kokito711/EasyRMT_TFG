@@ -40,7 +40,14 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("login");
+        mav.setViewName("redirect: /");
+        return mav;
+    }
+
+    @RequestMapping(value = "/login_error", method = RequestMethod.GET)
+    public ModelAndView login_error(){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("login_error");
         return mav;
     }
 
