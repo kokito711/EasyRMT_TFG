@@ -148,7 +148,7 @@ function deleteTrace(projectId, object1Id, object2Id) {
 }
 
 
-function sendForm(groupId) {
+function sendGroupForm(groupId) {
     $.ajax({
         type: "POST",
         url: "/admin/groups/group/"+groupId+"/1",

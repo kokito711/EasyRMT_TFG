@@ -161,7 +161,7 @@
 
 	<build>
 		<plugins>
-            <plugin>
+           <!-- <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.0.0</version>
@@ -180,7 +180,7 @@
                     <entryPoint>
                         ["java", "-jar", "target/${project.build.finalName}.jar"]
                     </entryPoint>
-                    <resources>        <!-- Dockerfile building resources -->
+                    <resources>        &lt;!&ndash; Dockerfile building resources &ndash;&gt;
                         <resource>
                             <targetPath>target</targetPath>
                             <directory>${project.build.directory}</directory>
@@ -192,7 +192,7 @@
                         </resource>
                     </resources>
                 </configuration>
-            </plugin>
+            </plugin>-->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

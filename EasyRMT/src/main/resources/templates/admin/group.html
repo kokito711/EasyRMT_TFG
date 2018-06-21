@@ -24,7 +24,7 @@
                         <h4 class="modal-title" id="updateGroup1Label" th:text="#{modifyGroup.modifyLabel}" align="center"></h4>
                     </div>
                     <div class="modal-body">
-                        <form autocomplete="off" action="#" id="updateGroup1Form"
+                        <form autocomplete="off" th:action="@{'/admin/groups/group/'+${group.getGroupId()}+'/1'}" id="updateGroup1Form"
                               th:object="${group}" method="post" class="form-horizontal"
                               role="form">
                             <div class="form-group">
@@ -45,7 +45,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-8 col-sm-offset-2">
-                                    <button type="button" th:onclick="'sendForm('+${group.getGroupId()}+')'"
+                                    <button type="button" th:onclick="'sendGroupForm('+${group.getGroupId()}+')'"
                                             class="btn btn-primary btn-block" th:text="#{modifyGroup.modifyLabel}"></button>
                                 </div>
                             </div>
@@ -274,7 +274,7 @@
         </div>
         <div class="row">
             <ul class="nav nav-tabs">
-                <li class="active"><a href="#analysts" data-toggle="tab" th:text="#{createUser.role.analyst}"></a>
+                <li class="active"><a href="#analysts" data-toggle="tab" th:text="#{createUser.role.analyst}+'s'"></a>
                 </li>
                 <li><a href="#stakeholders" data-toggle="tab">Stakeholders</a>
                 </li>
