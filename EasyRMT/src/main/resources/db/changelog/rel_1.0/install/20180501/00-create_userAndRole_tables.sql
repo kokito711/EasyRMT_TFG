@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS easyrmt.user (
   `name` VARCHAR(30) NULL,
   `lastname` VARCHAR(45) NULL,
   `phone` VARCHAR(15) NULL,
+  `enabled` SMALLINT DEFAULT 1,
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC))
   ENGINE = InnoDB;

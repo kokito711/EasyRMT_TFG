@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS easyrmt.comment (
   CONSTRAINT fk_comment_objectId
     FOREIGN KEY (objectId)
     REFERENCES easyrmt.object (idobject)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT fk_comment_userId
     FOREIGN KEY (userId)
     REFERENCES easyrmt.app_user (user_id)
