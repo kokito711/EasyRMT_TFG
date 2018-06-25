@@ -132,17 +132,33 @@ function deleteFromGroup(user, groupId) {
     });
 }
 
+function createTrace(projectId,object1Id) {
+    $.ajax({
+        type: "POST",
+        url: '/traceability/' + projectId + '/obj1/' + object1Id,
+        data: $("#CreateTracesForm").serialize(), // serializes the form's elements.
+        success: function (data) {
+            $("#addToTrace").modal('hide');
+            $("#createTraceModalOk").modal('show');
+        },
+        error: function () {
+            $("#addToTrace").modal('hide');
+            $("#createTraceModalFail").modal('show');
+        }
+    });
+}
+
 function deleteTrace(projectId, object1Id, object2Id) {
     $.ajax({
         url: '/traceability/'+projectId+'/obj1/'+object1Id+'/obj2/'+object2Id,
         type: 'DELETE',
         success: function() {
             $("#deleteTraceModal").modal('hide');
-            $("#deleteTraceModalModalOk").modal('show');
+            $("#deleteTraceModalOk").modal('show');
         },
         error: function () {
             $("#deleteTraceModal").modal('hide');
-            $("#deleteRequirementModalFail").modal('show');
+            $("#deleteTraceModalFail").modal('show');
         }
     });
 }

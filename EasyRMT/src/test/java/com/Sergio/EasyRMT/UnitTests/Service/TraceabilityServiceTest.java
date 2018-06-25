@@ -263,6 +263,10 @@ public class TraceabilityServiceTest {
         ObjectEntity objectEntity1 = mock(ObjectEntity.class);
         ObjectEntity objectEntity2 = mock(ObjectEntity.class);
         List<ObjectEntity> traced = mock(List.class);
+        TraceDom newTraces = new TraceDom();
+        newTraces.init();
+        newTraces.getNewTraces().add("1");
+        newTraces.getNewTraces().add("2");
         when(objectRepository.findOne(1)).thenReturn(objectEntity1);
         when(objectRepository.findOne(2)).thenReturn(objectEntity2);
         when(objectEntity1.getTraced()).thenReturn(traced);
@@ -270,9 +274,9 @@ public class TraceabilityServiceTest {
         when(objectRepository.save(any(ObjectEntity.class))).thenReturn(objectEntity1);
 
         TraceabilityService traceabilityService = createTraceabilityService();
-        assertTrue(traceabilityService.saveRelationship(1,2));
-        verify(objectRepository, times(2)).findOne(anyInt());
-        verify(objectRepository, times(2)).save(any(ObjectEntity.class));
+        assertTrue(traceabilityService.saveRelationship(1,newTraces));
+        verify(objectRepository, times(4)).findOne(anyInt());
+        verify(objectRepository, times(4)).save(any(ObjectEntity.class));
     }
 
     @Test
@@ -281,6 +285,10 @@ public class TraceabilityServiceTest {
         ObjectEntity objectEntity1 = mock(ObjectEntity.class);
         ObjectEntity objectEntity2 = mock(ObjectEntity.class);
         List<ObjectEntity> traced = mock(List.class);
+        TraceDom newTraces = new TraceDom();
+        newTraces.init();
+        newTraces.getNewTraces().add("1");
+        newTraces.getNewTraces().add("2");
         when(objectRepository.findOne(1)).thenReturn(objectEntity1);
         when(objectRepository.findOne(2)).thenReturn(objectEntity2);
         when(objectEntity1.getTraced()).thenReturn(traced);
@@ -288,7 +296,7 @@ public class TraceabilityServiceTest {
         when(objectRepository.save(any(ObjectEntity.class))).thenThrow(Exception.class);
 
         TraceabilityService traceabilityService = createTraceabilityService();
-        assertFalse(traceabilityService.saveRelationship(1,2));
+        assertFalse(traceabilityService.saveRelationship(1,newTraces));
         verify(objectRepository, times(2)).findOne(anyInt());
         verify(objectRepository, times(1)).save(any(ObjectEntity.class));
     }

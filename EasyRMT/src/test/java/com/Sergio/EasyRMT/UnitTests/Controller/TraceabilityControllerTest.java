@@ -3,6 +3,7 @@ package com.Sergio.EasyRMT.UnitTests.Controller;
 import com.Sergio.EasyRMT.Controller.CommonMethods;
 import com.Sergio.EasyRMT.Controller.TraceabilityController;
 import com.Sergio.EasyRMT.Domain.ProjectDom;
+import com.Sergio.EasyRMT.Domain.TraceDom;
 import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Service.ProjectService;
 import com.Sergio.EasyRMT.Service.TraceabilityService;
@@ -131,15 +132,19 @@ public class TraceabilityControllerTest {
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
         List<ProjectDom> projectDomList = mock(List.class);
+        TraceDom newTraces = new TraceDom();
+        newTraces.init();
+        newTraces.getNewTraces().add("1");
+        newTraces.getNewTraces().add("2");
         when(projectService.getProject(1)).thenReturn(projectDom);
         when(principal.getName()).thenReturn("user");
         when(userService.findUser("user")).thenReturn(user);
         when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
         when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(true);
-        when(traceabilityService.saveRelationship(1,2)).thenReturn(true);
+        when(traceabilityService.saveRelationship(1,newTraces)).thenReturn(true);
 
         TraceabilityController traceabilityController = createTraceabilityController();
-        ResponseEntity responseEntity = traceabilityController.createRelationship(1,1,2, principal);
+        ResponseEntity responseEntity = traceabilityController.createRelationship(1,1,newTraces, principal);
         assertNotNull(responseEntity);
         assertEquals("", responseEntity.getBody().toString());
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -147,7 +152,7 @@ public class TraceabilityControllerTest {
         verify(userService, times(1)).findUser("user");
         verify(commonMethods, times(1)).getProjectsFromGroup(user);
         verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
-        verify(traceabilityService, times(1)).saveRelationship(1,2);
+        verify(traceabilityService, times(1)).saveRelationship(1,newTraces);
     }
 
     @Test
@@ -156,15 +161,19 @@ public class TraceabilityControllerTest {
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
         List<ProjectDom> projectDomList = mock(List.class);
+        TraceDom newTraces = new TraceDom();
+        newTraces.init();
+        newTraces.getNewTraces().add("1");
+        newTraces.getNewTraces().add("2");
         when(projectService.getProject(1)).thenReturn(projectDom);
         when(principal.getName()).thenReturn("user");
         when(userService.findUser("user")).thenReturn(user);
         when(commonMethods.getProjectsFromGroup(user)).thenReturn(projectDomList);
         when(commonMethods.isAllowed(projectDomList,projectDom)).thenReturn(true);
-        when(traceabilityService.saveRelationship(1,2)).thenReturn(false);
+        when(traceabilityService.saveRelationship(1,newTraces)).thenReturn(false);
 
         TraceabilityController traceabilityController = createTraceabilityController();
-        ResponseEntity responseEntity = traceabilityController.createRelationship(1,1,2, principal);
+        ResponseEntity responseEntity = traceabilityController.createRelationship(1,1,newTraces, principal);
         assertNotNull(responseEntity);
         assertEquals("", responseEntity.getBody().toString());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
@@ -172,7 +181,7 @@ public class TraceabilityControllerTest {
         verify(userService, times(1)).findUser("user");
         verify(commonMethods, times(1)).getProjectsFromGroup(user);
         verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
-        verify(traceabilityService, times(1)).saveRelationship(1,2);
+        verify(traceabilityService, times(1)).saveRelationship(1,newTraces);
     }
 
     @Test
@@ -181,6 +190,10 @@ public class TraceabilityControllerTest {
         ProjectDom projectDom = mock(ProjectDom.class);
         UserDom user = mock(UserDom.class);
         List<ProjectDom> projectDomList = mock(List.class);
+        TraceDom newTraces = new TraceDom();
+        newTraces.init();
+        newTraces.getNewTraces().add("1");
+        newTraces.getNewTraces().add("2");
         when(projectService.getProject(1)).thenReturn(projectDom);
         when(principal.getName()).thenReturn("user");
         when(userService.findUser("user")).thenReturn(user);
@@ -189,7 +202,7 @@ public class TraceabilityControllerTest {
 
         TraceabilityController traceabilityController = createTraceabilityController();
         try {
-            traceabilityController.createRelationship(1,1,2, principal);
+            traceabilityController.createRelationship(1,1,newTraces, principal);
             fail("");
         }
         catch (AccessDeniedException e){
@@ -199,7 +212,7 @@ public class TraceabilityControllerTest {
         verify(userService, times(1)).findUser("user");
         verify(commonMethods, times(1)).getProjectsFromGroup(user);
         verify(commonMethods, times(1)).isAllowed(projectDomList,projectDom);
-        verify(traceabilityService, times(0)).saveRelationship(1,2);
+        verify(traceabilityService, times(0)).saveRelationship(1,newTraces);
     }
 
     private TraceabilityController createTraceabilityController(){

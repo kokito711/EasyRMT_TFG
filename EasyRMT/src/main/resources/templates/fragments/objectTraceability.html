@@ -36,7 +36,7 @@ featureList, epicList, useCaseList, userStoryList)">
         </div>
         <!-- /. deletion modal -->
         <!-- Deletion notify Modal -->
-        <div class="modal fade" id="deleteTraceModalModalOk" tabindex="-1" role="dialog"
+        <div class="modal fade" id="deleteTraceModalOk" tabindex="-1" role="dialog"
              aria-labelledby="deleteTraceModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -59,13 +59,13 @@ featureList, epicList, useCaseList, userStoryList)">
         </div>
         <!-- /. deletion notify modal -->
         <!-- Deletion fail Modal -->
-        <div class="modal fade" id="deleteRequirementModalFail" tabindex="-1" role="dialog"
-             aria-labelledby="deleteEpicModalLabel" aria-hidden="true">
+        <div class="modal fade" id="deleteTraceModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="deleteTraceModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                        <h4 class="modal-title" id="deleteRequirementModalLabelFail" th:text="#{traceability.deleteModal.label}"></h4>
+                        <h4 class="modal-title" id="deleteTraceModalLabelFail" th:text="#{traceability.deleteModal.label}"></h4>
                     </div>
                     <div class="modal-body" th:text="#{traceability.deleteModal.Failtext}">
                     </div>
@@ -90,7 +90,7 @@ featureList, epicList, useCaseList, userStoryList)">
                         <h4 class="modal-title" id="addToTraceLabel" th:text="#{traceability.createModal.label}"></h4>
                     </div>
                     <div class="modal-body">
-                        <form autocomplete="off" action="#" th:action="@{'/traceability/add/'+${objectId}}"
+                        <form autocomplete="off" action="#" id="CreateTracesForm"
                               th:object="${traceDom}" method="post" class="form-horizontal" role="form">
                             <div class="row col-md-12">
                                 <h4 class=" col-sm-5 col-sm-offset-1" th:text="#{project.notAgile}" th:if="${featureList!=null}"></h4>
@@ -100,24 +100,24 @@ featureList, epicList, useCaseList, userStoryList)">
                             </div>
                             <div class="row col-md-12">
                                 <div class="col-sm-5 col-sm-offset-1">
-                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${featureList!=null}">
+                                    <select class="form-control" name="newTraces"  multiple="multiple" th:if="${featureList!=null}">
                                         <option th:each="feature : ${featureList}" th:text="${feature.getName()}"
                                                 th:value="${feature.getIdFeature()}">
                                         </option>
                                     </select>
-                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${epicList!=null}">
+                                    <select class="form-control" name="newTraces"  multiple="multiple" th:if="${epicList!=null}">
                                         <option th:each="epic : ${epicList}" th:text="${epic.getName()}"
                                                 th:value="${epic.getIdEpic()}">
                                         </option>
                                     </select>
                                 </div>
                                 <div class="col-sm-5 col-sm-offset-1">
-                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${useCaseList!=null}">
+                                    <select class="form-control" name="newTraces"  multiple="multiple" th:if="${useCaseList!=null}">
                                         <option th:each="useCase : ${useCaseList}" th:text="${useCase.getName()}"
                                                 th:value="${useCase.getIdUseCase()}">
                                         </option>
                                     </select>
-                                    <select class="form-control" id="newTraces1" name="newTraces"  multiple="multiple" th:if="${userStoryList!=null}">
+                                    <select class="form-control" name="newTraces"  multiple="multiple" th:if="${userStoryList!=null}">
                                         <option th:each="userStory : ${userStoryList}" th:text="${userStory.getName()}"
                                                 th:value="${userStory.getIdUserStory()}">
                                         </option>
@@ -179,7 +179,8 @@ featureList, epicList, useCaseList, userStoryList)">
                             <div class="form-group">
                                 <div class="col-sm-8 col-sm-offset-2">
                                     <br/>
-                                    <button type="submit" class="btn btn-primary btn-block" th:text="#{traceability.addbutton}"></button>
+                                    <button type="button" class="btn btn-primary btn-block" th:text="#{traceability.addbutton}"
+                                            th:onclick="'createTrace('+${projectId}+','+${objectId}+')'"></button>
                                 </div>
                             </div>
                         </form>
@@ -189,6 +190,50 @@ featureList, epicList, useCaseList, userStoryList)">
             </div>
             <!-- /.modal-dialog -->
         </div>
+        <!-- Deletion notify Modal -->
+        <div class="modal fade" id="createTraceModalOk" tabindex="-1" role="dialog"
+             aria-labelledby="createTraceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="createTraceModalLabelOk" th:text="#{traceability.createModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{traceability.createModal.Oktext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default modal-redirect" data-dismiss="modal"
+                                onclick="location.reload();"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}">
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion notify modal -->
+        <!-- Deletion fail Modal -->
+        <div class="modal fade" id="createTraceModalFail" tabindex="-1" role="dialog"
+             aria-labelledby="createTraceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h4 class="modal-title" id="createTraceModalLabelFail" th:text="#{traceability.createModal.label}"></h4>
+                    </div>
+                    <div class="modal-body" th:text="#{traceability.createModal.Failtext}">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                th:text="#{epicsDashboard.deleteNotificationModal.dismissButton}"></button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /. deletion fail modal -->
 
         <div class="col-lg-1 col-lg-offset-11">
             <a href="" data-toggle="modal" data-target="#addToTrace" class="tooltip-demo">

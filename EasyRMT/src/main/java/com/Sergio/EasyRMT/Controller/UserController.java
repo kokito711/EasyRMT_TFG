@@ -40,7 +40,7 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("redirect: /");
+        mav.setViewName("redirect:/");
         return mav;
     }
 
