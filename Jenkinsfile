@@ -1,12 +1,12 @@
 pipeline {
   agent any
   stages {
-    stage('') {
+    stage('error') {
       agent any
       steps {
         sh 'cd EasyRMT'
         ws(dir: 'EasyRMT') {
-          sh 'echo dir'
+          sh 'ls'
         }
 
       }
