@@ -121,7 +121,7 @@ public class UserService {
      */
     @Transactional(rollbackFor = Exception.class)
     public UserDom modifyUser(@Nullable Integer userId, @Nullable String username, UserDom userInfo) {
-        User user = new User();
+        User user;
         if(userId != null) {
             user = userRepository.findOne(userId);
         }
@@ -156,10 +156,7 @@ public class UserService {
             modified = true;
         }
         if(userInfo.getStringRoles()!=null) {
-            List<Role> roleListPersisted = new ArrayList<>();
-            for (Role role : user.getRoles()) {
-                roleListPersisted.add(role);
-            }
+            List<Role> roleListPersisted = user.getRoles();
             List<Role> roleList = new ArrayList<>();
             for (String role : userInfo.getStringRoles()) {
                 if (!role.equals("NONE")) {

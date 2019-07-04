@@ -6,7 +6,6 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.*;
-import com.Sergio.EasyRMT.Model.Feature;
 import com.Sergio.EasyRMT.Model.ObjectEntity;
 import com.Sergio.EasyRMT.Model.RequirementType;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
@@ -131,19 +130,21 @@ public class TraceabilityService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveRelationship(int object1Id, int object2Id){
-        ObjectEntity object1 = objectRepository.findOne(object1Id);
-        ObjectEntity object2 = objectRepository.findOne(object2Id);
-        object1.getTraced().add(object2);
-        object2.getTraced().add(object1);
-        try {
-            objectRepository.save(object1);
-            objectRepository.save(object1);
-            return true;
+    public boolean saveRelationship(int object1Id, TraceDom traces){
+        for(String value :traces.getNewTraces()) {
+            int object2Id = Integer.parseInt(value);
+            ObjectEntity object1 = objectRepository.findOne(object1Id);
+            ObjectEntity object2 = objectRepository.findOne(object2Id);
+            object1.getTraced().add(object2);
+            object2.getTraced().add(object1);
+            try {
+                objectRepository.save(object1);
+                objectRepository.save(object1);
+            } catch (Exception e) {
+                return false;
+            }
         }
-        catch (Exception e){
-            return false;
-        }
+        return true;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -159,7 +160,7 @@ public class TraceabilityService {
                 }
             }
             for(ObjectEntity object : object2.getTraced()){
-                if(object.equals(object2)){
+                if(object.equals(object1)){
                     int index = object2.getTraced().indexOf(object);
                     object2.getTraced().remove(index);
                     break;

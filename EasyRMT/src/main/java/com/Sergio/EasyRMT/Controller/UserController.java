@@ -40,7 +40,14 @@ public class UserController {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(){
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("login");
+        mav.setViewName("redirect:/");
+        return mav;
+    }
+
+    @RequestMapping(value = "/login_error", method = RequestMethod.GET)
+    public ModelAndView login_error(){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("login_error");
         return mav;
     }
 
@@ -61,7 +68,7 @@ public class UserController {
     }
 
     /**
-     * This metod receives a request to update an user. then calls the userService to update user.
+     * This method receives a request to update an user. then calls the userService to update user.
      * @param username username to be updated
      * @param userInfo user information to be updated
      * @return View with updated user

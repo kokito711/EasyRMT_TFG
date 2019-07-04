@@ -10,6 +10,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -35,7 +37,7 @@ public class ProjectControllerITest {
 
     @Before
     public void setup() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).apply(springSecurity()).build();
         try {
             project = projectRepository.findAll().get(0);
         }
@@ -50,7 +52,7 @@ public class ProjectControllerITest {
     }
     @Test
     @DisplayName("Endpoint test for createProject")
-
+    @WithMockUser(username="User", roles={"PROJECT_MANAGER"})
     public void AcreateProject() throws Exception {
         this.mockMvc.perform(post("/projects")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -68,6 +70,7 @@ public class ProjectControllerITest {
 
     @Test
     @DisplayName("Endpoint test for createProject view")
+    @WithMockUser(username="User", roles={"PROJECT_MANAGER"})
     public void BgetCreateProjectView() throws Exception {
         this.mockMvc.perform(get("/createProject"))
                 .andExpect(status().isOk())
@@ -76,6 +79,7 @@ public class ProjectControllerITest {
 
     @Test
     @DisplayName("Endpoint test for updateProject view")
+    @WithMockUser(username="User", roles={"PROJECT_MANAGER"})
     public void CgetUpdateProjectView() throws Exception {
         this.mockMvc.perform(get("/updateProject/"+project.getIdProject()))
                 .andExpect(status().isOk())
@@ -84,6 +88,7 @@ public class ProjectControllerITest {
 
     @Test
     @DisplayName("Endpoint test for updateProject")
+    @WithMockUser(username="User", roles={"PROJECT_MANAGER"})
     public void DupdateProject() throws Exception {
         List<Project> projectList = projectRepository.findAll();
         int size = projectList.size();
@@ -102,6 +107,7 @@ public class ProjectControllerITest {
 
     @Test
     @DisplayName("Endpoint test for project view")
+    @WithMockUser(username="User", roles={"PROJECT_MANAGER"})
     public void EgetProjectView() throws Exception {
         this.mockMvc.perform(get("/project/"+project.getIdProject()))
                 .andExpect(status().isOk())
@@ -110,6 +116,7 @@ public class ProjectControllerITest {
 
     @Test
     @DisplayName("Endpoint test for delete project correct request")
+    @WithMockUser(username="User", roles={"PROJECT_MANAGER"})
     public void FdeleteProject_ReturnsOk() throws Exception {
         List<Project> projectList = projectRepository.findAll();
         int size = projectList.size();
@@ -119,6 +126,7 @@ public class ProjectControllerITest {
     }
     @Test
     @DisplayName("Endpoint test for delete project error request")
+    @WithMockUser(username="User", roles={"PROJECT_MANAGER"})
     public void GdeleteProject_ReturnsError() throws Exception {
         List<Project> projectList = projectRepository.findAll();
         int size = projectList.size();

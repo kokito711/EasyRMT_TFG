@@ -6,13 +6,13 @@
 package com.Sergio.EasyRMT.UnitTests.Service;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
-import com.Sergio.EasyRMT.Model.Epic;
-import com.Sergio.EasyRMT.Model.ObjectEntity;
-import com.Sergio.EasyRMT.Model.Project;
-import com.Sergio.EasyRMT.Model.UserStory;
+import com.Sergio.EasyRMT.Domain.UserDom;
+import com.Sergio.EasyRMT.Model.*;
+import com.Sergio.EasyRMT.Model.types.*;
 import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
 import com.Sergio.EasyRMT.Repository.ProjectRepository;
+import com.Sergio.EasyRMT.Repository.UserRepository;
 import com.Sergio.EasyRMT.Service.Converter.EpicConverter;
 import com.Sergio.EasyRMT.Service.DocumentService;
 import com.Sergio.EasyRMT.Service.EpicService;
@@ -28,15 +28,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class EpicServiceTest {
 
- /*   @Mock
+    @Mock
     private ObjectRepository objectRepository;
     @Mock
     private EpicRepository epicRepository;
@@ -46,6 +45,10 @@ public class EpicServiceTest {
     private EpicConverter epicConverter;
     @Mock
     private DocumentService documentService;
+    @Mock
+    private UserRepository userRepository;
+
+    private Date date;
 
     @BeforeEach
     public void initMocks(){
@@ -54,6 +57,8 @@ public class EpicServiceTest {
         projectRepository = mock(ProjectRepository.class);
         epicConverter = mock(EpicConverter.class);
         documentService = mock(DocumentService.class);
+        userRepository = mock(UserRepository.class);
+        date = new Date();
     }
 
     @Test
@@ -74,20 +79,23 @@ public class EpicServiceTest {
         verify(epicConverter,times(1)).toDomain(epicList);
     }
 
+
     @Test
     @DisplayName("Get an epic")
     public void getEpic_EpicIdProvided_EpicReturned(){
-        Epic epic = mock(Epic.class);
-        EpicDom epicDom = mock(EpicDom.class);
+        Epic epic = createEpic();
+        EpicDom epicDom = createEpicDom();
 
-        when(epicRepository.findOne(anyInt())).thenReturn(epic);
+        when(epicRepository.findOne(1)).thenReturn(epic);
         when(epicConverter.toDomain(epic)).thenReturn(epicDom);
 
         EpicService epicService = createEpicService();
+        EpicDom obtained = epicService.getEpic(1);
         //Test conditions
-        assertTrue(epicService.getEpic(7).equals(epicDom));
+        assertEquals(obtained, epicDom);
+        assertNotNull(obtained);
         //Verify epicRepository has been called one time
-        verify(epicRepository,times(1)).findOne(7);
+        verify(epicRepository,times(1)).findOne(1);
         //Verify epicConverter has been called one time
         verify(epicConverter,times(1)).toDomain(epic);
     }
@@ -95,10 +103,12 @@ public class EpicServiceTest {
     @Test
     @DisplayName("Create epic persists an epic from an epic provided")
     public void createEpic_EpicProvided_ReturnsEpicPersisted(){
-        EpicDom epicDom = mock(EpicDom.class);
-        Epic epic = mock(Epic.class);
+        EpicDom epicDom = createEpicDom();
+        Epic epic = createEpic();
         Project project = mock(Project.class);
         ObjectEntity objectEntity = mock(ObjectEntity.class);
+        User user = epic.getAssignedTo();
+
 
         when(projectRepository.findByIdProject(7)).thenReturn(Optional.of(project));
         when(objectRepository.save(any(ObjectEntity.class))).thenReturn(objectEntity);
@@ -106,67 +116,85 @@ public class EpicServiceTest {
         when(objectEntity.getIdobject()).thenReturn(9);
         when(epicRepository.save(epic)).thenReturn(epic);
         when(epicConverter.toDomain(epic)).thenReturn(epicDom);
+        when(userRepository.findOne(epicDom.getAuthorId())).thenReturn(user);
+        when(userRepository.findOne(epicDom.getAssignedId())).thenReturn(user);
 
 
         EpicService epicService = createEpicService();
 
+        EpicDom obtained = epicService.create(epicDom,7);
+
         //Test conditions
-        assertTrue(epicService.create(epicDom,7).equals(epicDom));
-        //Verify that epicConverter.toModel has been called once
+        assertEquals(obtained,epicDom);
+        assertNotNull(obtained);
+
         verify(epicConverter, times(1)).toModel(epicDom);
-        //verify that projectRepository.save has been called once
         verify(projectRepository, times(1)).findByIdProject(7);
-        //verify that epicConverter.toDomain has been called once
         verify(epicConverter, times(1)).toDomain(epic);
-        //verify objectRepository has been called
         verify(objectRepository, times(1)).save(any(ObjectEntity.class));
-        //verify epic repository has been called
         verify(epicRepository, times(1)).save(epic);
-        //verify epic.setIdeEpic has been called
-        verify(epic, times(1)).setIdEpic(9);
-        //verify object entity. get id object has been called
         verify(objectEntity,times(1)).getIdobject();
-        //verify epic.setAuthor has been called
-        verify(epicDom, times(1)).setAuthor(anyInt());
-        //verify setUserStories has been called
-        verify(epic, times(1)).setUserStories(anyList());
-        //Verify epic created has been called
-        verify(epicDom, times(1)).setCreated(any(Date.class));
-        //Verify epic last updated has been called
-        verify(epicDom, times(1)).setLastUpdated(any(Date.class));
+        verify(userRepository, times(2)).findOne(anyInt());
     }
 
     @Test
     @DisplayName("DeleteEpic deletes an epic and all its children")
     public void deleteEpic_IdObjectProvided_DeletesEpicObjectAndChildren(){
-        Epic epic = mock(Epic.class);
+        Epic epic = createEpic();
         List<UserStory> userStories = new ArrayList<>();
-        UserStory us1 = new UserStory();
-        us1.setIdUserStory(1);
-        userStories.add(us1);
         UserStory userStory = mock(UserStory.class);
+        userStories.add(userStory);
+        epic.setUserStories(userStories);
+        ObjectEntity objectEntity = new ObjectEntity();
+        Project project = new Project();
+        project.setIdProject(1);
+        objectEntity.setIdobject(7);
+        objectEntity.setProject(project);
         doReturn(true).doReturn(false).when(objectRepository).exists(anyInt());
-        when(epic.getUserStories()).thenReturn(userStories);
+        when(userStory.getObject()).thenReturn(objectEntity);
+        when(objectRepository.findOne(7)).thenReturn(objectEntity);
         doNothing().when(objectRepository).deleteObject(anyInt());
+        doNothing().when(documentService).deleteFiles(objectEntity.getProject().getIdProject(), objectEntity.getIdobject());
         doReturn(false).when(epicRepository).exists(anyInt());
         when(epicRepository.findOne(anyInt())).thenReturn(epic);
 
         EpicService epicService = createEpicService();
 
         assertTrue(epicService.deleteEpic(7));
-        //Verify that method calls two times to project repository.existsByIdProject
         verify(objectRepository, times(2)).exists(anyInt());
-        //Verify that projectRepository.deleteProjectByIdProject() is called once
         verify(objectRepository, times(2)).deleteObject(anyInt());
-        //verify epic repository has been called
-        verify(epicRepository, times(1)).findOne(anyInt());
         verify(epicRepository,times(1)).exists(anyInt());
-        //verify epic has been called
-        verify(epic, times(2)).getUserStories();
+        verify(documentService, times(1)).deleteFiles(1,7);
     }
 
     @Test
-    @DisplayName("Delete Epic fails when epic does not exists in DB")
+    @DisplayName("deleteEpic fails to delete an epic")
+    public void deleteEpic_IdObjectProvided_DeletionFailed(){
+        Epic epic = mock(Epic.class);
+        ObjectEntity objectEntity = new ObjectEntity();
+        Project project = new Project();
+        project.setIdProject(1);
+        objectEntity.setIdobject(7);
+        objectEntity.setProject(project);
+        doReturn(true).doReturn(true).when(objectRepository).exists(anyInt());
+        when(epic.getObject()).thenReturn(objectEntity);
+        doNothing().when(documentService).deleteFiles(objectEntity.getProject().getIdProject(), objectEntity.getIdobject());
+        doNothing().when(objectRepository).deleteObject(anyInt());
+        doReturn(false).when(epicRepository).exists(anyInt());
+        when(epicRepository.findOne(anyInt())).thenReturn(epic);
+
+        EpicService epicService = createEpicService();
+
+        assertFalse(epicService.deleteEpic(7));
+
+        verify(objectRepository, times(2)).exists(anyInt());
+        verify(objectRepository, times(1)).deleteObject(anyInt());
+        verify(epicRepository,times(0)).exists(anyInt());
+        verify(documentService, times(1)).deleteFiles(1,7);
+    }
+
+    @Test
+    @DisplayName("deleteEpic fails when epic does not exists in DB")
     public void deleteEpic_IdObjectNotExist_ReturnFalse(){
         doReturn(false).when(objectRepository).exists(anyInt());
 
@@ -174,23 +202,131 @@ public class EpicServiceTest {
 
         //Test conditions
         assertFalse(epicService.deleteEpic(7));
-        //Verify that method calls one time to object repository.exists
+
         verify(objectRepository, times(1)).exists(anyInt());
-        //Verify that epicRepository.findOne() is never called
-        verify(epicRepository, times(0)).findOne(anyInt());
-        //Verify that objectRepository.deleteObject() is never called
         verify(objectRepository, times(0)).deleteObject(anyInt());
+        verify(epicRepository,times(0)).exists(anyInt());
+        verify(documentService, times(0)).deleteFiles(1,7);
     }
 
     @Test
-    @DisplayName("Update epic persist infomation")
-    public void updateEpic_EpicModified_EpicUpdated(){
+    @DisplayName("Update Requirement persist infomation")
+    public void updateRequirement_RequirementModified_RequirementUpdated(){
+        EpicDom epicDom = new EpicDom();
+        UserDom userDom2 = mock(UserDom.class);
+        epicDom.setIdEpic(1);
+        epicDom.setName("Test1");
+        epicDom.setIdentifier("12345");
+        epicDom.setDescription("description1");
+        epicDom.setPriority(Priority.BLOCKER);
+        epicDom.setComplexity(Complexity.HIGH);
+        epicDom.setState(State.APPROVED);
+        epicDom.setCost(27.0);
+        epicDom.setEstimatedHours(29.00);
+        epicDom.setStoryPoints(5);
+        epicDom.setSource("source1");
+        epicDom.setScope(Scope.PROJECT);
+        epicDom.setRisk(Risk.LOW);
+        epicDom.setCreated(date);
+        epicDom.setLastUpdated(date);
+        epicDom.setVersion("version1");
+        epicDom.setValidationMethod("validation1");
+        epicDom.setAuthor(userDom2);
+        epicDom.setAssignedTo(userDom2);
+        epicDom.setJustification("justification1");
+        epicDom.setTestCases("test cases1");
+        epicDom.setDefinitionOfDone("DuD");
+        epicDom.setProjectId(1);
+        epicDom.setAssignedId(1);
 
+        Epic epic = createEpic();
+        User user = epic.getAssignedTo();
+        when(epicRepository.findOne(1)).thenReturn(epic);
+        when(userRepository.findOne(epicDom.getAssignedId())).thenReturn(user);
+        when(user.getUserId()).thenReturn(5);
+        when(epicRepository.save(any(Epic.class))).thenReturn(epic);
+        when(epicConverter.toDomain(any(Epic.class))).thenReturn(epicDom);
 
+        EpicService epicService = createEpicService();
+        EpicDom obtained = epicService.update(epicDom,1,1);
+
+        assertEquals(obtained,epicDom);
+        assertNotNull(obtained);
+        verify(epicRepository,times(1)).findOne(anyInt());
+        verify(epicRepository,times(1)).save(any(Epic.class));
+        verify(epicConverter, times(1)).toDomain(any(Epic.class));
+        verify(userRepository, times(1)).findOne(anyInt());
     }
 
     private EpicService createEpicService(){
-        return new EpicService(objectRepository,epicRepository,projectRepository,epicConverter, documentService);
+        return new EpicService(objectRepository,epicRepository,projectRepository,epicConverter, documentService,
+                userRepository);
     }
-*/
+
+    private EpicDom createEpicDom(){
+        EpicDom epicDom = new EpicDom();
+        epicDom.setIdEpic(1);
+        epicDom.setName("Test");
+        epicDom.setIdentifier("1234");
+        epicDom.setDescription("description");
+        epicDom.setPriority(Priority.NORMAL);
+        epicDom.setComplexity(Complexity.NORMAL);
+        epicDom.setState(State.DRAFT);
+        epicDom.setCost(0.0);
+        epicDom.setEstimatedHours(27.00);
+        epicDom.setStoryPoints(0);
+        epicDom.setSource("source");
+        epicDom.setScope(Scope.FEATURE);
+        epicDom.setRisk(Risk.HIGH);
+        epicDom.setCreated(date);
+        epicDom.setLastUpdated(date);
+        epicDom.setVersion("version");
+        epicDom.setValidationMethod("validation");
+        epicDom.setJustification("justification");
+        epicDom.setTestCases("test cases");
+        epicDom.setDefinitionOfDone("DoD");
+        epicDom.setProjectId(1);
+
+        UserDom userDom = mock(UserDom.class);
+        epicDom.setAssignedTo(userDom);
+        epicDom.setAuthor(userDom);
+        return epicDom;
+    }
+
+    private  Epic createEpic(){
+        Project project = new Project();
+        project.setIdProject(1);
+        ObjectEntity objectEntity = new ObjectEntity();
+        objectEntity.setProject(project);
+        objectEntity.setIdobject(1);
+
+        Epic epic = new Epic();
+        epic.setIdEpic(1);
+        epic.setName("Test");
+        epic.setIdentifier("1234");
+        epic.setDescription("description");
+        epic.setPriority(Priority.NORMAL);
+        epic.setComplexity(Complexity.NORMAL);
+        epic.setState(State.DRAFT);
+        epic.setCost(0.0);
+        epic.setEstimatedHours(27.00);
+        epic.setStoryPoints(0);
+        epic.setSource("source");
+        epic.setScope(Scope.FEATURE);
+        epic.setRisk(Risk.HIGH);
+        epic.setCreated(date);
+        epic.setLastUpdated(date);
+        epic.setVersion("version");
+        epic.setValidationMethod("validation");
+        epic.setJustification("justification");
+        epic.setTestCases("test cases");
+        epic.setDefinitionOfDone("DoD");
+        epic.setObject(objectEntity);
+
+        User user = mock(User.class);
+        epic.setAssignedTo(user);
+        epic.setAuthor(user);
+        return epic;
+    }
+
 }

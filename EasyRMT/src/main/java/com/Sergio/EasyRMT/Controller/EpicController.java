@@ -28,14 +28,14 @@ import java.util.logging.Logger;
 public class EpicController {
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
-    final String PATH_BASE = "/project/{projectId}/";
-    ProjectService projectService;
-    EpicService epicService;
-    DocumentService documentService;
-    CommonMethods commonMethods;
-    UserService userService;
-    TraceabilityService traceabilityService;
-    CommentService commentService;
+    private final String PATH_BASE = "/project/{projectId}/";
+    private ProjectService projectService;
+    private EpicService epicService;
+    private DocumentService documentService;
+    private CommonMethods commonMethods;
+    private UserService userService;
+    private TraceabilityService traceabilityService;
+    private CommentService commentService;
 
     @Autowired
     public EpicController(ProjectService projectService, EpicService epicService, DocumentService documentService,
@@ -49,6 +49,8 @@ public class EpicController {
         this.traceabilityService = traceabilityService;
         this.commentService = commentService;
     }
+
+    //TODO create exception handlers
 
     /**
      * This rest controller receives a request to get an epic list related with a project

@@ -28,15 +28,15 @@ import java.util.logging.Logger;
 public class UseCaseController {
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
-    final String PATH_BASE = "/project/{projectId}/feature/{featureId}/";
-    ProjectService projectService;
-    FeatureService featureService;
-    UseCaseService useCaseService;
-    DocumentService documentService;
-    CommonMethods commonMethods;
-    UserService userService;
-    TraceabilityService traceabilityService;
-    CommentService commentService;
+    private final String PATH_BASE = "/project/{projectId}/feature/{featureId}/";
+    private ProjectService projectService;
+    private FeatureService featureService;
+    private UseCaseService useCaseService;
+    private DocumentService documentService;
+    private CommonMethods commonMethods;
+    private UserService userService;
+    private TraceabilityService traceabilityService;
+    private CommentService commentService;
 
     @Autowired
      public UseCaseController(ProjectService projectService, FeatureService featureService, UseCaseService useCaseService,
@@ -51,6 +51,8 @@ public class UseCaseController {
         this.traceabilityService = traceabilityService;
         this.commentService = commentService;
     }
+
+    //TODO Create handlers
 
     /**
      * This rest controller receives a request to get an use cases list related with a feature

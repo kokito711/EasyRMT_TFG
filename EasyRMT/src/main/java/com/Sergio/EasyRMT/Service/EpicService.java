@@ -6,7 +6,6 @@
 package com.Sergio.EasyRMT.Service;
 
 import com.Sergio.EasyRMT.Domain.EpicDom;
-import com.Sergio.EasyRMT.Domain.UserDom;
 import com.Sergio.EasyRMT.Model.*;
 import com.Sergio.EasyRMT.Repository.EpicRepository;
 import com.Sergio.EasyRMT.Repository.ObjectRepository;
@@ -24,12 +23,12 @@ import java.util.Optional;
 
 @Service
 public class EpicService {
-    ObjectRepository objectRepository;
-    EpicRepository epicRepository;
-    ProjectRepository projectRepository;
-    EpicConverter epicConverter;
-    DocumentService documentService;
-    UserRepository userRepository;
+    private ObjectRepository objectRepository;
+    private EpicRepository epicRepository;
+    private ProjectRepository projectRepository;
+    private EpicConverter epicConverter;
+    private DocumentService documentService;
+    private UserRepository userRepository;
 
     @Autowired
     public EpicService(ObjectRepository objectRepository, EpicRepository epicRepository, ProjectRepository projectRepository,

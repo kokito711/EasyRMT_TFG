@@ -18,8 +18,12 @@ import java.util.List;
 @Component
 public class CommonMethods {
 
-    @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    public CommonMethods(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     public boolean isPM(UserDom user, String name){
         for(Group_user groupDom : user.getGroups()) {

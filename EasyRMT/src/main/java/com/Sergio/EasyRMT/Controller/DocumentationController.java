@@ -15,10 +15,10 @@ import javax.annotation.Nullable;
 
 @RestController
 public class DocumentationController {
-    final String PATH_BASE = "/project/{projectId}/";
-    final String UPLOAD_PATH = "uploadFile";
-    final String OBJECT_PATH = "object/{objectId}/";
-    DocumentService documentService;
+    private final String PATH_BASE = "/project/{projectId}/";
+    private final String UPLOAD_PATH = "uploadFile";
+    private final String OBJECT_PATH = "object/{objectId}/";
+    private DocumentService documentService;
 
     @Autowired
     public DocumentationController(DocumentService documentService) {
@@ -55,7 +55,7 @@ public class DocumentationController {
      * This method returns a file stored in project path. Method calls {@link DocumentService} to get the file and serve it
      * @param projectId id of project
      * @param fileId id of file
-     * @return response entity 200 if file has been stored and 500 if not
+     * @return file obtained from FileSystem
      */
     @RequestMapping(value = PATH_BASE+"file/{fileId}", method = RequestMethod.GET)
     public HttpEntity<byte[]> getFile(@PathVariable int projectId, @PathVariable int fileId){
@@ -68,7 +68,7 @@ public class DocumentationController {
     * @param projectId id of project
     * @param objectId id of object
     * @param fileId id of file
-    * @return response entity 200 if file has been stored and 500 if not
+    * @return file obtained from FileSystem
     */
     @RequestMapping(value = PATH_BASE+OBJECT_PATH+"file/{fileId}", method = RequestMethod.GET)
     public HttpEntity<byte[]> getFile(@PathVariable int projectId, @PathVariable int objectId, @PathVariable int fileId){

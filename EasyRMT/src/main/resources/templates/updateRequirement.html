@@ -82,7 +82,7 @@
                                 <option th:each="user_group : ${group}" th:if="not ${user_group.isStakeholder()}"
                                         th:value="${user_group.getPrimaryKey().getUser().getUserId()}"
                                         th:text="${user_group.getPrimaryKey().getUser().getUsername()}"
-                                        th:selected="${userStory.getAssignedTo().getUserId() == user_group.getPrimaryKey().getUser().getUserId()}">
+                                        th:selected="${requirement.getAssignedTo().getUserId() == user_group.getPrimaryKey().getUser().getUserId()}">
                                 </option>
                             </select>
                             <br/>

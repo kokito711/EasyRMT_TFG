@@ -23,12 +23,12 @@ import java.util.Optional;
 
 @Service
 public class FeatureService {
-    ObjectRepository objectRepository;
-    FeatureRepository featureRepository;
-    ProjectRepository projectRepository;
-    FeatureConverter featureConverter;
-    DocumentService documentService;
-    UserRepository userRepository;
+    private ObjectRepository objectRepository;
+    private FeatureRepository featureRepository;
+    private ProjectRepository projectRepository;
+    private FeatureConverter featureConverter;
+    private DocumentService documentService;
+    private UserRepository userRepository;
 
     @Autowired
     public FeatureService(ObjectRepository objectRepository, FeatureRepository featureRepository,
@@ -205,7 +205,7 @@ public class FeatureService {
             Feature feature = featureRepository.findOne(featureId);
             if(!feature.getUseCases().isEmpty()){
                 for(UseCase useCase: feature.getUseCases()){
-                    ObjectEntity object = feature.getObject();
+                    ObjectEntity object = useCase.getObject();
                     documentService.deleteFiles(object.getProject().getIdProject(),object.getIdobject());
                     objectRepository.deleteObject(useCase.getIdUseCase());
                 }

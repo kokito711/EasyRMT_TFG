@@ -20,19 +20,19 @@ import java.util.*;
 @Service
 public class ProjectService {
 
-    ProjectRepository projectRepository;
-    ReqTypeRepository reqTypeRepository;
-    ProjectConverter projectConverter;
-    ReqTypeConverter reqTypeConverter;
-    DocumentService documentService;
-    GroupRepository groupRepository;
-    ObjectRepository objectRepository;
-    TraceabilityService traceabilityService;
-    FeatureService featureService;
-    EpicService epicService;
-    UseCaseService useCaseService;
-    UserStoryService userStoryService;
-    RequirementService requirementService;
+    private ProjectRepository projectRepository;
+    private ReqTypeRepository reqTypeRepository;
+    private ProjectConverter projectConverter;
+    private ReqTypeConverter reqTypeConverter;
+    private DocumentService documentService;
+    private GroupRepository groupRepository;
+    private ObjectRepository objectRepository;
+    private TraceabilityService traceabilityService;
+    private FeatureService featureService;
+    private EpicService epicService;
+    private UseCaseService useCaseService;
+    private UserStoryService userStoryService;
+    private RequirementService requirementService;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, ReqTypeRepository reqTypeRepository, ProjectConverter projectConverter,
@@ -217,7 +217,7 @@ public class ProjectService {
     }
 
     public Map<String, List> getStateStats(int idProject) {
-        List<Integer> requirementsList = new ArrayList<>();
+        List<Integer> requirementsList;
         List<Integer> objectLvl1Serie= new ArrayList<>();
         List<Integer> objectLvl2Serie= new ArrayList<>();
         Map<String,List> stats = new HashMap<>();

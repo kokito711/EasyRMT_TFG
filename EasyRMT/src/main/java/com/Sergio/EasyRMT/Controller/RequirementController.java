@@ -28,14 +28,14 @@ import java.util.logging.Logger;
 public class RequirementController {
     private static final Logger LOGGER = Logger.getLogger( TypeData.ClassName.class.getName() );
     private final String loggerMessage = "Unauthorized attempt to access: ";
-    final String PATH_BASE = "/project/{projectId}/";
-    ProjectService projectService;
-    RequirementService requirementService;
-    DocumentService documentService;
-    CommonMethods commonMethods;
-    UserService userService;
-    TraceabilityService traceabilityService;
-    CommentService commentService;
+    private final String PATH_BASE = "/project/{projectId}/";
+    private ProjectService projectService;
+    private RequirementService requirementService;
+    private DocumentService documentService;
+    private CommonMethods commonMethods;
+    private UserService userService;
+    private TraceabilityService traceabilityService;
+    private CommentService commentService;
 
     @Autowired
     public RequirementController(ProjectService projectService, RequirementService requirementService, DocumentService documentService,
@@ -49,6 +49,8 @@ public class RequirementController {
         this.traceabilityService = traceabilityService;
         this.commentService = commentService;
     }
+
+    //TODO Make handlers
 
     /**
      * This rest controller receives a request to get a requirement list related with a project
@@ -108,7 +110,7 @@ public class RequirementController {
             modelAndView.addObject("requirement", requirementService.getRequirement(requirementId));
             modelAndView.addObject("project", project);
             modelAndView.addObject("projectList", projectDomList);
-            modelAndView.addObject("reqTypes", projectService.getReqTypes());
+            //modelAndView.addObject("reqTypes", projectService.getReqTypes());
             modelAndView.addObject("fileList", documentService.getFileList(projectId, requirementId));
             modelAndView.addObject("user", principal.getName());
             modelAndView.addObject("group", group);
@@ -188,20 +190,8 @@ public class RequirementController {
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         requirementDom.setAuthorId(user.getUserId());
         if (commonMethods.isAllowed(projectDomList, project)) {
-            if (result.hasErrors()) {
-                boolean isPm = commonMethods.isPM(user, principal.getName());
-                List<Group_user> group = project.getGroup().getUsers();
-                ModelAndView modelAndView = new ModelAndView();
-                modelAndView.setViewName("requirement");
-                modelAndView.addObject("requirement", requirementDom);
-                modelAndView.addObject("project", project);
-                modelAndView.addObject("projectList", projectDomList);
-                modelAndView.addObject("reqTypes", projectService.getReqTypes());
-                modelAndView.addObject("user", principal.getName());
-                modelAndView.addObject("group", group);
-                modelAndView.addObject("isPM", isPm);
-                return modelAndView;
-            }
+            ModelAndView modelAndView = getModelAndView(principal, requirementDom, result, project, user, projectDomList);
+            if (modelAndView != null) return modelAndView;
             RequirementDom persistedRequirement = requirementService.create(requirementDom, projectId);
             String path = "/project/" + projectId + "/requirement/" + persistedRequirement.getIdRequirement();
             return new ModelAndView("redirect:" + path);
@@ -266,18 +256,8 @@ public class RequirementController {
         UserDom user = userService.findUser(principal.getName());
         List<ProjectDom> projectDomList = commonMethods.getProjectsFromGroup(user);
         if (commonMethods.isAllowed(projectDomList, project)) {
-            if (result.hasErrors()) {
-                boolean isPm = commonMethods.isPM(user, principal.getName());
-                List<Group_user> group = project.getGroup().getUsers();
-                ModelAndView mav = new ModelAndView();
-                mav.setViewName("requirement");
-                mav.addObject("requirement", requirementDom);
-                mav.addObject("project", project);
-                mav.addObject("projectList", projectDomList);
-                mav.addObject("reqTypes", projectService.getReqTypes());
-                mav.addObject("user", principal.getName());
-                return mav;
-            }
+            ModelAndView modelAndView = getModelAndView(principal, requirementDom, result, project, user, projectDomList);
+            if (modelAndView != null) return modelAndView;
             RequirementDom persistedRequirement = requirementService.update(requirementDom, requirementId, projectId);
             String path = "/project/" + projectId + "/requirement/" + persistedRequirement.getIdRequirement();
             return new ModelAndView("redirect:" + path);
@@ -286,6 +266,7 @@ public class RequirementController {
                 " from project "+projectId);
         throw new AccessDeniedException("Not allowed");
     }
+
 
     /**
      * Delete requirement receives a requirement id as path variable and uses it to call {@link RequirementService}
@@ -313,5 +294,23 @@ public class RequirementController {
         LOGGER.log(Level.INFO, loggerMessage+"User "+principal.getName()+" has tried to delete a requirement " +
                 "from project "+projectId);
         throw new AccessDeniedException("Not allowed");
+    }
+
+    private ModelAndView getModelAndView(Principal principal, @ModelAttribute @Valid RequirementDom requirementDom, BindingResult result, ProjectDom project, UserDom user, List<ProjectDom> projectDomList) {
+        if (result.hasErrors()) {
+            boolean isPm = commonMethods.isPM(user, principal.getName());
+            List<Group_user> group = project.getGroup().getUsers();
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("requirement");
+            modelAndView.addObject("requirement", requirementDom);
+            modelAndView.addObject("project", project);
+            modelAndView.addObject("projectList", projectDomList);
+            modelAndView.addObject("reqTypes", project.getRequirementTypes());
+            modelAndView.addObject("user", principal.getName());
+            modelAndView.addObject("group", group);
+            modelAndView.addObject("isPM", isPm);
+            return modelAndView;
+        }
+        return null;
     }
 }
